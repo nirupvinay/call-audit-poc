@@ -139,11 +139,6 @@ for idx, param in enumerate(template_data["parameters"]):
                 placeholder="Parameter title"
             )
 
-        with col_h2:
-            if st.button("🗑", key=f"del_param_{idx}") and len(template_data["parameters"]) > 1:
-                template_data["parameters"].pop(idx)
-                st.rerun()
-
         # ---------- TYPE / FATAL / SCORE ----------
         col1, col2, col3 = st.columns([3, 1, 1])
 
