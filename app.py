@@ -182,49 +182,80 @@ for idx, param in enumerate(template_data["parameters"]):
                 label_visibility="collapsed"
             )
 
-        # ---------- PROMPTS (HORIZONTAL, FIXED SIZE) ----------
-        cols = st.columns(len(param["prompts"]) * 2)
+                # ---------- PROMPTS (HORIZONTAL NODE STYLE) ----------
+        st.markdown(
+            """
+            <div style="overflow-x:auto; white-space:nowrap; padding-bottom:10px;">
+            """,
+            unsafe_allow_html=True
+        )
 
-        c = 0
         for p_idx in range(len(param["prompts"])):
 
-            with cols[c]:
+            # ---- horizontal container per prompt ----
+            col_card, col_logic = st.columns([3, 1])
 
-                param_titles = [p["title"] for p in template_data["parameters"][:idx]]
+            # ===== PROMPT CARD =====
+            with col_card:
+                with st.container(border=True):
 
-                if param["type"] == "Conditional" and param_titles:
-                    param["prompts"][p_idx] = st.selectbox(
-                        "Cond",
-                        param_titles,
-                        index=param_titles.index(param["prompts"][p_idx])
-                        if param["prompts"][p_idx] in param_titles else 0,
-                        key=f"prompt_{selected_template}_{idx}_{p_idx}",
-                        label_visibility="collapsed"
+                    param_titles = [p["title"] for p in template_data["parameters"][:idx]]
+
+                    # Conditional dropdown OR normal text
+                    if param["type"] == "Conditional" and param_titles:
+                        param["prompts"][p_idx] = st.selectbox(
+                            "Cond",
+                            param_titles,
+                            index=param_titles.index(param["prompts"][p_idx])
+                            if param["prompts"][p_idx] in param_titles else 0,
+                            key=f"prompt_{selected_template}_{idx}_{p_idx}",
+                            label_visibility="collapsed"
+                        )
+                    else:
+                        param["prompts"][p_idx] = st.text_input(
+                            "Prompt Name",
+                            value=param["prompts"][p_idx],
+                            key=f"prompt_{selected_template}_{idx}_{p_idx}",
+                            label_visibility="collapsed",
+                            placeholder="Prompt name"
+                        )
+
+                    # --- action buttons inside card ---
+                    btn_add, btn_del = st.columns(2)
+
+                    with btn_add:
+                        if st.button(
+                            "➕",
+                            key=f"add_prompt_{selected_template}_{idx}_{p_idx}",
+                            use_container_width=True
+                        ):
+                            param["prompts"].insert(p_idx + 1, "")
+                            param["logic"].insert(p_idx, "AND")
+                            st.rerun()
+
+                    with btn_del:
+                        if st.button(
+                            "🗑",
+                            key=f"del_prompt_{selected_template}_{idx}_{p_idx}",
+                            use_container_width=True
+                        ) and len(param["prompts"]) > 1:
+                            param["prompts"].pop(p_idx)
+                            if p_idx < len(param["logic"]):
+                                param["logic"].pop(p_idx)
+                            st.rerun()
+
+            # ===== AND / OR BETWEEN CARDS =====
+            if p_idx < len(param["prompts"]) - 1:
+                with col_logic:
+                    param["logic"][p_idx] = st.selectbox(
+                        "",
+                        ["AND", "OR"],
+                        index=["AND", "OR"].index(param["logic"][p_idx])
+                        if p_idx < len(param["logic"]) else 0,
+                        key=f"logic_{selected_template}_{idx}_{p_idx}"
                     )
-                else:
-                    param["prompts"][p_idx] = st.text_area(
-                        "Prompt",
-                        value=param["prompts"][p_idx],
-                        key=f"prompt_{selected_template}_{idx}_{p_idx}",
-                        height=80,
-                        label_visibility="collapsed"
-                    )
 
-            c += 1
-
-            with cols[c]:
-                if st.button("➕", key=f"add_prompt_{selected_template}_{idx}_{p_idx}", use_container_width=True):
-                    param["prompts"].insert(p_idx + 1, "")
-                    param["logic"].insert(p_idx, "AND")
-                    st.rerun()
-
-                if st.button("🗑", key=f"del_prompt_{selected_template}_{idx}_{p_idx}", use_container_width=True) and len(param["prompts"]) > 1:
-                    param["prompts"].pop(p_idx)
-                    if p_idx < len(param["logic"]):
-                        param["logic"].pop(p_idx)
-                    st.rerun()
-
-            c += 1
+        st.markdown("</div>", unsafe_allow_html=True)
 
         # ---------- ADD / DELETE PARAMETER ----------
         col_add, col_del = st.columns(2)
