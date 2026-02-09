@@ -78,7 +78,7 @@ with colp1:
     param["fatal"] = st.checkbox("Fatal", value=param["fatal"])
 
 with colp2:
-param["score"] = st.number_input(
+    param["score"] = st.number_input(
     "Score",
     min_value=0,
     step=1,
