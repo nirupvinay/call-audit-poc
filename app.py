@@ -54,13 +54,16 @@ if run:
         st.write("Explanation: Consent implied during conversation.")
 
 if reset:
+    saved_score = total_score if 'total_score' in locals() else 0
+    saved_ztp = ztp_status if 'ztp_status' in locals() else "NA"
+
     with open("audit_log.csv", "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow([
             datetime.now(),
             transcript,
-            total_score,
-            ztp_status
+            saved_score,
+            saved_ztp
         ])
 
     st.experimental_rerun()
