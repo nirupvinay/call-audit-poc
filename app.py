@@ -44,6 +44,12 @@ if run:
     st.write(f"Status: {ztp_status}")
     st.write(f"Reason: {ztp_reason}")
 
+    if ztp_status == "UNCERTAIN":
+        st.subheader("Escalation")
+        st.write("Sent to flagship model for final compliance decision.")
+        st.write("Final Verdict: CLEAR (Dummy)")
+        st.write("Explanation: Consent implied during conversation.")
+
 if reset:
     st.experimental_rerun()
 
