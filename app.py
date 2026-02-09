@@ -1,7 +1,7 @@
 import streamlit as st
 import csv
 from datetime import datetime
-import streamlit as st
+import pandas as pd
 
 st.title("AI Call Audit – Phase 1 POC")
 
@@ -26,12 +26,15 @@ with colp2:
     p1_score = st.number_input("Score", min_value=0, step=1, key="p1_score")
 
 st.markdown("**Prompt**")
+
+# ---------- SESSION STATE ----------
 if "p1_prompts" not in st.session_state:
     st.session_state.p1_prompts = [""]
 
 if "p1_logic" not in st.session_state:
     st.session_state.p1_logic = []
 
+# ---------- PROMPT UI ----------
 for i in range(len(st.session_state.p1_prompts)):
     col1, col2, col3 = st.columns([5, 1, 1])
 
@@ -55,28 +58,25 @@ for i in range(len(st.session_state.p1_prompts)):
                 st.session_state.p1_logic.pop(i)
             st.rerun()
 
+    # AND / OR selector between prompts
     if i < len(st.session_state.p1_prompts) - 1:
         st.session_state.p1_logic[i] = st.selectbox(
             "Logic",
             ["AND", "OR"],
+            index=0 if len(st.session_state.p1_logic) <= i else ["AND", "OR"].index(st.session_state.p1_logic[i]),
             key=f"logic_{i}"
         )
 
-
-if st.button("➕ Add Prompt"):
-    st.session_state.p1_prompts.append("")
-    st.session_state.p1_logic.append("AND")
-    st.rerun()
 st.divider()
 
-
+# ---------- TRANSCRIPT ----------
 transcript = st.text_area("Paste transcript here")
 
 col1, col2 = st.columns(2)
-
 run = col1.button("Run Audit")
 reset = col2.button("Reset")
 
+# ---------- RUN AUDIT ----------
 if run:
     if transcript.strip() == "":
         st.error("Please paste a transcript before running the audit.")
@@ -112,6 +112,7 @@ if run:
         st.write("Final Verdict: CLEAR (Dummy)")
         st.write("Explanation: Consent implied during conversation.")
 
+# ---------- RESET ----------
 if reset:
     saved_score = total_score if 'total_score' in locals() else 0
     saved_ztp = ztp_status if 'ztp_status' in locals() else "NA"
@@ -126,9 +127,8 @@ if reset:
         ])
 
     st.rerun()
-    
-import pandas as pd
 
+# ---------- HISTORY ----------
 st.subheader("Saved Audit History")
 
 try:
@@ -136,5 +136,3 @@ try:
     st.dataframe(df)
 except FileNotFoundError:
     st.write("No audits saved yet.")
-
-
