@@ -204,10 +204,21 @@ for idx, param in enumerate(template_data["parameters"]):
 
             # ----- STACKED BUTTONS -----
             with col_btns:
-                if st.button("➕", key=f"add_prompt_{idx}_{p_idx}"):
-                    param["prompts"].insert(p_idx + 1, "")
-                    param["logic"].insert(p_idx, "AND")
-                    st.rerun()
+                btn_col1 = st.container()
+                btn_col2 = st.container()
+
+                with btn_col1:
+                    if st.button("➕", key=f"add_prompt_{idx}_{p_idx}", use_container_width=True):
+                        param["prompts"].insert(p_idx + 1, "")
+                        param["logic"].insert(p_idx, "AND")
+                        st.rerun()
+
+                with btn_col2:
+                    if st.button("🗑", key=f"del_prompt_{idx}_{p_idx}", use_container_width=True) and len(param["prompts"]) > 1:
+                        param["prompts"].pop(p_idx)
+                        if p_idx < len(param["logic"]):
+                            param["logic"].pop(p_idx)
+                        st.rerun()
 
                 if st.button("🗑", key=f"del_prompt_{idx}_{p_idx}") and len(param["prompts"]) > 1:
                     param["prompts"].pop(p_idx)
