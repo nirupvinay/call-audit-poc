@@ -62,7 +62,7 @@ if len(current_template_data["parameters"]) == 0:
         "logic": []
     })
 
-param = current_template_data["parameters"][0]
+for i, param in enumerate(current_template_data["parameters"]):
 
 param["title"] = st.text_input("Title", value=param["title"])
 
