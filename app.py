@@ -248,7 +248,7 @@ reset = col2.button("Reset")
 
 
 # =========================================================
-# RULE ENGINE TEST — FIRST PARAMETER ONLY
+# RULE ENGINE — ALL PARAMETERS, PER TEMPLATE
 # =========================================================
 if run:
 
@@ -256,66 +256,72 @@ if run:
         st.error("Paste transcript first.")
         st.stop()
 
-    results = []
+    for template_name, template in st.session_state.templates.items():
 
-    # evaluate only first active template → first parameter
-    for template in st.session_state.templates.values():
         if not template.get("active"):
             continue
 
-        if not template["parameters"]:
-            continue
+        results = []
+        fatal_triggered = False
+        template_total = 0
 
-        param = template["parameters"][0]
+        for param in template["parameters"]:
 
-        # ---------- PROMPT MATCH ----------
-        matches = []
-        for prompt in param["prompts"]:
-            if prompt and prompt.lower() in transcript.lower():
-                matches.append(prompt)
+            # ---------- PROMPT MATCH ----------
+            matches = []
+            checks = []
 
-        # ---------- AND / OR LOGIC ----------
-        if not param["prompts"]:
-            param_yes = False
-        else:
-            checks = [(p.lower() in transcript.lower()) for p in param["prompts"]]
+            for prompt in param["prompts"]:
+                found = prompt and prompt.lower() in transcript.lower()
+                checks.append(found)
+                if found:
+                    matches.append(prompt)
 
-            result = checks[0]
-            for i, logic in enumerate(param["logic"]):
-                if logic == "AND":
-                    result = result and checks[i + 1]
-                else:
-                    result = result or checks[i + 1]
-
-            param_yes = result
-
-        # ---------- RESULT WITH FATAL RULE ----------
-        if param_yes:
-            final_result = "YES"
-            score = param["score"]
-        else:
-            if param["fatal"]:
-                final_result = "FATAL"
-                score = 0
+            # ---------- AND / OR LOGIC ----------
+            if not checks:
+                param_yes = False
             else:
-                final_result = "NO"
-                score = 0
+                result = checks[0]
+                for i, logic in enumerate(param["logic"]):
+                    if logic == "AND":
+                        result = result and checks[i + 1]
+                    else:
+                        result = result or checks[i + 1]
+                param_yes = result
 
-        evidence = ", ".join(matches) if matches else "—"
+            # ---------- RESULT WITH FATAL RULE ----------
+            if param_yes:
+                final_result = "YES"
+                score = param["score"]
+            else:
+                if param["fatal"]:
+                    final_result = "FATAL"
+                    score = 0
+                    fatal_triggered = True
+                else:
+                    final_result = "NO"
+                    score = 0
 
-        results.append({
-            "Parameter": param["title"],
-            "Result": final_result,
-            "Score": score,
-            "Evidence": evidence
-        })
+            template_total += score
+            evidence = ", ".join(matches) if matches else "—"
 
-    # ---------- SHOW TABLE ----------
-    if results:
-        df = pd.DataFrame(results)
-        st.subheader("Audit Result")
-        st.table(df)
+            results.append({
+                "Parameter": param["title"],
+                "Result": final_result,
+                "Score": score,
+                "Evidence": evidence
+            })
 
+        # ---------- FATAL OVERRIDE ----------
+        if fatal_triggered:
+            template_total = 0
+
+        # ---------- SHOW TEMPLATE TABLE ----------
+        if results:
+            st.subheader(f"Template: {template_name}")
+            df = pd.DataFrame(results)
+            st.table(df)
+            st.markdown(f"**Total Score: {template_total}**")
 
 # =========================================================
 # RESET + LOG
