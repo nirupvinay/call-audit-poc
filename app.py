@@ -2,6 +2,8 @@ import streamlit as st
 import csv
 from datetime import datetime
 import pandas as pd
+import json
+TEMPLATE_FILE = "templates.json"
 
 # =========================================================
 # SESSION STRUCTURE
