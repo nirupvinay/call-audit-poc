@@ -187,9 +187,7 @@ for idx, param in enumerate(template_data["parameters"]):
             max-width: 90%;
             padding-left: 5%;
             padding-right: 5%;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 15px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            background: transparent !important;
         }
         
         /* Input fields styling */
