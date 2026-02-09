@@ -36,6 +36,14 @@ if run:
 
     st.subheader(f"Overall Score: {total_score}")
 
+    st.subheader("ZTP / Compliance Check (Dummy)")
+
+    ztp_status = "UNCERTAIN"
+    ztp_reason = "Customer consent unclear in transcript."
+
+    st.write(f"Status: {ztp_status}")
+    st.write(f"Reason: {ztp_reason}")
+
 if reset:
     st.experimental_rerun()
 
