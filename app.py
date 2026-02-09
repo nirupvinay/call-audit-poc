@@ -39,6 +39,10 @@ run = col1.button("Run Audit")
 reset = col2.button("Reset")
 
 if run:
+        if transcript.strip() == "":
+        st.error("Please paste a transcript before running the audit.")
+        st.stop()
+
     st.subheader("Transcript Preview")
     st.write(transcript)
 
