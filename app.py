@@ -26,6 +26,40 @@ with colp2:
     p1_score = st.number_input("Score", min_value=0, step=1, key="p1_score")
 
 st.markdown("**Prompt**")
+if "p1_prompts" not in st.session_state:
+    st.session_state.p1_prompts = [""]
+
+if "p1_logic" not in st.session_state:
+    st.session_state.p1_logic = []
+
+for i in range(len(st.session_state.p1_prompts)):
+    col1, col2 = st.columns([5, 1])
+
+    with col1:
+        st.session_state.p1_prompts[i] = st.text_input(
+            f"Prompt {i+1}",
+            value=st.session_state.p1_prompts[i],
+            key=f"p1_prompt_{i}"
+        )
+
+    with col2:
+        if st.button("🗑", key=f"del_{i}") and len(st.session_state.p1_prompts) > 1:
+            st.session_state.p1_prompts.pop(i)
+            if i < len(st.session_state.p1_logic):
+                st.session_state.p1_logic.pop(i)
+            st.rerun()
+
+    if i < len(st.session_state.p1_prompts) - 1:
+        st.session_state.p1_logic[i] = st.selectbox(
+            "Logic",
+            ["AND", "OR"],
+            key=f"logic_{i}"
+        )
+
+if st.button("➕ Add Prompt"):
+    st.session_state.p1_prompts.append("")
+    st.session_state.p1_logic.append("AND")
+    st.rerun()
 st.divider()
 
 
