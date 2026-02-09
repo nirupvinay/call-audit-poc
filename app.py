@@ -7,7 +7,7 @@ import json
 # =========================================================
 # SESSION STRUCTURE
 # =========================================================
-TEMPLATE_FILE = "templates.json"keywork
+TEMPLATE_FILE = "templates.json"
 
 if "templates" not in st.session_state:
     try:
