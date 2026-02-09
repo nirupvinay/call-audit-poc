@@ -192,12 +192,13 @@ for idx, param in enumerate(template_data["parameters"]):
                     label_visibility="collapsed"
                 )
             else:
-                param["prompts"][p_idx] = st.text_input(
+                param["prompts"][p_idx] = st.text_area(
                     "Prompt",
                     value=param["prompts"][p_idx],
                     key=f"prompt_{selected_template}_{idx}_{p_idx}",
+                    height=70,
                     label_visibility="collapsed",
-                    placeholder="Enter Prompt"
+                    placeholder="Enter condition / keyword"
                 )
 
         c += 1
