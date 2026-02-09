@@ -175,11 +175,35 @@ for idx, param in enumerate(template_data["parameters"]):
     # Custom CSS for smaller prompt buttons and 90% width container
     st.markdown("""
         <style>
+        /* Dark blue theme */
+        .stApp {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+        }
+        
         .block-container {
             max-width: 90%;
             padding-left: 5%;
             padding-right: 5%;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
         }
+        
+        /* Input fields styling */
+        .stTextInput input, .stTextArea textarea, .stSelectbox select {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            border: 2px solid #4a90e2 !important;
+            border-radius: 8px !important;
+            color: #1a1a1a !important;
+            font-weight: 500;
+        }
+        
+        .stTextInput input:focus, .stTextArea textarea:focus, .stSelectbox select:focus {
+            border-color: #64b5f6 !important;
+            box-shadow: 0 0 0 2px rgba(100, 181, 246, 0.3) !important;
+        }
+        
+        /* Prompt delete/add buttons - vibrant colors */
         .small-button button {
             height: 28px !important;
             min-height: 28px !important;
@@ -187,12 +211,102 @@ for idx, param in enumerate(template_data["parameters"]):
             font-size: 14px !important;
             min-width: 30px !important;
             max-width: 35px !important;
+            border-radius: 6px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+            border: none !important;
+        }
+        
+        /* Delete button - vibrant red */
+        .small-button button:first-child {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%) !important;
+            color: white !important;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4) !important;
+        }
+        
+        .small-button button:first-child:hover {
+            background: linear-gradient(135deg, #ff5252 0%, #e53e3e 100%) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.6) !important;
+        }
+        
+        /* Add button - vibrant green */
+        .small-button button:last-child {
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%) !important;
+            color: white !important;
+            box-shadow: 0 2px 8px rgba(81, 207, 102, 0.4) !important;
+        }
+        
+        .small-button button:last-child:hover {
+            background: linear-gradient(135deg, #40c057 0%, #2f9e44 100%) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(81, 207, 102, 0.6) !important;
+        }
+        
+        /* Parameter buttons - vibrant purple/red */
+        div[data-testid="column"] > div > div > button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 10px 20px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4) !important;
+        }
+        
+        div[data-testid="column"] > div > div > button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6) !important;
+            background: linear-gradient(135deg, #5568d3 0%, #6941a5 100%) !important;
+        }
+        
+        /* Save Templates button */
+        .stButton > button:first-child {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+            color: white !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 12px rgba(240, 147, 251, 0.4) !important;
+        }
+        
+        /* Headers and text */
+        h1, h2, h3, .stMarkdown {
+            color: #ffffff !important;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Checkbox and labels */
+        label {
+            color: #e0e0e0 !important;
+            font-weight: 500;
+        }
+        
+        /* Dividers */
+        hr {
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+        
+        /* Number input styling */
+        .stNumberInput input {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            border: 2px solid #4a90e2 !important;
+            border-radius: 8px !important;
+            color: #1a1a1a !important;
         }
         </style>
     """, unsafe_allow_html=True)
     
-    total_cols = len(param["prompts"]) * 3 - 1
-    cols = st.columns(total_cols)
+    # Calculate column widths to give more space to prompts
+    # For each prompt: large prompt column, tiny button column, medium logic column
+    col_widths = []
+    for p_idx in range(len(param["prompts"])):
+        col_widths.append(10)  # Prompt - larger
+        col_widths.append(1)   # Buttons - tiny
+        if p_idx < len(param["prompts"]) - 1:
+            col_widths.append(2)  # AND/OR - medium
+    
+    cols = st.columns(col_widths)
 
     c = 0
     for p_idx in range(len(param["prompts"])):
@@ -215,7 +329,7 @@ for idx, param in enumerate(template_data["parameters"]):
                     "Prompt",
                     value=param["prompts"][p_idx],
                     key=f"prompt_{selected_template}_{idx}_{p_idx}",
-                    height=70,
+                    height=100,
                     label_visibility="collapsed",
                     placeholder="Enter Prompt"
                 )
