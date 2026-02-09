@@ -5,6 +5,9 @@ import streamlit as st
 
 st.title("AI Call Audit – Phase 1 POC")
 
+st.divider()
+st.subheader("Audit Parameter Designer (Phase-1 UI)")
+
 transcript = st.text_area("Paste transcript here")
 
 col1, col2 = st.columns(2)
