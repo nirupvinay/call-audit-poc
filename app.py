@@ -236,16 +236,25 @@ for idx, param in enumerate(template_data["parameters"]):
                 )
 
         # ---------- ADD PARAMETER BELOW ----------
-        if st.button("➕ Add Parameter Below", key=f"add_param_{idx}"):
-            template_data["parameters"].insert(idx + 1, {
-                "title": "Parameter",
-                "type": "Regular",
-                "fatal": False,
-                "score": 0,
-                "prompts": [""],
-                "logic": []
-            })
-            st.rerun()
+        col_add, col_del = st.columns([3, 2])
+
+with col_add:
+    if st.button("➕ Add Parameter Below", key=f"add_param_{idx}", use_container_width=True):
+        template_data["parameters"].insert(idx + 1, {
+            "title": "Parameter",
+            "type": "Regular",
+            "fatal": False,
+            "score": 0,
+            "prompts": [""],
+            "logic": []
+        })
+        st.rerun()
+
+with col_del:
+    if st.button("🗑 Delete Parameter", key=f"delete_param_bottom_{idx}", use_container_width=True) and len(template_data["parameters"]) > 1:
+        template_data["parameters"].pop(idx)
+        st.rerun()
+
 
     st.markdown("<br>", unsafe_allow_html=True)
 
