@@ -205,18 +205,36 @@ for idx, param in enumerate(template_data["parameters"]):
 
         # ADD / DELETE PROMPT
         with cols[c]:
-            if st.button("➕", key=f"add_prompt_{selected_template}_{idx}_{p_idx}"):
-                param["prompts"].insert(p_idx + 1, "")
-                param["logic"].insert(p_idx, "AND")
-                st.rerun()
+        st.markdown(
+            """
+            <style>
+            div[data-testid="stButton"] > button {
+                height: 34px;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+    
+        if st.button(
+            "➕",
+            key=f"add_prompt_{selected_template}_{idx}_{p_idx}",
+            use_container_width=True
+        ):
+            param["prompts"].insert(p_idx + 1, "")
+            param["logic"].insert(p_idx, "AND")
+            st.rerun()
+    
+        if st.button(
+            "🗑",
+            key=f"del_prompt_{selected_template}_{idx}_{p_idx}",
+            use_container_width=True
+        ) and len(param["prompts"]) > 1:
+            param["prompts"].pop(p_idx)
+            if p_idx < len(param["logic"]):
+                param["logic"].pop(p_idx)
+            st.rerun()
 
-            if st.button("🗑", key=f"del_prompt_{selected_template}_{idx}_{p_idx}") and len(param["prompts"]) > 1:
-                param["prompts"].pop(p_idx)
-                if p_idx < len(param["logic"]):
-                    param["logic"].pop(p_idx)
-                st.rerun()
-
-        c += 1
 
         # AND / OR
         if p_idx < len(param["prompts"]) - 1:
