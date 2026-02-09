@@ -31,6 +31,11 @@ if "current_template" not in st.session_state:
 st.title("AI Call Audit – Phase 1 POC")
 st.divider()
 st.subheader("Audit Parameter Designer")
+with st.sidebar:
+    if st.button("💾 Save Templates"):
+        with open(TEMPLATE_FILE, "w") as f:
+            json.dump(st.session_state.templates, f, indent=2)
+        st.success("Templates saved.")
 
 
 # =========================================================
