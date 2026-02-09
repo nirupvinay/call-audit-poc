@@ -41,7 +41,7 @@ st.divider()
 st.subheader("Audit Parameter Designer")
 
 # =========================================================
-# TEMPLATE CONTROLS (TOOLBAR STYLE)
+# TEMPLATE TOOLBAR
 # =========================================================
 col_dd, col_edit, col_add, col_del = st.columns([6, 1, 1, 1])
 
@@ -57,8 +57,6 @@ with col_dd:
     )
     st.session_state.current_template = selected_template
 
-
-# ---------- RENAME POPOVER ----------
 if "rename_mode" not in st.session_state:
     st.session_state.rename_mode = False
 
@@ -72,7 +70,6 @@ if st.session_state.rename_mode:
         value=st.session_state.current_template,
         key="rename_input"
     )
-
     if new_name and new_name != st.session_state.current_template:
         st.session_state.templates[new_name] = st.session_state.templates.pop(
             st.session_state.current_template
@@ -81,21 +78,16 @@ if st.session_state.rename_mode:
         st.session_state.rename_mode = False
         st.rerun()
 
-
-# ---------- ADD TEMPLATE ----------
 with col_add:
     if st.button("➕", use_container_width=True):
         st.session_state.templates["New Template"] = {"active": False, "parameters": []}
         st.session_state.current_template = "New Template"
         st.rerun()
 
-
-# ---------- DELETE TEMPLATE ----------
 with col_del:
     if st.button("🗑", use_container_width=True):
         if st.session_state.current_template in st.session_state.templates:
             del st.session_state.templates[st.session_state.current_template]
-
         st.session_state.current_template = (
             list(st.session_state.templates.keys())[0]
             if st.session_state.templates else None
@@ -103,7 +95,7 @@ with col_del:
         st.rerun()
 
 # =========================================================
-# STOP UI IF NO TEMPLATES EXIST
+# STOP IF NO TEMPLATE
 # =========================================================
 if not st.session_state.templates:
     st.info("No templates available.")
@@ -120,7 +112,7 @@ template_data = st.session_state.templates[st.session_state.current_template]
 template_data["active"] = st.checkbox("Template Active", value=template_data.get("active", True))
 
 # =========================================================
-# ENSURE AT LEAST ONE PARAMETER
+# ENSURE PARAMETER EXISTS
 # =========================================================
 if len(template_data["parameters"]) == 0:
     template_data["parameters"].append({
@@ -133,7 +125,7 @@ if len(template_data["parameters"]) == 0:
     })
 
 # =========================================================
-# PARAMETER CARDS (UI FIXED ONLY)
+# PARAMETERS UI
 # =========================================================
 st.divider()
 
@@ -141,19 +133,16 @@ for idx, param in enumerate(template_data["parameters"]):
 
     with st.container(border=True):
 
-        # ---------- HEADER ----------
-        col_h1, col_h2 = st.columns([8, 2])
+        # TITLE
+        param["title"] = st.text_input(
+            "Title",
+            value=param["title"],
+            key=f"title_{selected_template}_{idx}",
+            label_visibility="collapsed",
+            placeholder="Parameter title"
+        )
 
-        with col_h1:
-            param["title"] = st.text_input(
-                "Title",
-                value=param["title"],
-                key=f"title_{selected_template}_{idx}",
-                label_visibility="collapsed",
-                placeholder="Parameter title"
-            )
-
-        # ---------- TYPE / FATAL / SCORE ----------
+        # TYPE / FATAL / SCORE
         col1, col2, col3 = st.columns([3, 1, 1])
 
         with col1:
@@ -182,14 +171,14 @@ for idx, param in enumerate(template_data["parameters"]):
                 label_visibility="collapsed"
             )
 
-                        # ---------- PROMPTS (STABLE HORIZONTAL) ----------
+        # ---------- HORIZONTAL PROMPTS ----------
         total_cols = len(param["prompts"]) * 3 - 1
         cols = st.columns(total_cols)
 
         c = 0
         for p_idx in range(len(param["prompts"])):
 
-            # ===== PROMPT INPUT =====
+            # PROMPT INPUT
             with cols[c]:
                 param_titles = [p["title"] for p in template_data["parameters"][:idx]]
 
@@ -213,7 +202,7 @@ for idx, param in enumerate(template_data["parameters"]):
 
             c += 1
 
-            # ===== ADD / DELETE BUTTONS =====
+            # ADD / DELETE PROMPT
             with cols[c]:
                 if st.button("➕", key=f"add_prompt_{selected_template}_{idx}_{p_idx}"):
                     param["prompts"].insert(p_idx + 1, "")
@@ -228,7 +217,7 @@ for idx, param in enumerate(template_data["parameters"]):
 
             c += 1
 
-            # ===== AND / OR BETWEEN PROMPTS =====
+            # AND / OR
             if p_idx < len(param["prompts"]) - 1:
                 with cols[c]:
                     param["logic"][p_idx] = st.selectbox(
@@ -240,20 +229,7 @@ for idx, param in enumerate(template_data["parameters"]):
                     )
                 c += 1
 
-            # ===== AND / OR BETWEEN CARDS =====
-            if p_idx < len(param["prompts"]) - 1:
-                with col_logic:
-                    param["logic"][p_idx] = st.selectbox(
-                        "",
-                        ["AND", "OR"],
-                        index=["AND", "OR"].index(param["logic"][p_idx])
-                        if p_idx < len(param["logic"]) else 0,
-                        key=f"logic_{selected_template}_{idx}_{p_idx}"
-                    )
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
-        # ---------- ADD / DELETE PARAMETER ----------
+        # ADD / DELETE PARAMETER
         col_add, col_del = st.columns(2)
 
         with col_add:
@@ -272,8 +248,6 @@ for idx, param in enumerate(template_data["parameters"]):
             if st.button("🗑 Delete Parameter", key=f"delete_param_{idx}", use_container_width=True) and len(template_data["parameters"]) > 1:
                 template_data["parameters"].pop(idx)
                 st.rerun()
-
-        st.markdown("<br>", unsafe_allow_html=True)
 
 # =========================================================
 # TRANSCRIPT + RUN
