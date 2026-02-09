@@ -78,7 +78,13 @@ with colp1:
     param["fatal"] = st.checkbox("Fatal", value=param["fatal"])
 
 with colp2:
-    param["score"] = st.number_input("Score", min_value=0, step=1, value=param["score"])
+param["score"] = st.number_input(
+    "Score",
+    min_value=0,
+    step=1,
+    value=param["score"],
+    key=f'score_{st.session_state.current_template}'
+)
 
 
 st.markdown("**Prompt**")
