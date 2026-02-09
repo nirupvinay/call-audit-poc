@@ -172,28 +172,24 @@ for idx, param in enumerate(template_data["parameters"]):
         )
 
     # ---------- HORIZONTAL PROMPTS WITH AND/OR BETWEEN ----------
-    # Add horizontal scroll container
-    st.markdown("""
-        <style>
-        .prompt-scroll-container {
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-    
-    # Calculate total columns needed
     num_prompts = len(param["prompts"])
     
-    # Build columns list: [prompt, delete, AND/OR, prompt, delete, AND/OR, ..., add]
-    cols_list = []
-    for i in range(num_prompts):
-        cols_list.extend([4, 1])  # prompt and delete
-        if i < num_prompts - 1:
-            cols_list.append(1)  # AND/OR
-    cols_list.append(1)  # final add button
+    # Use a single row with many columns, but use fixed column count approach
+    # For each prompt: we need prompt (wide), delete (narrow), and potentially AND/OR (narrow)
+    # Let's use 3 prompts max per row approach, or just make them equal width
     
-    cols = st.columns(cols_list)
+    # Simple approach: create enough columns for all elements
+    # Layout: [Prompt1] [Del1] [AND/OR1] [Prompt2] [Del2] [AND/OR2] ... [PromptN] [DelN] [Add]
+    
+    cols_config = []
+    for i in range(num_prompts):
+        cols_config.append(6)  # Prompt width
+        cols_config.append(1)  # Delete button width
+        if i < num_prompts - 1:
+            cols_config.append(2)  # AND/OR width
+    cols_config.append(1)  # Add button at the end
+    
+    cols = st.columns(cols_config)
     col_idx = 0
     
     for p_idx in range(num_prompts):
