@@ -35,6 +35,13 @@ if new_name != selected_template and new_name not in st.session_state.templates:
     st.session_state.templates[new_name] = st.session_state.templates.pop(selected_template)
     st.session_state.current_template = new_name
     st.rerun()
+if st.button("➕ New Template"):
+    st.session_state.templates["New Template"] = {
+        "active": False,
+        "parameters": []
+    }
+    st.session_state.current_template = "New Template"
+    st.rerun()
 
 st.markdown("### Parameter 1")
 
