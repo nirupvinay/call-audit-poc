@@ -48,7 +48,19 @@ if st.button("🗑 Delete Template") and len(st.session_state.templates) > 1:
     st.rerun()
 
 
-st.markdown("### Parameter 1")
+st.markdown("### Parameters")
+
+current_template_data = st.session_state.templates[st.session_state.current_template]
+
+if len(current_template_data["parameters"]) == 0:
+    current_template_data["parameters"].append({
+        "title": "Parameter 1",
+        "type": "Regular",
+        "fatal": False,
+        "score": 0,
+        "prompts": [""],
+        "logic": []
+    })
 
 param_title = st.text_input("Opening / Title", key="p1_title")
 
