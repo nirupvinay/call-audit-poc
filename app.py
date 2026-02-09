@@ -2,12 +2,16 @@ import streamlit as st
 
 st.title("AI Call Audit – Phase 1 POC")
 
-st.text_area("Paste transcript here")
+transcript = st.text_area("Paste transcript here")
 
 col1, col2 = st.columns(2)
 
-with col1:
-    st.button("Run Audit")
+run = col1.button("Run Audit")
+reset = col2.button("Reset")
 
-with col2:
-    st.button("Reset")
+if run:
+    st.subheader("Transcript Preview")
+    st.write(transcript)
+
+if reset:
+    st.experimental_rerun()
