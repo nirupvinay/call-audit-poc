@@ -175,32 +175,35 @@ for idx, param in enumerate(template_data["parameters"]):
     # Custom CSS for smaller prompt buttons and 90% width container
     st.markdown("""
         <style>
-        /* Dark blue theme */
+        /* Off-white textured background */
         .stApp {
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            background: #f5f5f5;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.5) 35px, rgba(255,255,255,.5) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(0,0,0,.02) 35px, rgba(0,0,0,.02) 70px);
         }
         
         .block-container {
             max-width: 90%;
             padding-left: 5%;
             padding-right: 5%;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.8);
             border-radius: 15px;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
         
         /* Input fields styling */
         .stTextInput input, .stTextArea textarea, .stSelectbox select {
-            background-color: rgba(255, 255, 255, 0.95) !important;
-            border: 2px solid #4a90e2 !important;
+            background-color: #ffffff !important;
+            border: 2px solid #d1d5db !important;
             border-radius: 8px !important;
-            color: #1a1a1a !important;
+            color: #1f2937 !important;
             font-weight: 500;
         }
         
         .stTextInput input:focus, .stTextArea textarea:focus, .stSelectbox select:focus {
-            border-color: #64b5f6 !important;
-            box-shadow: 0 0 0 2px rgba(100, 181, 246, 0.3) !important;
+            border-color: #8b7fd4 !important;
+            box-shadow: 0 0 0 2px rgba(139, 127, 212, 0.15) !important;
         }
         
         /* Prompt delete/add buttons - elegant muted colors */
@@ -273,28 +276,37 @@ for idx, param in enumerate(template_data["parameters"]):
         }
         
         /* Headers and text */
-        h1, h2, h3, .stMarkdown {
-            color: #ffffff !important;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        h1, h2, h3 {
+            color: #1f2937 !important;
+        }
+        
+        .stMarkdown {
+            color: #374151 !important;
         }
         
         /* Checkbox and labels */
         label {
-            color: #e0e0e0 !important;
+            color: #4b5563 !important;
             font-weight: 500;
         }
         
         /* Dividers */
         hr {
-            border-color: rgba(255, 255, 255, 0.2) !important;
+            border-color: rgba(0, 0, 0, 0.1) !important;
         }
         
         /* Number input styling */
         .stNumberInput input {
-            background-color: rgba(255, 255, 255, 0.95) !important;
-            border: 2px solid #4a90e2 !important;
+            background-color: #ffffff !important;
+            border: 2px solid #d1d5db !important;
             border-radius: 8px !important;
-            color: #1a1a1a !important;
+            color: #1f2937 !important;
+        }
+        
+        /* Dataframe styling */
+        .stDataFrame {
+            background-color: white !important;
+            border-radius: 8px !important;
         }
         </style>
     """, unsafe_allow_html=True)
