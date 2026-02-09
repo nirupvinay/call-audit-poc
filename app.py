@@ -172,21 +172,28 @@ for idx, param in enumerate(template_data["parameters"]):
         )
 
     # ---------- HORIZONTAL PROMPTS WITH AND/OR BETWEEN ----------
-    # Calculate total columns needed: prompts + AND/OR connectors + final add button
+    # Add horizontal scroll container
+    st.markdown("""
+        <style>
+        .prompt-scroll-container {
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    
+    # Calculate total columns needed
     num_prompts = len(param["prompts"])
-    num_connectors = num_prompts - 1
-    total_elements = num_prompts + num_connectors + 1  # +1 for the add button at the end
     
-    # Create column layout: [prompt, AND/OR, prompt, AND/OR, ..., prompt, add_button]
-    col_widths = []
+    # Build columns list: [prompt, delete, AND/OR, prompt, delete, AND/OR, ..., add]
+    cols_list = []
     for i in range(num_prompts):
-        col_widths.append(3)  # prompt width
-        if i < num_connectors:
-            col_widths.append(1)  # AND/OR width
-    col_widths.append(1)  # add button width
+        cols_list.extend([4, 1])  # prompt and delete
+        if i < num_prompts - 1:
+            cols_list.append(1)  # AND/OR
+    cols_list.append(1)  # final add button
     
-    cols = st.columns(col_widths)
-    
+    cols = st.columns(cols_list)
     col_idx = 0
     
     for p_idx in range(num_prompts):
@@ -212,8 +219,11 @@ for idx, param in enumerate(template_data["parameters"]):
                     label_visibility="collapsed",
                     placeholder="Enter Prompt"
                 )
-            
-            # Delete button below each prompt (except if only one prompt)
+        col_idx += 1
+        
+        # DELETE BUTTON
+        with cols[col_idx]:
+            st.markdown("<br>", unsafe_allow_html=True)
             if len(param["prompts"]) > 1:
                 if st.button(
                     "🗑",
@@ -224,13 +234,12 @@ for idx, param in enumerate(template_data["parameters"]):
                     if p_idx < len(param["logic"]):
                         param["logic"].pop(p_idx)
                     st.rerun()
-        
         col_idx += 1
         
-        # AND/OR CONNECTOR (between prompts)
+        # AND/OR CONNECTOR
         if p_idx < num_prompts - 1:
             with cols[col_idx]:
-                st.markdown("<br>", unsafe_allow_html=True)  # Add spacing to align with prompts
+                st.markdown("<br>", unsafe_allow_html=True)
                 param["logic"][p_idx] = st.selectbox(
                     "",
                     ["AND", "OR"],
@@ -243,7 +252,7 @@ for idx, param in enumerate(template_data["parameters"]):
     
     # ADD BUTTON at the end
     with cols[col_idx]:
-        st.markdown("<br>", unsafe_allow_html=True)  # Add spacing to align with prompts
+        st.markdown("<br>", unsafe_allow_html=True)
         if st.button(
             "➕",
             key=f"add_prompt_{selected_template}_{idx}",
