@@ -64,9 +64,9 @@ if len(current_template_data["parameters"]) == 0:
 
 for i, param in enumerate(current_template_data["parameters"]):
 
-param["title"] = st.text_input("Title", value=param["title"])
+   param["title"] = st.text_input("Title", value=param["title"])
 
-param["type"] = st.selectbox(
+   param["type"] = st.selectbox(
     "Parameter Type",
     ["Regular", "Conditional", "Flag"],
     index=["Regular", "Conditional", "Flag"].index(param["type"]),
@@ -85,7 +85,7 @@ with colp2:
     step=1,
     value=param["score"],
     key=f'score_{st.session_state.current_template}'
-)
+    )
 
 
 st.markdown("**Prompt**")
