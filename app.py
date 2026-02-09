@@ -293,11 +293,17 @@ if run:
                 param_yes = False
             else:
                 result = checks[0]
+
                 for i, logic in enumerate(param["logic"]):
+                    # safety guard for mismatch
+                    if i + 1 >= len(checks):
+                        break
+
                     if logic == "AND":
                         result = result and checks[i + 1]
                     else:
                         result = result or checks[i + 1]
+ 
                 param_yes = result
 
             # ---------- RESULT WITH FATAL RULE ----------
