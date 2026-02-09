@@ -33,7 +33,7 @@ if "p1_logic" not in st.session_state:
     st.session_state.p1_logic = []
 
 for i in range(len(st.session_state.p1_prompts)):
-    col1, col2 = st.columns([5, 1])
+    col1, col2, col3 = st.columns([5, 1, 1])
 
     with col1:
         st.session_state.p1_prompts[i] = st.text_input(
@@ -43,6 +43,12 @@ for i in range(len(st.session_state.p1_prompts)):
         )
 
     with col2:
+        if st.button("➕", key=f"add_{i}"):
+            st.session_state.p1_prompts.insert(i + 1, "")
+            st.session_state.p1_logic.insert(i, "AND")
+            st.rerun()
+
+    with col3:
         if st.button("🗑", key=f"del_{i}") and len(st.session_state.p1_prompts) > 1:
             st.session_state.p1_prompts.pop(i)
             if i < len(st.session_state.p1_logic):
@@ -55,6 +61,7 @@ for i in range(len(st.session_state.p1_prompts)):
             ["AND", "OR"],
             key=f"logic_{i}"
         )
+
 
 if st.button("➕ Add Prompt"):
     st.session_state.p1_prompts.append("")
