@@ -31,6 +31,110 @@ if "current_template" not in st.session_state:
 # PAGE HEADER
 # =========================================================
 st.title("AI Call Audit – Phase 1 POC")
+st.markdown("""
+<style>
+
+/* ===== GLOBAL BACKGROUND ===== */
+.stApp {
+    background: radial-gradient(circle at 20% 20%, #0f172a 0%, #020617 60%);
+    color: #e5e7eb;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.block-container {
+    max-width: 92%;
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+}
+
+/* ===== HEADERS ===== */
+h1, h2, h3 {
+    color: #f8fafc !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.3px;
+}
+
+/* ===== INPUT FIELDS ===== */
+.stTextInput input,
+.stTextArea textarea,
+.stSelectbox select,
+.stNumberInput input {
+    background: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid rgba(148, 163, 184, 0.25) !important;
+    border-radius: 10px !important;
+    color: #e5e7eb !important;
+    backdrop-filter: blur(6px);
+    transition: all 0.2s ease;
+}
+
+.stTextInput input:focus,
+.stTextArea textarea:focus,
+.stSelectbox select:focus,
+.stNumberInput input:focus {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 1px #6366f1 !important;
+}
+
+/* ===== BUTTONS ===== */
+.stButton > button {
+    background: linear-gradient(135deg, #1e293b, #0f172a) !important;
+    color: #e5e7eb !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(148, 163, 184, 0.25) !important;
+    height: 38px !important;
+    padding: 0 16px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+
+.stButton > button:hover {
+    border-color: #6366f1 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.35);
+    transform: translateY(-1px);
+}
+
+/* ===== SMALL PROMPT BUTTONS ===== */
+.small-button button {
+    height: 30px !important;
+    min-width: 32px !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+}
+
+/* ===== SELECTBOX (AND/OR) ===== */
+[data-baseweb="select"] {
+    background: rgba(15, 23, 42, 0.6) !important;
+    border-radius: 10px !important;
+}
+
+/* ===== DIVIDERS ===== */
+hr {
+    border: none;
+    border-top: 1px solid rgba(148, 163, 184, 0.15);
+    margin: 1.2rem 0;
+}
+
+/* ===== DATAFRAME ===== */
+.stDataFrame {
+    background: rgba(15, 23, 42, 0.6) !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(148, 163, 184, 0.15) !important;
+}
+
+/* ===== SCROLLBAR (SUBTLE) ===== */
+::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.3);
+    border-radius: 10px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 
 if st.button("💾 Save Templates"):
     with open(TEMPLATE_FILE, "w") as f:
