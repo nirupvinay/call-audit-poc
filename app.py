@@ -23,8 +23,10 @@ if "templates" not in st.session_state:
         }
 
 if "current_template" not in st.session_state:
+    if st.session_state.templates:
     st.session_state.current_template = list(st.session_state.templates.keys())[0]
-
+else:
+    st.session_state.current_template = None
 # =========================================================
 # PAGE HEADER
 # =========================================================
