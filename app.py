@@ -197,7 +197,7 @@ for idx, param in enumerate(template_data["parameters"]):
                         value=param["prompts"][p_idx],
                         key=f"prompt_{selected_template}_{idx}_{p_idx}",
                         label_visibility="collapsed",
-                        placeholder="Prompt name"
+                        placeholder="Enter condition / keyword"
                     )
 
             c += 1
