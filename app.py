@@ -172,19 +172,21 @@ for idx, param in enumerate(template_data["parameters"]):
         )
 
     # ---------- HORIZONTAL PROMPTS ----------
-    # Custom CSS for smaller buttons and full-width container
+    # Custom CSS for smaller buttons and 90% width container
     st.markdown("""
         <style>
         div[data-testid="stButton"] > button {
             height: 28px;
             min-height: 28px;
-            padding: 2px 8px;
+            padding: 2px 4px;
             font-size: 14px;
+            min-width: 30px;
+            max-width: 35px;
         }
         .block-container {
-            max-width: 100%;
-            padding-left: 1rem;
-            padding-right: 1rem;
+            max-width: 90%;
+            padding-left: 5%;
+            padding-right: 5%;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -227,7 +229,7 @@ for idx, param in enumerate(template_data["parameters"]):
                 if st.button(
                     "🗑",
                     key=f"del_prompt_{selected_template}_{idx}_{p_idx}",
-                    use_container_width=True
+                    use_container_width=False
                 ):
                     param["prompts"].pop(p_idx)
                     if p_idx < len(param["logic"]):
@@ -239,7 +241,7 @@ for idx, param in enumerate(template_data["parameters"]):
                 if st.button(
                     "➕",
                     key=f"add_prompt_{selected_template}_{idx}_{p_idx}",
-                    use_container_width=True
+                    use_container_width=False
                 ):
                     param["prompts"].append("")
                     param["logic"].append("AND")
