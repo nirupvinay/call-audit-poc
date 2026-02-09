@@ -6,6 +6,24 @@ import pandas as pd
 # =========================================================
 # SESSION STRUCTURE
 # =========================================================
+import json
+
+TEMPLATE_FILE = "templates.json"
+
+if "templates" not in st.session_state:
+    try:
+        with open(TEMPLATE_FILE, "r") as f:
+            st.session_state.templates = json.load(f)
+    except:
+        st.session_state.templates = {
+            "Default Template": {
+                "active": True,
+                "parameters": []
+            }
+        }
+
+if "current_template" not in st.session_state:
+    st.session_state.current_template = list(st.session_state.templates.keys())[0]
 
 # =========================================================
 # PAGE HEADER
