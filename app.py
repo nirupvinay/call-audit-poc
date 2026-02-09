@@ -31,6 +31,10 @@ selected_template = st.selectbox(
 
 st.session_state.current_template = selected_template
 new_name = st.text_input("Rename current template", value=selected_template)
+if new_name != selected_template and new_name not in st.session_state.templates:
+    st.session_state.templates[new_name] = st.session_state.templates.pop(selected_template)
+    st.session_state.current_template = new_name
+    st.rerun()
 
 st.markdown("### Parameter 1")
 
