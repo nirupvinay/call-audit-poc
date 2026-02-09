@@ -2,44 +2,26 @@ import streamlit as st
 import csv
 from datetime import datetime
 import pandas as pd
-import json
-
-TEMPLATE_FILE = "templates.json"
-
 
 # =========================================================
-# LOAD TEMPLATES FROM JSON (SAFE)
+# SESSION STRUCTURE
 # =========================================================
-try:
-    with open(TEMPLATE_FILE, "r") as f:
-        st.session_state.templates = json.load(f)
-except:
-    if "templates" not in st.session_state:
-        st.session_state.templates = {
-            "Default Template": {
-                "active": True,
-                "parameters": []
-            }
+if "templates" not in st.session_state:
+    st.session_state.templates = {
+        "Default Template": {
+            "active": True,
+            "parameters": []
         }
+    }
 
 if "current_template" not in st.session_state:
-    st.session_state.current_template = list(st.session_state.templates.keys())[0]
+    st.session_state.current_template = "Default Template"
 
 
 # =========================================================
 # PAGE HEADER
 # =========================================================
 st.title("AI Call Audit – Phase 1 POC")
-
-# ---------- SIDEBAR SAVE ----------
-with st.sidebar:
-    st.subheader("Storage")
-    if st.button("💾 Save Templates"):
-        with open(TEMPLATE_FILE, "w") as f:
-            json.dump(st.session_state.templates, f, indent=2)
-        st.success("Templates saved.")
-
-
 st.divider()
 st.subheader("Audit Parameter Designer")
 
@@ -56,7 +38,6 @@ with col1:
         "Template",
         template_names,
         index=template_names.index(st.session_state.current_template)
-        if st.session_state.current_template in template_names else 0
     )
     st.session_state.current_template = selected_template
 
@@ -102,13 +83,12 @@ if len(template_data["parameters"]) == 0:
 
 
 # =========================================================
-# PARAMETER CARDS (COMPACT HORIZONTAL)
+# PARAMETER CARDS
 # =========================================================
 st.divider()
 
 for idx, param in enumerate(template_data["parameters"]):
 
-    # ---------- HEADER ----------
     col_h1, col_h2 = st.columns([6, 1])
 
     with col_h1:
@@ -125,7 +105,6 @@ for idx, param in enumerate(template_data["parameters"]):
             template_data["parameters"].pop(idx)
             st.rerun()
 
-    # ---------- TYPE / FATAL / SCORE ----------
     col1, col2, col3 = st.columns([2, 1, 1])
 
     with col1:
@@ -158,14 +137,12 @@ for idx, param in enumerate(template_data["parameters"]):
     prompt_cols = st.columns(len(param["prompts"]) * 2 - 1)
     col_i = 0
 
-    # titles of previous params (for conditional)
     param_titles = [p["title"] for p in template_data["parameters"][:idx]]
 
     for p_idx in range(len(param["prompts"])):
 
         with prompt_cols[col_i]:
 
-            # ----- INPUT TYPE -----
             if param["type"] == "Conditional" and param_titles:
                 param["prompts"][p_idx] = st.selectbox(
                     "Cond",
@@ -210,7 +187,6 @@ for idx, param in enumerate(template_data["parameters"]):
                 )
             col_i += 1
 
-    # ---------- ADD PARAMETER BELOW ----------
     if st.button("➕ Add Parameter Below", key=f"add_param_{idx}"):
         template_data["parameters"].insert(idx + 1, {
             "title": "Parameter",
@@ -236,7 +212,7 @@ reset = col2.button("Reset")
 
 
 # =========================================================
-# RUN (PHASE-1 DUMMY ENGINE)
+# DUMMY RUN
 # =========================================================
 if run:
 
