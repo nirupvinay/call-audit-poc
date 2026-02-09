@@ -2,12 +2,11 @@ import streamlit as st
 import csv
 from datetime import datetime
 import pandas as pd
+import json
 
 # =========================================================
 # SESSION STRUCTURE
 # =========================================================
-import json
-
 TEMPLATE_FILE = "templates.json"
 
 if "templates" not in st.session_state:
@@ -22,10 +21,13 @@ if "templates" not in st.session_state:
             }
         }
 
-if st.session_state.templates:
-    st.session_state.current_template = list(st.session_state.templates.keys())[0]
-else:
-    st.session_state.current_template = None
+# ensure current_template is valid
+if "current_template" not in st.session_state:
+    st.session_state.current_template = (
+        list(st.session_state.templates.keys())[0]
+        if st.session_state.templates else None
+    )
+
 
 # =========================================================
 # PAGE HEADER
@@ -33,8 +35,7 @@ else:
 st.title("AI Call Audit – Phase 1 POC")
 
 if st.button("💾 Save Templates"):
-    import json
-    with open("templates.json", "w") as f:
+    with open(TEMPLATE_FILE, "w") as f:
         json.dump(st.session_state.templates, f, indent=2)
     st.success("Templates saved.")
 
@@ -53,7 +54,6 @@ with col1:
     selected_template = st.selectbox(
         "Template",
         template_names,
-        index=template_names.index(st.session_state.current_template)
         index=template_names.index(st.session_state.current_template)
         if st.session_state.current_template in template_names else 0
     )
@@ -74,9 +74,27 @@ with col3:
 
 with col4:
     if st.button("🗑"):
-        del st.session_state.templates[st.session_state.current_template]
-        st.session_state.current_template = list(st.session_state.templates.keys())[0]
+        if st.session_state.current_template in st.session_state.templates:
+            del st.session_state.templates[st.session_state.current_template]
+
+        # fix crash when last template deleted
+        st.session_state.current_template = (
+            list(st.session_state.templates.keys())[0]
+            if st.session_state.templates else None
+        )
         st.rerun()
+
+
+# =========================================================
+# STOP UI IF NO TEMPLATES EXIST
+# =========================================================
+if not st.session_state.templates:
+    st.info("No templates available.")
+    if st.button("➕ Add New Template"):
+        st.session_state.templates["New Template"] = {"active": True, "parameters": []}
+        st.session_state.current_template = "New Template"
+        st.rerun()
+    st.stop()
 
 
 # =========================================================
