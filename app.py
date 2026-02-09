@@ -62,21 +62,24 @@ if len(current_template_data["parameters"]) == 0:
         "logic": []
     })
 
-param_title = st.text_input("Opening / Title", key="p1_title")
+param = current_template_data["parameters"][0]
 
-param_type = st.selectbox(
+param["title"] = st.text_input("Opening / Title", value=param["title"])
+
+param["type"] = st.selectbox(
     "Parameter Type",
     ["Regular", "Conditional", "Flag"],
-    key="p1_type"
+    index=["Regular", "Conditional", "Flag"].index(param["type"])
 )
 
 colp1, colp2 = st.columns(2)
 
 with colp1:
-    p1_fatal = st.checkbox("Fatal", key="p1_fatal")
+    param["fatal"] = st.checkbox("Fatal", value=param["fatal"])
 
 with colp2:
-    p1_score = st.number_input("Score", min_value=0, step=1, key="p1_score")
+    param["score"] = st.number_input("Score", min_value=0, step=1, value=param["score"])
+
 
 st.markdown("**Prompt**")
 
