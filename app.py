@@ -41,38 +41,61 @@ st.divider()
 st.subheader("Audit Parameter Designer")
 
 # =========================================================
-# TEMPLATE CONTROLS
+# TEMPLATE CONTROLS (TOOLBAR STYLE)
 # =========================================================
-col1, col2, col3, col4 = st.columns([2, 2, 1, 1])
+col_dd, col_edit, col_add, col_del = st.columns([6, 1, 1, 1])
 
 template_names = list(st.session_state.templates.keys())
 
-with col1:
+with col_dd:
     selected_template = st.selectbox(
         "Template",
         template_names,
         index=template_names.index(st.session_state.current_template)
-        if st.session_state.current_template in template_names else 0
+        if st.session_state.current_template in template_names else 0,
+        label_visibility="collapsed"
     )
     st.session_state.current_template = selected_template
 
-with col2:
-    new_name = st.text_input("Rename", value=selected_template, label_visibility="collapsed")
-    if new_name != selected_template and new_name not in st.session_state.templates:
-        st.session_state.templates[new_name] = st.session_state.templates.pop(selected_template)
+
+# ---------- RENAME POPOVER ----------
+if "rename_mode" not in st.session_state:
+    st.session_state.rename_mode = False
+
+with col_edit:
+    if st.button("✏️", use_container_width=True):
+        st.session_state.rename_mode = not st.session_state.rename_mode
+
+if st.session_state.rename_mode:
+    new_name = st.text_input(
+        "Rename Template",
+        value=st.session_state.current_template,
+        key="rename_input"
+    )
+
+    if new_name and new_name != st.session_state.current_template:
+        st.session_state.templates[new_name] = st.session_state.templates.pop(
+            st.session_state.current_template
+        )
         st.session_state.current_template = new_name
+        st.session_state.rename_mode = False
         st.rerun()
 
-with col3:
-    if st.button("➕"):
+
+# ---------- ADD TEMPLATE ----------
+with col_add:
+    if st.button("➕", use_container_width=True):
         st.session_state.templates["New Template"] = {"active": False, "parameters": []}
         st.session_state.current_template = "New Template"
         st.rerun()
 
-with col4:
-    if st.button("🗑"):
+
+# ---------- DELETE TEMPLATE ----------
+with col_del:
+    if st.button("🗑", use_container_width=True):
         if st.session_state.current_template in st.session_state.templates:
             del st.session_state.templates[st.session_state.current_template]
+
         st.session_state.current_template = (
             list(st.session_state.templates.keys())[0]
             if st.session_state.templates else None
