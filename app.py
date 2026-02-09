@@ -3,43 +3,49 @@ import csv
 from datetime import datetime
 import pandas as pd
 import json
+
 TEMPLATE_FILE = "templates.json"
+
+
+# =========================================================
+# LOAD TEMPLATES FROM JSON (SAFE)
+# =========================================================
 try:
     with open(TEMPLATE_FILE, "r") as f:
         st.session_state.templates = json.load(f)
 except:
-    pass
-
-# =========================================================
-# SESSION STRUCTURE
-# =========================================================
-if "templates" not in st.session_state:
-    st.session_state.templates = {
-        "Default Template": {
-            "active": True,
-            "parameters": []
+    if "templates" not in st.session_state:
+        st.session_state.templates = {
+            "Default Template": {
+                "active": True,
+                "parameters": []
+            }
         }
-    }
 
 if "current_template" not in st.session_state:
-    st.session_state.current_template = "Default Template"
+    st.session_state.current_template = list(st.session_state.templates.keys())[0]
 
 
 # =========================================================
 # PAGE HEADER
 # =========================================================
 st.title("AI Call Audit – Phase 1 POC")
-st.divider()
-st.subheader("Audit Parameter Designer")
+
+# ---------- SIDEBAR SAVE ----------
 with st.sidebar:
+    st.subheader("Storage")
     if st.button("💾 Save Templates"):
         with open(TEMPLATE_FILE, "w") as f:
             json.dump(st.session_state.templates, f, indent=2)
         st.success("Templates saved.")
 
 
+st.divider()
+st.subheader("Audit Parameter Designer")
+
+
 # =========================================================
-# TEMPLATE CONTROLS (COMPACT ROW)
+# TEMPLATE CONTROLS
 # =========================================================
 col1, col2, col3, col4 = st.columns([2, 2, 1, 1])
 
@@ -50,12 +56,12 @@ with col1:
         "Template",
         template_names,
         index=template_names.index(st.session_state.current_template)
+        if st.session_state.current_template in template_names else 0
     )
     st.session_state.current_template = selected_template
 
 with col2:
     new_name = st.text_input("Rename", value=selected_template, label_visibility="collapsed")
-
     if new_name != selected_template and new_name not in st.session_state.templates:
         st.session_state.templates[new_name] = st.session_state.templates.pop(selected_template)
         st.session_state.current_template = new_name
@@ -75,7 +81,7 @@ with col4:
 
 
 # =========================================================
-# TEMPLATE ACTIVE TOGGLE
+# TEMPLATE ACTIVE FLAG
 # =========================================================
 template_data = st.session_state.templates[st.session_state.current_template]
 template_data["active"] = st.checkbox("Template Active", value=template_data.get("active", True))
@@ -96,7 +102,7 @@ if len(template_data["parameters"]) == 0:
 
 
 # =========================================================
-# PARAMETER CARDS (HORIZONTAL COMPACT)
+# PARAMETER CARDS (COMPACT HORIZONTAL)
 # =========================================================
 st.divider()
 
@@ -152,7 +158,7 @@ for idx, param in enumerate(template_data["parameters"]):
     prompt_cols = st.columns(len(param["prompts"]) * 2 - 1)
     col_i = 0
 
-    # parameter titles for conditional dropdown
+    # titles of previous params (for conditional)
     param_titles = [p["title"] for p in template_data["parameters"][:idx]]
 
     for p_idx in range(len(param["prompts"])):
@@ -179,14 +185,12 @@ for idx, param in enumerate(template_data["parameters"]):
 
             c1, c2 = st.columns(2)
 
-            # ----- ADD PROMPT -----
             with c1:
                 if st.button("➕", key=f"add_prompt_{idx}_{p_idx}"):
                     param["prompts"].insert(p_idx + 1, "")
                     param["logic"].insert(p_idx, "AND")
                     st.rerun()
 
-            # ----- DELETE PROMPT -----
             with c2:
                 if st.button("🗑", key=f"del_prompt_{idx}_{p_idx}") and len(param["prompts"]) > 1:
                     param["prompts"].pop(p_idx)
@@ -196,7 +200,6 @@ for idx, param in enumerate(template_data["parameters"]):
 
         col_i += 1
 
-        # ----- AND / OR -----
         if p_idx < len(param["prompts"]) - 1:
             with prompt_cols[col_i]:
                 param["logic"][p_idx] = st.selectbox(
@@ -233,7 +236,7 @@ reset = col2.button("Reset")
 
 
 # =========================================================
-# RUN (PHASE-1 DUMMY)
+# RUN (PHASE-1 DUMMY ENGINE)
 # =========================================================
 if run:
 
