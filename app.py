@@ -4,6 +4,11 @@ from datetime import datetime
 import pandas as pd
 import json
 TEMPLATE_FILE = "templates.json"
+try:
+    with open(TEMPLATE_FILE, "r") as f:
+        st.session_state.templates = json.load(f)
+except:
+    pass
 
 # =========================================================
 # SESSION STRUCTURE
