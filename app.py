@@ -3,6 +3,19 @@ import csv
 from datetime import datetime
 import pandas as pd
 
+# ---------- TEMPLATE DATA STRUCTURE ----------
+if "templates" not in st.session_state:
+    st.session_state.templates = {
+        "Default Template": {
+            "active": True,
+            "parameters": []
+        }
+    }
+
+if "current_template" not in st.session_state:
+    st.session_state.current_template = "Default Template"
+
+
 st.title("AI Call Audit – Phase 1 POC")
 
 st.divider()
