@@ -272,10 +272,19 @@ if run:
             checks = []
 
             for prompt in param["prompts"]:
-                found = prompt and prompt.lower() in transcript.lower()
-                checks.append(found)
-                if found:
-                    matches.append(prompt)
+
+    if param["type"] == "Conditional":
+        # check earlier parameter results
+        found = any(r["Parameter"] == prompt and r["Result"] == "YES" for r in results)
+    else:
+        # normal transcript keyword match
+        found = prompt and prompt.lower() in transcript.lower()
+
+    checks.append(found)
+
+    if found:
+        matches.append(prompt)
+
 
             # ---------- AND / OR LOGIC ----------
             if not checks:
