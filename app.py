@@ -15,10 +15,15 @@ if run:
 
     st.subheader("Audit Result (Dummy)")
 
-    st.write("Greeting given: YES")
-    st.write("Score: 10")
+    greeting_score = 10
+    pitch_score = 20
 
-    st.subheader("Overall Score: 10")
+    st.write("Greeting given: YES | Score:", greeting_score)
+    st.write("Pitch explained: YES | Score:", pitch_score)
+
+    total_score = greeting_score + pitch_score
+
+    st.subheader(f"Overall Score: {total_score}")
 
 if reset:
     st.experimental_rerun()
