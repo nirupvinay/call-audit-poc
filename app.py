@@ -64,7 +64,7 @@ if len(current_template_data["parameters"]) == 0:
 
 param = current_template_data["parameters"][0]
 
-param["title"] = st.text_input("Opening / Title", value=param["title"])
+param["title"] = st.text_input("Title", value=param["title"])
 
 param["type"] = st.selectbox(
     "Parameter Type",
