@@ -68,11 +68,14 @@ if reset:
 
     st.rerun()
     
+import pandas as pd
+
 st.subheader("Saved Audit History")
 
 try:
-    with open("audit_log.csv", "r", encoding="utf-8") as f:
-        st.text(f.read())
+    df = pd.read_csv("audit_log.csv")
+    st.dataframe(df)
 except FileNotFoundError:
     st.write("No audits saved yet.")
+
 
