@@ -172,6 +172,23 @@ for idx, param in enumerate(template_data["parameters"]):
         )
 
     # ---------- HORIZONTAL PROMPTS ----------
+    # Custom CSS for smaller buttons and full-width container
+    st.markdown("""
+        <style>
+        div[data-testid="stButton"] > button {
+            height: 28px;
+            min-height: 28px;
+            padding: 2px 8px;
+            font-size: 14px;
+        }
+        .block-container {
+            max-width: 100%;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    
     total_cols = len(param["prompts"]) * 3 - 1
     cols = st.columns(total_cols)
 
@@ -205,17 +222,6 @@ for idx, param in enumerate(template_data["parameters"]):
 
         # DELETE BUTTON (only show for non-last prompts OR if more than 1 prompt)
         with cols[c]:
-            st.markdown(
-                """
-                <style>
-                div[data-testid="stButton"] > button {
-                    height: 34px;
-                }
-                </style>
-                """,
-                unsafe_allow_html=True
-            )
-            
             # Show delete button for all prompts if more than 1 exists
             if len(param["prompts"]) > 1:
                 if st.button(
