@@ -39,7 +39,7 @@ run = col1.button("Run Audit")
 reset = col2.button("Reset")
 
 if run:
-        if transcript.strip() == "":
+    if transcript.strip() == "":
         st.error("Please paste a transcript before running the audit.")
         st.stop()
 
@@ -48,10 +48,7 @@ if run:
 
     st.subheader("Audit Result (From Parameter 1)")
 
-    if transcript.strip() == "":
-        p1_yes = False
-    else:
-        p1_yes = True
+    p1_yes = True
 
     st.write(f"{param_title or 'Parameter 1'}: {p1_yes} | Score: {p1_score} | Fatal: {p1_fatal}")
 
