@@ -21,13 +21,11 @@ if "templates" not in st.session_state:
             }
         }
 
-# ensure current_template is valid
 if "current_template" not in st.session_state:
     st.session_state.current_template = (
         list(st.session_state.templates.keys())[0]
         if st.session_state.templates else None
     )
-
 
 # =========================================================
 # PAGE HEADER
@@ -41,7 +39,6 @@ if st.button("💾 Save Templates"):
 
 st.divider()
 st.subheader("Audit Parameter Designer")
-
 
 # =========================================================
 # TEMPLATE CONTROLS
@@ -76,14 +73,11 @@ with col4:
     if st.button("🗑"):
         if st.session_state.current_template in st.session_state.templates:
             del st.session_state.templates[st.session_state.current_template]
-
-        # fix crash when last template deleted
         st.session_state.current_template = (
             list(st.session_state.templates.keys())[0]
             if st.session_state.templates else None
         )
         st.rerun()
-
 
 # =========================================================
 # STOP UI IF NO TEMPLATES EXIST
@@ -96,13 +90,11 @@ if not st.session_state.templates:
         st.rerun()
     st.stop()
 
-
 # =========================================================
 # TEMPLATE ACTIVE FLAG
 # =========================================================
 template_data = st.session_state.templates[st.session_state.current_template]
 template_data["active"] = st.checkbox("Template Active", value=template_data.get("active", True))
-
 
 # =========================================================
 # ENSURE AT LEAST ONE PARAMETER
@@ -117,9 +109,8 @@ if len(template_data["parameters"]) == 0:
         "logic": []
     })
 
-
 # =========================================================
-# PARAMETER CARDS (UPDATED UI ONLY)
+# PARAMETER CARDS (UI FIXED ONLY)
 # =========================================================
 st.divider()
 
@@ -128,7 +119,7 @@ for idx, param in enumerate(template_data["parameters"]):
     with st.container(border=True):
 
         # ---------- HEADER ----------
-        col_h1, col_h2 = st.columns([8, 1])
+        col_h1, col_h2 = st.columns([8, 2])
 
         with col_h1:
             param["title"] = st.text_input(
@@ -168,13 +159,13 @@ for idx, param in enumerate(template_data["parameters"]):
                 label_visibility="collapsed"
             )
 
-        # ---------- PROMPTS ----------
+        # ---------- PROMPTS (HORIZONTAL, FIXED SIZE) ----------
+        cols = st.columns(len(param["prompts"]) * 2)
+
+        c = 0
         for p_idx in range(len(param["prompts"])):
 
-            col_prompt, col_btns = st.columns([10, 1])
-
-            # ----- PROMPT BOX (BIG SQUARE) -----
-            with col_prompt:
+            with cols[c]:
 
                 param_titles = [p["title"] for p in template_data["parameters"][:idx]]
 
@@ -192,66 +183,47 @@ for idx, param in enumerate(template_data["parameters"]):
                         "Prompt",
                         value=param["prompts"][p_idx],
                         key=f"prompt_{selected_template}_{idx}_{p_idx}",
-                        height=90,
-                        label_visibility="collapsed",
-                        placeholder="Enter prompt text..."
+                        height=80,
+                        label_visibility="collapsed"
                     )
 
-            # ----- STACKED BUTTONS -----
-            with col_btns:
-                btn_col1 = st.container()
-                btn_col2 = st.container()
+            c += 1
 
-                with btn_col1:
-                    if st.button("➕", key=f"add_prompt_{idx}_{p_idx}", use_container_width=True):
-                        param["prompts"].insert(p_idx + 1, "")
-                        param["logic"].insert(p_idx, "AND")
-                        st.rerun()
+            with cols[c]:
+                if st.button("➕", key=f"add_prompt_{selected_template}_{idx}_{p_idx}", use_container_width=True):
+                    param["prompts"].insert(p_idx + 1, "")
+                    param["logic"].insert(p_idx, "AND")
+                    st.rerun()
 
-                with btn_col2:
-                    if st.button("🗑", key=f"del_prompt_{idx}_{p_idx}", use_container_width=True) and len(param["prompts"]) > 1:
-                        param["prompts"].pop(p_idx)
-                        if p_idx < len(param["logic"]):
-                            param["logic"].pop(p_idx)
-                        st.rerun()
-
-                if st.button("🗑", key=f"del_prompt_{idx}_{p_idx}") and len(param["prompts"]) > 1:
+                if st.button("🗑", key=f"del_prompt_{selected_template}_{idx}_{p_idx}", use_container_width=True) and len(param["prompts"]) > 1:
                     param["prompts"].pop(p_idx)
                     if p_idx < len(param["logic"]):
                         param["logic"].pop(p_idx)
                     st.rerun()
 
-            # ----- AND / OR -----
-            if p_idx < len(param["prompts"]) - 1:
-                param["logic"][p_idx] = st.selectbox(
-                    "",
-                    ["AND", "OR"],
-                    index=["AND", "OR"].index(param["logic"][p_idx]) if p_idx < len(param["logic"]) else 0,
-                    key=f"logic_{selected_template}_{idx}_{p_idx}"
-                )
+            c += 1
 
-        # ---------- ADD PARAMETER BELOW ----------
-        col_add, col_del = st.columns([3, 2])
+        # ---------- ADD / DELETE PARAMETER ----------
+        col_add, col_del = st.columns(2)
 
-with col_add:
-    if st.button("➕ Add Parameter Below", key=f"add_param_{idx}", use_container_width=True):
-        template_data["parameters"].insert(idx + 1, {
-            "title": "Parameter",
-            "type": "Regular",
-            "fatal": False,
-            "score": 0,
-            "prompts": [""],
-            "logic": []
-        })
-        st.rerun()
+        with col_add:
+            if st.button("➕ Add Parameter", key=f"add_param_{idx}", use_container_width=True):
+                template_data["parameters"].insert(idx + 1, {
+                    "title": "Parameter",
+                    "type": "Regular",
+                    "fatal": False,
+                    "score": 0,
+                    "prompts": [""],
+                    "logic": []
+                })
+                st.rerun()
 
-with col_del:
-    if st.button("🗑 Delete Parameter", key=f"delete_param_bottom_{idx}", use_container_width=True) and len(template_data["parameters"]) > 1:
-        template_data["parameters"].pop(idx)
-        st.rerun()
+        with col_del:
+            if st.button("🗑 Delete Parameter", key=f"delete_param_{idx}", use_container_width=True) and len(template_data["parameters"]) > 1:
+                template_data["parameters"].pop(idx)
+                st.rerun()
 
-
-    st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
 
 # =========================================================
 # TRANSCRIPT + RUN
@@ -262,9 +234,8 @@ col1, col2 = st.columns(2)
 run = col1.button("Run Audit")
 reset = col2.button("Reset")
 
-
 # =========================================================
-# RULE ENGINE — ALL PARAMETERS, PER TEMPLATE
+# RULE ENGINE (UNCHANGED)
 # =========================================================
 if run:
 
@@ -283,20 +254,17 @@ if run:
 
         for param in template["parameters"]:
 
-            # ---------- PROMPT MATCH ----------
             matches = []
             checks = []
 
             for prompt in param["prompts"]:
 
                 if param["type"] == "Conditional":
-                    # check earlier parameter results
                     found = any(
                         r["Parameter"] == prompt and r["Result"] == "YES"
                         for r in results
                     )
                 else:
-                    # normal transcript keyword match
                     found = prompt and prompt.lower() in transcript.lower()
 
                 checks.append(found)
@@ -304,25 +272,16 @@ if run:
                 if found:
                     matches.append(prompt)
 
-            # ---------- AND / OR LOGIC ----------
             if not checks:
                 param_yes = False
             else:
                 result = checks[0]
-
                 for i, logic in enumerate(param["logic"]):
-                    # safety guard for mismatch
                     if i + 1 >= len(checks):
                         break
-
-                    if logic == "AND":
-                        result = result and checks[i + 1]
-                    else:
-                        result = result or checks[i + 1]
- 
+                    result = result and checks[i + 1] if logic == "AND" else result or checks[i + 1]
                 param_yes = result
 
-            # ---------- RESULT WITH FATAL RULE ----------
             if param_yes:
                 final_result = "YES"
                 score = param["score"]
@@ -345,11 +304,9 @@ if run:
                 "Evidence": evidence
             })
 
-        # ---------- FATAL OVERRIDE ----------
         if fatal_triggered:
             template_total = 0
 
-        # ---------- SHOW TEMPLATE TABLE ----------
         if results:
             st.subheader(f"Template: {template_name}")
             df = pd.DataFrame(results)
@@ -364,7 +321,6 @@ if reset:
         writer = csv.writer(f)
         writer.writerow([datetime.now(), transcript])
     st.rerun()
-
 
 # =========================================================
 # HISTORY
