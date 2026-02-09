@@ -42,28 +42,21 @@ if run:
     st.subheader("Transcript Preview")
     st.write(transcript)
 
-    st.subheader("Audit Result (Dummy)")
+    st.subheader("Audit Result (From Parameter 1)")
 
-    greeting_yes = True
-    greeting_score = 10
-    greeting_fatal = False
+    if transcript.strip() == "":
+        p1_yes = False
+    else:
+        p1_yes = True
 
-    pitch_yes = False
-    pitch_score = 20
-    pitch_fatal = True
+    st.write(f"{param_title or 'Parameter 1'}: {p1_yes} | Score: {p1_score} | Fatal: {p1_fatal}")
 
-    st.write(f"Greeting given: {greeting_yes} | Score: {greeting_score} | Fatal: {greeting_fatal}")
-    st.write(f"Pitch explained: {pitch_yes} | Score: {pitch_score} | Fatal: {pitch_fatal}")
+    total_score = p1_score if p1_yes else 0
 
-    total_score = greeting_score + pitch_score
-
-    if (not greeting_yes and greeting_fatal) or (not pitch_yes and pitch_fatal):
+    if not p1_yes and p1_fatal:
         total_score = 0
 
     st.subheader(f"Final Score: {total_score}")
-
-
-    st.subheader(f"Overall Score: {total_score}")
 
     st.subheader("ZTP / Compliance Check (Dummy)")
 
