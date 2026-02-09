@@ -54,6 +54,8 @@ with col1:
         "Template",
         template_names,
         index=template_names.index(st.session_state.current_template)
+        index=template_names.index(st.session_state.current_template)
+        if st.session_state.current_template in template_names else 0
     )
     st.session_state.current_template = selected_template
 
