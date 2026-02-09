@@ -310,8 +310,6 @@ if run:
             "Evidence": evidence
         })
 
-        break  # only first active template
-
     # ---------- SHOW TABLE ----------
     if results:
         df = pd.DataFrame(results)
