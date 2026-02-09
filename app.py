@@ -172,28 +172,39 @@ for idx, param in enumerate(template_data["parameters"]):
         )
 
     # ---------- HORIZONTAL PROMPTS WITH AND/OR BETWEEN ----------
-    # Use HTML container with horizontal scroll instead of Streamlit columns
+    # Custom CSS for true horizontal scrolling
     st.markdown("""
         <style>
-        .horizontal-scroll-container {
-            overflow-x: auto;
-            overflow-y: visible;
-            white-space: nowrap;
-            padding: 10px 0;
+        [data-testid="column"] {
+            min-width: 300px !important;
+            flex-shrink: 0 !important;
+        }
+        .stHorizontalBlock {
+            overflow-x: auto !important;
+            overflow-y: visible !important;
+            display: flex !important;
+            flex-wrap: nowrap !important;
         }
         </style>
     """, unsafe_allow_html=True)
     
     num_prompts = len(param["prompts"])
     
-    # Create each prompt in a separate row-based layout for proper width
+    # Build columns: each prompt + logic/add button
+    cols_list = []
     for p_idx in range(num_prompts):
-        
-        # Each prompt gets its own column layout with full width control
-        col_prompt, col_del, col_logic_or_add = st.columns([10, 1, 2])
-        
-        # PROMPT INPUT
-        with col_prompt:
+        cols_list.append(1)  # Prompt column
+        if p_idx < num_prompts - 1:
+            cols_list.append(1)  # Logic column
+        else:
+            cols_list.append(1)  # Add button column
+    
+    cols = st.columns(cols_list)
+    col_idx = 0
+    
+    for p_idx in range(num_prompts):
+        # PROMPT BLOCK
+        with cols[col_idx]:
             param_titles = [p["title"] for p in template_data["parameters"][:idx]]
 
             if param["type"] == "Conditional" and param_titles:
@@ -214,9 +225,8 @@ for idx, param in enumerate(template_data["parameters"]):
                     label_visibility="collapsed",
                     placeholder="Enter Prompt"
                 )
-        
-        # DELETE BUTTON
-        with col_del:
+            
+            # Delete button below prompt
             if len(param["prompts"]) > 1:
                 if st.button(
                     "🗑",
@@ -228,10 +238,13 @@ for idx, param in enumerate(template_data["parameters"]):
                         param["logic"].pop(p_idx)
                     st.rerun()
         
-        # AND/OR CONNECTOR or ADD BUTTON
-        with col_logic_or_add:
+        col_idx += 1
+        
+        # LOGIC or ADD BUTTON
+        with cols[col_idx]:
             if p_idx < num_prompts - 1:
-                # Show AND/OR selector
+                # AND/OR selector
+                st.markdown("<br><br>", unsafe_allow_html=True)
                 param["logic"][p_idx] = st.selectbox(
                     "",
                     ["AND", "OR"],
@@ -241,7 +254,8 @@ for idx, param in enumerate(template_data["parameters"]):
                     label_visibility="collapsed"
                 )
             else:
-                # Show ADD button on the last prompt
+                # Add button
+                st.markdown("<br><br>", unsafe_allow_html=True)
                 if st.button(
                     "➕",
                     key=f"add_prompt_{selected_template}_{idx}",
@@ -251,6 +265,8 @@ for idx, param in enumerate(template_data["parameters"]):
                     if len(param["logic"]) < len(param["prompts"]) - 1:
                         param["logic"].append("AND")
                     st.rerun()
+        
+        col_idx += 1
 
     # ADD / DELETE PARAMETER
     col_add, col_del = st.columns(2)
