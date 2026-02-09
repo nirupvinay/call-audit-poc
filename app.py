@@ -20,6 +20,17 @@ st.title("AI Call Audit – Phase 1 POC")
 
 st.divider()
 st.subheader("Audit Parameter Designer (Phase-1 UI)")
+# ---------- TEMPLATE SELECTOR ----------
+template_names = list(st.session_state.templates.keys())
+
+selected_template = st.selectbox(
+    "Select Template",
+    template_names,
+    index=template_names.index(st.session_state.current_template)
+)
+
+st.session_state.current_template = selected_template
+
 st.markdown("### Parameter 1")
 
 param_title = st.text_input("Opening / Title", key="p1_title")
