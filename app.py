@@ -15,13 +15,24 @@ if run:
 
     st.subheader("Audit Result (Dummy)")
 
+    greeting_yes = True
     greeting_score = 10
-    pitch_score = 20
+    greeting_fatal = False
 
-    st.write("Greeting given: YES | Score:", greeting_score)
-    st.write("Pitch explained: YES | Score:", pitch_score)
+    pitch_yes = False
+    pitch_score = 20
+    pitch_fatal = True
+
+    st.write(f"Greeting given: {greeting_yes} | Score: {greeting_score} | Fatal: {greeting_fatal}")
+    st.write(f"Pitch explained: {pitch_yes} | Score: {pitch_score} | Fatal: {pitch_fatal}")
 
     total_score = greeting_score + pitch_score
+
+    if (not greeting_yes and greeting_fatal) or (not pitch_yes and pitch_fatal):
+        total_score = 0
+
+    st.subheader(f"Final Score: {total_score}")
+
 
     st.subheader(f"Overall Score: {total_score}")
 
