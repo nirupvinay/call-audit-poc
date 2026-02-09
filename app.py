@@ -131,7 +131,7 @@ st.divider()
 
 for idx, param in enumerate(template_data["parameters"]):
 
-    with st.container(border=True):
+    st.markdown("---")  # simple clean separator instead of container
 
         # TITLE
         param["title"] = st.text_input(
