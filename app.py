@@ -175,12 +175,12 @@ for idx, param in enumerate(template_data["parameters"]):
     # Custom CSS for smaller prompt buttons and 90% width container
     st.markdown("""
         <style>
-        /* Off-white textured background */
+        /* White background with very fine texture */
         .stApp {
-            background: #f5f5f5;
+            background: #fafafa;
             background-image: 
-                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.5) 35px, rgba(255,255,255,.5) 70px),
-                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(0,0,0,.02) 35px, rgba(0,0,0,.02) 70px);
+                repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(0,0,0,.01) 3px, rgba(0,0,0,.01) 6px),
+                repeating-linear-gradient(-45deg, transparent, transparent 3px, rgba(0,0,0,.008) 3px, rgba(0,0,0,.008) 6px);
         }
         
         .block-container {
@@ -200,11 +200,11 @@ for idx, param in enumerate(template_data["parameters"]):
         }
         
         .stTextInput input:focus, .stTextArea textarea:focus, .stSelectbox select:focus {
-            border-color: #8b7fd4 !important;
-            box-shadow: 0 0 0 2px rgba(139, 127, 212, 0.15) !important;
+            border-color: #2563eb !important;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) !important;
         }
         
-        /* Prompt delete/add buttons - elegant muted colors */
+        /* Prompt delete/add buttons - dark blue theme */
         .small-button button {
             height: 28px !important;
             min-height: 28px !important;
@@ -218,59 +218,59 @@ for idx, param in enumerate(template_data["parameters"]):
             border: none !important;
         }
         
-        /* Delete button - elegant muted red */
+        /* Delete button - dark navy blue */
         .small-button button:first-child {
-            background: #dc6b6b !important;
+            background: #1e3a8a !important;
             color: white !important;
-            box-shadow: 0 1px 3px rgba(220, 107, 107, 0.3) !important;
+            box-shadow: 0 1px 3px rgba(30, 58, 138, 0.3) !important;
         }
         
         .small-button button:first-child:hover {
-            background: #c95d5d !important;
-            box-shadow: 0 2px 6px rgba(220, 107, 107, 0.4) !important;
+            background: #1e40af !important;
+            box-shadow: 0 2px 6px rgba(30, 58, 138, 0.4) !important;
         }
         
-        /* Add button - elegant muted purple/blue */
+        /* Add button - bright blue */
         .small-button button:last-child {
-            background: #8b7fd4 !important;
+            background: #2563eb !important;
             color: white !important;
-            box-shadow: 0 1px 3px rgba(139, 127, 212, 0.3) !important;
+            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3) !important;
         }
         
         .small-button button:last-child:hover {
-            background: #7c6fc7 !important;
-            box-shadow: 0 2px 6px rgba(139, 127, 212, 0.4) !important;
+            background: #1d4ed8 !important;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4) !important;
         }
         
-        /* Parameter buttons - elegant muted purple */
+        /* Parameter buttons - dark blue */
         div[data-testid="column"] > div > div > button {
-            background: #8b7fd4 !important;
+            background: #1e40af !important;
             color: white !important;
             border: none !important;
             border-radius: 8px !important;
             padding: 10px 20px !important;
             font-weight: 500 !important;
             transition: all 0.2s ease !important;
-            box-shadow: 0 2px 6px rgba(139, 127, 212, 0.3) !important;
+            box-shadow: 0 2px 6px rgba(30, 64, 175, 0.3) !important;
         }
         
         div[data-testid="column"] > div > div > button:hover {
-            background: #7c6fc7 !important;
-            box-shadow: 0 3px 8px rgba(139, 127, 212, 0.4) !important;
+            background: #1e3a8a !important;
+            box-shadow: 0 3px 8px rgba(30, 64, 175, 0.4) !important;
         }
         
-        /* Save Templates button - elegant amber/orange */
+        /* Save Templates button - medium blue */
         .stButton > button:first-child {
-            background: #e8a05d !important;
+            background: #3b82f6 !important;
             color: white !important;
             border-radius: 8px !important;
             font-weight: 500 !important;
-            box-shadow: 0 2px 6px rgba(232, 160, 93, 0.3) !important;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3) !important;
         }
         
         .stButton > button:first-child:hover {
-            background: #d99050 !important;
-            box-shadow: 0 3px 8px rgba(232, 160, 93, 0.4) !important;
+            background: #2563eb !important;
+            box-shadow: 0 3px 8px rgba(59, 130, 246, 0.4) !important;
         }
         
         /* Headers and text */
