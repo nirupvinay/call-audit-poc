@@ -69,7 +69,8 @@ param["title"] = st.text_input("Opening / Title", value=param["title"])
 param["type"] = st.selectbox(
     "Parameter Type",
     ["Regular", "Conditional", "Flag"],
-    index=["Regular", "Conditional", "Flag"].index(param["type"])
+    index=["Regular", "Conditional", "Flag"].index(param["type"]),
+    key=f"type_{st.session_state.current_template}"
 )
 
 colp1, colp2 = st.columns(2)
