@@ -30,6 +30,7 @@ selected_template = st.selectbox(
 )
 
 st.session_state.current_template = selected_template
+new_name = st.text_input("Rename current template", value=selected_template)
 
 st.markdown("### Parameter 1")
 
