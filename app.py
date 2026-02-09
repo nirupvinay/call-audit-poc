@@ -203,7 +203,7 @@ for idx, param in enumerate(template_data["parameters"]):
             box-shadow: 0 0 0 2px rgba(100, 181, 246, 0.3) !important;
         }
         
-        /* Prompt delete/add buttons - vibrant colors */
+        /* Prompt delete/add buttons - elegant muted colors */
         .small-button button {
             height: 28px !important;
             min-height: 28px !important;
@@ -212,62 +212,64 @@ for idx, param in enumerate(template_data["parameters"]):
             min-width: 30px !important;
             max-width: 35px !important;
             border-radius: 6px !important;
-            font-weight: 600 !important;
-            transition: all 0.3s ease !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease !important;
             border: none !important;
         }
         
-        /* Delete button - vibrant red */
+        /* Delete button - elegant muted red */
         .small-button button:first-child {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%) !important;
+            background: #dc6b6b !important;
             color: white !important;
-            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4) !important;
+            box-shadow: 0 1px 3px rgba(220, 107, 107, 0.3) !important;
         }
         
         .small-button button:first-child:hover {
-            background: linear-gradient(135deg, #ff5252 0%, #e53e3e 100%) !important;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.6) !important;
+            background: #c95d5d !important;
+            box-shadow: 0 2px 6px rgba(220, 107, 107, 0.4) !important;
         }
         
-        /* Add button - vibrant green */
+        /* Add button - elegant muted purple/blue */
         .small-button button:last-child {
-            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%) !important;
+            background: #8b7fd4 !important;
             color: white !important;
-            box-shadow: 0 2px 8px rgba(81, 207, 102, 0.4) !important;
+            box-shadow: 0 1px 3px rgba(139, 127, 212, 0.3) !important;
         }
         
         .small-button button:last-child:hover {
-            background: linear-gradient(135deg, #40c057 0%, #2f9e44 100%) !important;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(81, 207, 102, 0.6) !important;
+            background: #7c6fc7 !important;
+            box-shadow: 0 2px 6px rgba(139, 127, 212, 0.4) !important;
         }
         
-        /* Parameter buttons - vibrant purple/red */
+        /* Parameter buttons - elegant muted purple */
         div[data-testid="column"] > div > div > button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: #8b7fd4 !important;
             color: white !important;
             border: none !important;
             border-radius: 8px !important;
             padding: 10px 20px !important;
-            font-weight: 600 !important;
-            transition: all 0.3s ease !important;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4) !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease !important;
+            box-shadow: 0 2px 6px rgba(139, 127, 212, 0.3) !important;
         }
         
         div[data-testid="column"] > div > div > button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6) !important;
-            background: linear-gradient(135deg, #5568d3 0%, #6941a5 100%) !important;
+            background: #7c6fc7 !important;
+            box-shadow: 0 3px 8px rgba(139, 127, 212, 0.4) !important;
         }
         
-        /* Save Templates button */
+        /* Save Templates button - elegant amber/orange */
         .stButton > button:first-child {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+            background: #e8a05d !important;
             color: white !important;
             border-radius: 8px !important;
-            font-weight: 600 !important;
-            box-shadow: 0 4px 12px rgba(240, 147, 251, 0.4) !important;
+            font-weight: 500 !important;
+            box-shadow: 0 2px 6px rgba(232, 160, 93, 0.3) !important;
+        }
+        
+        .stButton > button:first-child:hover {
+            background: #d99050 !important;
+            box-shadow: 0 3px 8px rgba(232, 160, 93, 0.4) !important;
         }
         
         /* Headers and text */
