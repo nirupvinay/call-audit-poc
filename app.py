@@ -6,17 +6,6 @@ import pandas as pd
 # =========================================================
 # SESSION STRUCTURE
 # =========================================================
-if "templates" not in st.session_state:
-    st.session_state.templates = {
-        "Default Template": {
-            "active": True,
-            "parameters": []
-        }
-    }
-
-if "current_template" not in st.session_state:
-    st.session_state.current_template = "Default Template"
-
 
 # =========================================================
 # PAGE HEADER
