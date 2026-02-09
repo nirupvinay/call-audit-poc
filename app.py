@@ -66,5 +66,5 @@ if reset:
             saved_ztp
         ])
 
-    st.experimental_rerun()
+    st.rerun()
 
