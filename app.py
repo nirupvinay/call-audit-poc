@@ -248,7 +248,7 @@ reset = col2.button("Reset")
 
 
 # =========================================================
-# DUMMY RUN
+# RULE ENGINE TEST — FIRST PARAMETER ONLY
 # =========================================================
 if run:
 
@@ -256,16 +256,67 @@ if run:
         st.error("Paste transcript first.")
         st.stop()
 
-    total_score = 0
+    results = []
 
+    # evaluate only first active template → first parameter
     for template in st.session_state.templates.values():
         if not template.get("active"):
             continue
 
-        for param in template["parameters"]:
-            total_score += param["score"]
+        if not template["parameters"]:
+            continue
 
-    st.subheader(f"Final Score (Dummy): {total_score}")
+        param = template["parameters"][0]
+
+        # ---------- PROMPT MATCH ----------
+        matches = []
+        for prompt in param["prompts"]:
+            if prompt and prompt.lower() in transcript.lower():
+                matches.append(prompt)
+
+        # ---------- AND / OR LOGIC ----------
+        if not param["prompts"]:
+            param_yes = False
+        else:
+            checks = [(p.lower() in transcript.lower()) for p in param["prompts"]]
+
+            result = checks[0]
+            for i, logic in enumerate(param["logic"]):
+                if logic == "AND":
+                    result = result and checks[i + 1]
+                else:
+                    result = result or checks[i + 1]
+
+            param_yes = result
+
+        # ---------- RESULT WITH FATAL RULE ----------
+        if param_yes:
+            final_result = "YES"
+            score = param["score"]
+        else:
+            if param["fatal"]:
+                final_result = "FATAL"
+                score = 0
+            else:
+                final_result = "NO"
+                score = 0
+
+        evidence = ", ".join(matches) if matches else "—"
+
+        results.append({
+            "Parameter": param["title"],
+            "Result": final_result,
+            "Score": score,
+            "Evidence": evidence
+        })
+
+        break  # only first active template
+
+    # ---------- SHOW TABLE ----------
+    if results:
+        df = pd.DataFrame(results)
+        st.subheader("Audit Result")
+        st.table(df)
 
 
 # =========================================================
