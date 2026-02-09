@@ -1,4 +1,7 @@
 import streamlit as st
+import csv
+from datetime import datetime
+import streamlit as st
 
 st.title("AI Call Audit – Phase 1 POC")
 
@@ -51,5 +54,14 @@ if run:
         st.write("Explanation: Consent implied during conversation.")
 
 if reset:
+    with open("audit_log.csv", "a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            datetime.now(),
+            transcript,
+            total_score,
+            ztp_status
+        ])
+
     st.experimental_rerun()
 
