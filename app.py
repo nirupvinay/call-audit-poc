@@ -34,40 +34,53 @@ if "p1_prompts" not in st.session_state:
 if "p1_logic" not in st.session_state:
     st.session_state.p1_logic = []
 
-# ---------- PROMPT UI ----------
-for i in range(len(st.session_state.p1_prompts)):
-    col1, col2, col3 = st.columns([5, 1, 1])
+# ---------- HORIZONTAL PROMPTS ----------
+if "p1_prompts" not in st.session_state:
+    st.session_state.p1_prompts = [""]
 
-    with col1:
+if "p1_logic" not in st.session_state:
+    st.session_state.p1_logic = []
+
+cols = st.columns(len(st.session_state.p1_prompts) * 2 - 1)
+
+col_index = 0
+
+for i in range(len(st.session_state.p1_prompts)):
+    with cols[col_index]:
         st.session_state.p1_prompts[i] = st.text_input(
             f"Prompt {i+1}",
             value=st.session_state.p1_prompts[i],
             key=f"p1_prompt_{i}"
         )
 
-    with col2:
-        if st.button("➕", key=f"add_{i}"):
-            st.session_state.p1_prompts.insert(i + 1, "")
-            st.session_state.p1_logic.insert(i, "AND")
-            st.rerun()
+        c1, c2 = st.columns(2)
 
-    with col3:
-        if st.button("🗑", key=f"del_{i}") and len(st.session_state.p1_prompts) > 1:
-            st.session_state.p1_prompts.pop(i)
-            if i < len(st.session_state.p1_logic):
-                st.session_state.p1_logic.pop(i)
-            st.rerun()
+        with c1:
+            if st.button("➕", key=f"add_{i}"):
+                st.session_state.p1_prompts.insert(i + 1, "")
+                st.session_state.p1_logic.insert(i, "AND")
+                st.rerun()
 
-    # AND / OR selector between prompts
+        with c2:
+            if st.button("🗑", key=f"del_{i}") and len(st.session_state.p1_prompts) > 1:
+                st.session_state.p1_prompts.pop(i)
+                if i < len(st.session_state.p1_logic):
+                    st.session_state.p1_logic.pop(i)
+                st.rerun()
+
+    col_index += 1
+
     if i < len(st.session_state.p1_prompts) - 1:
-        st.session_state.p1_logic[i] = st.selectbox(
-            "Logic",
-            ["AND", "OR"],
-            index=0 if len(st.session_state.p1_logic) <= i else ["AND", "OR"].index(st.session_state.p1_logic[i]),
-            key=f"logic_{i}"
-        )
+        with cols[col_index]:
+            st.session_state.p1_logic[i] = st.selectbox(
+                " ",
+                ["AND", "OR"],
+                key=f"logic_{i}"
+            )
+        col_index += 1
 
 st.divider()
+
 
 # ---------- TRANSCRIPT ----------
 transcript = st.text_area("Paste transcript here")
