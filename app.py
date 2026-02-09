@@ -67,4 +67,12 @@ if reset:
         ])
 
     st.rerun()
+    
+st.subheader("Saved Audit History")
+
+try:
+    with open("audit_log.csv", "r", encoding="utf-8") as f:
+        st.text(f.read())
+except FileNotFoundError:
+    st.write("No audits saved yet.")
 
