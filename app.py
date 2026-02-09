@@ -3,11 +3,10 @@ import csv
 from datetime import datetime
 import pandas as pd
 
-# ---------- TEMPLATE DATA STRUCTURE ----------
+# ---------- TEMPLATE DATA ----------
 if "templates" not in st.session_state:
     st.session_state.templates = {
         "Default Template": {
-            "active": True,
             "parameters": []
         }
     }
@@ -19,8 +18,9 @@ if "current_template" not in st.session_state:
 st.title("AI Call Audit – Phase 1 POC")
 
 st.divider()
-st.subheader("Audit Parameter Designer (Phase-1 UI)")
-# ---------- TEMPLATE SELECTOR ----------
+st.subheader("Audit Parameter Designer")
+
+# ---------- TEMPLATE SELECT ----------
 template_names = list(st.session_state.templates.keys())
 
 selected_template = st.selectbox(
@@ -30,31 +30,37 @@ selected_template = st.selectbox(
 )
 
 st.session_state.current_template = selected_template
+
+# ---------- RENAME ----------
 new_name = st.text_input("Rename current template", value=selected_template)
+
 if new_name != selected_template and new_name not in st.session_state.templates:
     st.session_state.templates[new_name] = st.session_state.templates.pop(selected_template)
     st.session_state.current_template = new_name
     st.rerun()
+
+# ---------- NEW TEMPLATE ----------
 if st.button("➕ New Template"):
-    st.session_state.templates["New Template"] = {
-        "active": False,
-        "parameters": []
-    }
+    st.session_state.templates["New Template"] = {"parameters": []}
     st.session_state.current_template = "New Template"
     st.rerun()
+
+# ---------- DELETE TEMPLATE ----------
 if st.button("🗑 Delete Template") and len(st.session_state.templates) > 1:
     del st.session_state.templates[st.session_state.current_template]
     st.session_state.current_template = list(st.session_state.templates.keys())[0]
     st.rerun()
 
 
+# ---------- PARAMETERS ----------
 st.markdown("### Parameters")
 
-current_template_data = st.session_state.templates[st.session_state.current_template]
+template_data = st.session_state.templates[st.session_state.current_template]
 
-if len(current_template_data["parameters"]) == 0:
-    current_template_data["parameters"].append({
-        "title": "Parameter 1",
+# ensure at least one parameter
+if len(template_data["parameters"]) == 0:
+    template_data["parameters"].append({
+        "title": "Parameter",
         "type": "Regular",
         "fatal": False,
         "score": 0,
@@ -62,88 +68,116 @@ if len(current_template_data["parameters"]) == 0:
         "logic": []
     })
 
-for i, param in enumerate(current_template_data["parameters"]):
 
-   param["title"] = st.text_input("Title", value=param["title"])
+# ---------- PARAMETER LOOP ----------
+for idx, param in enumerate(template_data["parameters"]):
 
-   param["type"] = st.selectbox(
-    "Parameter Type",
-    ["Regular", "Conditional", "Flag"],
-    index=["Regular", "Conditional", "Flag"].index(param["type"]),
-    key=f"type_{st.session_state.current_template}"
-)
+    st.markdown("---")  # clear visual separation
 
-colp1, colp2 = st.columns(2)
+    # ---------- HEADER ----------
+    col_h1, col_h2 = st.columns([5, 1])
 
-with colp1:
-    param["fatal"] = st.checkbox("Fatal", value=param["fatal"])
-
-with colp2:
-    param["score"] = st.number_input(
-    "Score",
-    min_value=0,
-    step=1,
-    value=param["score"],
-    key=f'score_{st.session_state.current_template}'
-    )
-
-
-st.markdown("**Prompt**")
-
-# ---------- SESSION STATE ----------
-if "p1_prompts" not in st.session_state:
-    st.session_state.p1_prompts = [""]
-
-if "p1_logic" not in st.session_state:
-    st.session_state.p1_logic = []
-
-# ---------- HORIZONTAL PROMPTS ----------
-if "p1_prompts" not in st.session_state:
-    st.session_state.p1_prompts = [""]
-
-if "p1_logic" not in st.session_state:
-    st.session_state.p1_logic = []
-
-cols = st.columns(len(st.session_state.p1_prompts) * 2 - 1)
-
-col_index = 0
-
-for i in range(len(st.session_state.p1_prompts)):
-    with cols[col_index]:
-        st.session_state.p1_prompts[i] = st.text_input(
-            f"Prompt {i+1}",
-            value=st.session_state.p1_prompts[i],
-            key=f"p1_prompt_{i}"
+    with col_h1:
+        param["title"] = st.text_input(
+            "Parameter Title",
+            value=param["title"],
+            key=f"title_{selected_template}_{idx}"
         )
 
-        c1, c2 = st.columns(2)
+    with col_h2:
+        if st.button("🗑", key=f"del_param_{idx}") and len(template_data["parameters"]) > 1:
+            template_data["parameters"].pop(idx)
+            st.rerun()
 
-        with c1:
-            if st.button("➕", key=f"add_{i}"):
-                st.session_state.p1_prompts.insert(i + 1, "")
-                st.session_state.p1_logic.insert(i, "AND")
-                st.rerun()
+    # ---------- TYPE ----------
+    param["type"] = st.selectbox(
+        "Parameter Type",
+        ["Regular", "Conditional", "Flag"],
+        index=["Regular", "Conditional", "Flag"].index(param["type"]),
+        key=f"type_{selected_template}_{idx}"
+    )
 
-        with c2:
-            if st.button("🗑", key=f"del_{i}") and len(st.session_state.p1_prompts) > 1:
-                st.session_state.p1_prompts.pop(i)
-                if i < len(st.session_state.p1_logic):
-                    st.session_state.p1_logic.pop(i)
-                st.rerun()
+    # ---------- FATAL + SCORE ----------
+    col1, col2 = st.columns(2)
 
-    col_index += 1
+    with col1:
+        param["fatal"] = st.checkbox(
+            "Fatal",
+            value=param["fatal"],
+            key=f"fatal_{selected_template}_{idx}"
+        )
 
-    if i < len(st.session_state.p1_prompts) - 1:
-        with cols[col_index]:
-            st.session_state.p1_logic[i] = st.selectbox(
-                " ",
-                ["AND", "OR"],
-                key=f"logic_{i}"
+    with col2:
+        param["score"] = st.number_input(
+            "Score",
+            min_value=0,
+            step=1,
+            value=param["score"],
+            key=f"score_{selected_template}_{idx}"
+        )
+
+    # ---------- PROMPTS ----------
+    st.markdown("**Prompts**")
+
+    # horizontal prompt chain
+    cols = st.columns(len(param["prompts"]) * 2 - 1)
+
+    col_i = 0
+
+    for p_idx in range(len(param["prompts"])):
+
+        # prompt box
+        with cols[col_i]:
+            param["prompts"][p_idx] = st.text_input(
+                f"Prompt {p_idx+1}",
+                value=param["prompts"][p_idx],
+                key=f"prompt_{selected_template}_{idx}_{p_idx}"
             )
-        col_index += 1
+
+            c1, c2 = st.columns(2)
+
+            # add prompt
+            with c1:
+                if st.button("➕", key=f"add_prompt_{idx}_{p_idx}"):
+                    param["prompts"].insert(p_idx + 1, "")
+                    param["logic"].insert(p_idx, "AND")
+                    st.rerun()
+
+            # delete prompt
+            with c2:
+                if st.button("🗑", key=f"del_prompt_{idx}_{p_idx}") and len(param["prompts"]) > 1:
+                    param["prompts"].pop(p_idx)
+                    if p_idx < len(param["logic"]):
+                        param["logic"].pop(p_idx)
+                    st.rerun()
+
+        col_i += 1
+
+        # AND / OR selector
+        if p_idx < len(param["prompts"]) - 1:
+            with cols[col_i]:
+                param["logic"][p_idx] = st.selectbox(
+                    "",
+                    ["AND", "OR"],
+                    index=["AND", "OR"].index(param["logic"][p_idx]) if p_idx < len(param["logic"]) else 0,
+                    key=f"logic_{selected_template}_{idx}_{p_idx}"
+                )
+            col_i += 1
+
+    # ---------- ADD PARAMETER BELOW ----------
+    if st.button("➕ Add Parameter Below", key=f"add_param_{idx}"):
+        template_data["parameters"].insert(idx + 1, {
+            "title": "Parameter",
+            "type": "Regular",
+            "fatal": False,
+            "score": 0,
+            "prompts": [""],
+            "logic": []
+        })
+        st.rerun()
+
 
 st.divider()
-
 
 # ---------- TRANSCRIPT ----------
 transcript = st.text_area("Paste transcript here")
@@ -152,55 +186,24 @@ col1, col2 = st.columns(2)
 run = col1.button("Run Audit")
 reset = col2.button("Reset")
 
-# ---------- RUN AUDIT ----------
+# ---------- RUN (still dummy Phase-1) ----------
 if run:
     if transcript.strip() == "":
         st.error("Please paste a transcript before running the audit.")
         st.stop()
 
-    st.subheader("Transcript Preview")
-    st.write(transcript)
+    total_score = 0
 
-    st.subheader("Audit Result (From Parameter 1)")
+    for param in template_data["parameters"]:
+        total_score += param["score"]
 
-    p1_yes = True
-
-    st.write(f"{param_title or 'Parameter 1'}: {p1_yes} | Score: {p1_score} | Fatal: {p1_fatal}")
-
-    total_score = p1_score if p1_yes else 0
-
-    if not p1_yes and p1_fatal:
-        total_score = 0
-
-    st.subheader(f"Final Score: {total_score}")
-
-    st.subheader("ZTP / Compliance Check (Dummy)")
-
-    ztp_status = "UNCERTAIN"
-    ztp_reason = "Customer consent unclear in transcript."
-
-    st.write(f"Status: {ztp_status}")
-    st.write(f"Reason: {ztp_reason}")
-
-    if ztp_status == "UNCERTAIN":
-        st.subheader("Escalation")
-        st.write("Sent to flagship model for final compliance decision.")
-        st.write("Final Verdict: CLEAR (Dummy)")
-        st.write("Explanation: Consent implied during conversation.")
+    st.subheader(f"Final Score (Dummy): {total_score}")
 
 # ---------- RESET ----------
 if reset:
-    saved_score = total_score if 'total_score' in locals() else 0
-    saved_ztp = ztp_status if 'ztp_status' in locals() else "NA"
-
     with open("audit_log.csv", "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow([
-            datetime.now(),
-            transcript,
-            saved_score,
-            saved_ztp
-        ])
+        writer.writerow([datetime.now(), transcript])
 
     st.rerun()
 
