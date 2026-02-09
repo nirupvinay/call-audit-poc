@@ -172,29 +172,28 @@ for idx, param in enumerate(template_data["parameters"]):
         )
 
     # ---------- HORIZONTAL PROMPTS WITH AND/OR BETWEEN ----------
+    # Use HTML container with horizontal scroll instead of Streamlit columns
+    st.markdown("""
+        <style>
+        .horizontal-scroll-container {
+            overflow-x: auto;
+            overflow-y: visible;
+            white-space: nowrap;
+            padding: 10px 0;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    
     num_prompts = len(param["prompts"])
     
-    # Use a single row with many columns, but use fixed column count approach
-    # For each prompt: we need prompt (wide), delete (narrow), and potentially AND/OR (narrow)
-    # Let's use 3 prompts max per row approach, or just make them equal width
-    
-    # Simple approach: create enough columns for all elements
-    # Layout: [Prompt1] [Del1] [AND/OR1] [Prompt2] [Del2] [AND/OR2] ... [PromptN] [DelN] [Add]
-    
-    cols_config = []
-    for i in range(num_prompts):
-        cols_config.append(6)  # Prompt width
-        cols_config.append(1)  # Delete button width
-        if i < num_prompts - 1:
-            cols_config.append(2)  # AND/OR width
-    cols_config.append(1)  # Add button at the end
-    
-    cols = st.columns(cols_config)
-    col_idx = 0
-    
+    # Create each prompt in a separate row-based layout for proper width
     for p_idx in range(num_prompts):
+        
+        # Each prompt gets its own column layout with full width control
+        col_prompt, col_del, col_logic_or_add = st.columns([10, 1, 2])
+        
         # PROMPT INPUT
-        with cols[col_idx]:
+        with col_prompt:
             param_titles = [p["title"] for p in template_data["parameters"][:idx]]
 
             if param["type"] == "Conditional" and param_titles:
@@ -215,11 +214,9 @@ for idx, param in enumerate(template_data["parameters"]):
                     label_visibility="collapsed",
                     placeholder="Enter Prompt"
                 )
-        col_idx += 1
         
         # DELETE BUTTON
-        with cols[col_idx]:
-            st.markdown("<br>", unsafe_allow_html=True)
+        with col_del:
             if len(param["prompts"]) > 1:
                 if st.button(
                     "🗑",
@@ -230,12 +227,11 @@ for idx, param in enumerate(template_data["parameters"]):
                     if p_idx < len(param["logic"]):
                         param["logic"].pop(p_idx)
                     st.rerun()
-        col_idx += 1
         
-        # AND/OR CONNECTOR
-        if p_idx < num_prompts - 1:
-            with cols[col_idx]:
-                st.markdown("<br>", unsafe_allow_html=True)
+        # AND/OR CONNECTOR or ADD BUTTON
+        with col_logic_or_add:
+            if p_idx < num_prompts - 1:
+                # Show AND/OR selector
                 param["logic"][p_idx] = st.selectbox(
                     "",
                     ["AND", "OR"],
@@ -244,20 +240,17 @@ for idx, param in enumerate(template_data["parameters"]):
                     key=f"logic_{selected_template}_{idx}_{p_idx}",
                     label_visibility="collapsed"
                 )
-            col_idx += 1
-    
-    # ADD BUTTON at the end
-    with cols[col_idx]:
-        st.markdown("<br>", unsafe_allow_html=True)
-        if st.button(
-            "➕",
-            key=f"add_prompt_{selected_template}_{idx}",
-            use_container_width=True
-        ):
-            param["prompts"].append("")
-            if len(param["logic"]) < len(param["prompts"]) - 1:
-                param["logic"].append("AND")
-            st.rerun()
+            else:
+                # Show ADD button on the last prompt
+                if st.button(
+                    "➕",
+                    key=f"add_prompt_{selected_template}_{idx}",
+                    use_container_width=True
+                ):
+                    param["prompts"].append("")
+                    if len(param["logic"]) < len(param["prompts"]) - 1:
+                        param["logic"].append("AND")
+                    st.rerun()
 
     # ADD / DELETE PARAMETER
     col_add, col_del = st.columns(2)
