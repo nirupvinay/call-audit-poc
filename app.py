@@ -69,7 +69,7 @@ with col3:
         st.rerun()
 
 with col4:
-    if st.button("🗑") and len(st.session_state.templates) > 1:
+    if st.button("🗑"):
         del st.session_state.templates[st.session_state.current_template]
         st.session_state.current_template = list(st.session_state.templates.keys())[0]
         st.rerun()
