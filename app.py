@@ -7,6 +7,29 @@ st.title("AI Call Audit – Phase 1 POC")
 
 st.divider()
 st.subheader("Audit Parameter Designer (Phase-1 UI)")
+st.markdown("### Parameter 1")
+
+param_title = st.text_input("Opening / Title", key="p1_title")
+
+param_type = st.selectbox(
+    "Parameter Type",
+    ["Regular", "Conditional", "Flag"],
+    key="p1_type"
+)
+
+colp1, colp2 = st.columns(2)
+
+with colp1:
+    p1_fatal = st.checkbox("Fatal", key="p1_fatal")
+
+with colp2:
+    p1_score = st.number_input("Score", min_value=0, step=1, key="p1_score")
+
+st.markdown("**Prompt**")
+p1_prompt = st.text_input("Enter prompt", key="p1_prompt")
+
+st.divider()
+
 
 transcript = st.text_area("Paste transcript here")
 
