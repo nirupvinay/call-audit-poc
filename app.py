@@ -26,8 +26,6 @@ with colp2:
     p1_score = st.number_input("Score", min_value=0, step=1, key="p1_score")
 
 st.markdown("**Prompt**")
-p1_prompt = st.text_input("Enter prompt", key="p1_prompt")
-
 st.divider()
 
 
