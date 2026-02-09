@@ -42,6 +42,11 @@ if st.button("➕ New Template"):
     }
     st.session_state.current_template = "New Template"
     st.rerun()
+if st.button("🗑 Delete Template") and len(st.session_state.templates) > 1:
+    del st.session_state.templates[st.session_state.current_template]
+    st.session_state.current_template = list(st.session_state.templates.keys())[0]
+    st.rerun()
+
 
 st.markdown("### Parameter 1")
 
