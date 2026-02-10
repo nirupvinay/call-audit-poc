@@ -216,10 +216,10 @@ for idx, param in enumerate(template_data["parameters"]):
         
         /* Input fields styling - smaller with cream colors */
         .stTextInput input, .stTextArea textarea, .stSelectbox select {
-            background-color: #f5ebe0 !important;
+            background-color: #e6e6e6 !important;  /* light grey */
             border: 2px solid #d4a574 !important;
             border-radius: 6px !important;
-            color: #5c2e3e !important;
+            color: #6b2737 !important;             /* burgundy */
             font-weight: 500;
             font-size: 13px !important;
             padding: 6px 10px !important;
