@@ -553,17 +553,24 @@ if run:
                     result = result and checks[i + 1] if logic == "AND" else result or checks[i + 1]
                 param_yes = result
 
-            if param_yes:
-                final_result = "YES"
-                score = param["score"]
+            # --- FLAG handling (no score, no fatal impact) ---
+            if param["type"] == "Flag":
+                final_result = "YES" if param_yes else "NO"
+                score = 0
+            
             else:
-                if param["fatal"]:
-                    final_result = "FATAL"
-                    score = 0
-                    fatal_triggered = True
+                if param_yes:
+                    final_result = "YES"
+                    score = param["score"]
                 else:
-                    final_result = "NO"
-                    score = 0
+                    if param["fatal"]:
+                        final_result = "FATAL"
+                        score = 0
+                        fatal_triggered = True
+                    else:
+                        final_result = "NO"
+                        score = 0
+
 
             template_total += score
             evidence = ", ".join(matches) if matches else "—"
