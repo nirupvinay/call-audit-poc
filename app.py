@@ -3,6 +3,8 @@ import csv
 from datetime import datetime
 import pandas as pd
 import json
+st.write("API KEY FOUND:", bool(st.secrets.get("OPENAI_API_KEY")))
+
 if "transcript_key" not in st.session_state:
     st.session_state["transcript_key"] = "transcript_0"
 
