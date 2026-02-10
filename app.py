@@ -170,13 +170,16 @@ for idx, param in enumerate(template_data["parameters"]):
             label_visibility="collapsed"
         )
 
+    is_flag = param["type"] == "Flag"
+    
     with col2:
         param["fatal"] = st.checkbox(
             "Fatal",
             value=param["fatal"],
-            key=f"fatal_{selected_template}_{idx}"
+            key=f"fatal_{selected_template}_{idx}",
+            disabled=is_flag
         )
-
+    
     with col3:
         param["score"] = st.number_input(
             "Score",
@@ -184,8 +187,10 @@ for idx, param in enumerate(template_data["parameters"]):
             step=1,
             value=param["score"],
             key=f"score_{selected_template}_{idx}",
-            label_visibility="collapsed"
+            label_visibility="collapsed",
+            disabled=is_flag
         )
+
 
     # ---------- HORIZONTAL PROMPTS ----------
     # Custom CSS for smaller prompt buttons and 90% width container
