@@ -31,6 +31,7 @@ if "current_template" not in st.session_state:
 # PAGE HEADER
 # =========================================================
 st.title("AI Call Audit – Phase 1 POC")
+
 if st.button("💾 Save Templates"):
     with open(TEMPLATE_FILE, "w") as f:
         json.dump(st.session_state.templates, f, indent=2)
@@ -174,12 +175,12 @@ for idx, param in enumerate(template_data["parameters"]):
     # Custom CSS for smaller prompt buttons and 90% width container
     st.markdown("""
         <style>
-        /* White background with visible fine texture */
+        /* Cream/beige background with visible fine texture */
         .stApp {
-            background: #ffffff;
+            background: #f5ebe0;
             background-image: 
-                repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(0,0,0,.04) 4px, rgba(0,0,0,.04) 8px),
-                repeating-linear-gradient(-45deg, transparent, transparent 4px, rgba(0,0,0,.035) 4px, rgba(0,0,0,.035) 8px);
+                repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(139,69,78,.04) 4px, rgba(139,69,78,.04) 8px),
+                repeating-linear-gradient(-45deg, transparent, transparent 4px, rgba(139,69,78,.035) 4px, rgba(139,69,78,.035) 8px);
         }
         
         .block-container {
@@ -192,18 +193,18 @@ for idx, param in enumerate(template_data["parameters"]):
         /* Input fields styling */
         .stTextInput input, .stTextArea textarea, .stSelectbox select {
             background-color: #ffffff !important;
-            border: 2px solid #d1d5db !important;
+            border: 2px solid #d4a574 !important;
             border-radius: 8px !important;
-            color: #1f2937 !important;
+            color: #5c2e3e !important;
             font-weight: 500;
         }
         
         .stTextInput input:focus, .stTextArea textarea:focus, .stSelectbox select:focus {
-            border-color: #1e293b !important;
-            box-shadow: 0 0 0 2px rgba(30, 41, 59, 0.15) !important;
+            border-color: #8b454e !important;
+            box-shadow: 0 0 0 2px rgba(139, 69, 78, 0.15) !important;
         }
         
-        /* Prompt delete/add buttons - very dark with white text */
+        /* Prompt delete/add buttons - burgundy/maroon with white text */
         .small-button button {
             height: 28px !important;
             min-height: 28px !important;
@@ -218,87 +219,87 @@ for idx, param in enumerate(template_data["parameters"]):
             color: #ffffff !important;
         }
         
-        /* Delete button - very dark charcoal */
+        /* Delete button - deep burgundy */
         .small-button button:first-child {
-            background: #1e293b !important;
+            background: #6b2737 !important;
             color: #ffffff !important;
-            box-shadow: 0 1px 3px rgba(30, 41, 59, 0.4) !important;
+            box-shadow: 0 1px 3px rgba(107, 39, 55, 0.4) !important;
         }
         
         .small-button button:first-child:hover {
-            background: #0f172a !important;
-            box-shadow: 0 2px 6px rgba(30, 41, 59, 0.5) !important;
+            background: #5c2e3e !important;
+            box-shadow: 0 2px 6px rgba(107, 39, 55, 0.5) !important;
         }
         
-        /* Add button - very dark slate blue */
+        /* Add button - rich maroon */
         .small-button button:last-child {
-            background: #1e293b !important;
+            background: #8b454e !important;
             color: #ffffff !important;
-            box-shadow: 0 1px 3px rgba(30, 41, 59, 0.4) !important;
+            box-shadow: 0 1px 3px rgba(139, 69, 78, 0.4) !important;
         }
         
         .small-button button:last-child:hover {
-            background: #0f172a !important;
-            box-shadow: 0 2px 6px rgba(30, 41, 59, 0.5) !important;
+            background: #6b2737 !important;
+            box-shadow: 0 2px 6px rgba(139, 69, 78, 0.5) !important;
         }
         
-        /* Parameter buttons - very dark */
+        /* Parameter buttons - deep burgundy */
         div[data-testid="column"] > div > div > button {
-            background: #1e293b !important;
+            background: #6b2737 !important;
             color: #ffffff !important;
             border: none !important;
             border-radius: 8px !important;
             padding: 10px 20px !important;
             font-weight: 500 !important;
             transition: all 0.2s ease !important;
-            box-shadow: 0 2px 6px rgba(30, 41, 59, 0.4) !important;
+            box-shadow: 0 2px 6px rgba(107, 39, 55, 0.4) !important;
         }
         
         div[data-testid="column"] > div > div > button:hover {
-            background: #0f172a !important;
-            box-shadow: 0 3px 8px rgba(30, 41, 59, 0.5) !important;
+            background: #5c2e3e !important;
+            box-shadow: 0 3px 8px rgba(107, 39, 55, 0.5) !important;
         }
         
-        /* Save Templates button - very dark */
+        /* Save Templates button - warm maroon */
         .stButton > button:first-child {
-            background: #1e293b !important;
+            background: #8b454e !important;
             color: #ffffff !important;
             border-radius: 8px !important;
             font-weight: 500 !important;
-            box-shadow: 0 2px 6px rgba(30, 41, 59, 0.4) !important;
+            box-shadow: 0 2px 6px rgba(139, 69, 78, 0.4) !important;
         }
         
         .stButton > button:first-child:hover {
-            background: #0f172a !important;
-            box-shadow: 0 3px 8px rgba(30, 41, 59, 0.5) !important;
+            background: #6b2737 !important;
+            box-shadow: 0 3px 8px rgba(139, 69, 78, 0.5) !important;
         }
         
-        /* Headers and text */
+        /* Headers and text - dark burgundy for contrast */
         h1, h2, h3 {
-            color: #1f2937 !important;
+            color: #5c2e3e !important;
         }
         
         .stMarkdown {
-            color: #374151 !important;
+            color: #6b2737 !important;
         }
         
-        /* Checkbox and labels */
+        /* Checkbox and labels - burgundy tones */
         label {
-            color: #4b5563 !important;
+            color: #5c2e3e !important;
             font-weight: 500;
         }
         
         /* Dividers */
         hr {
-            border-color: rgba(0, 0, 0, 0.1) !important;
+            border-color: rgba(139, 69, 78, 0.2) !important;
         }
         
         /* Number input styling */
         .stNumberInput input {
             background-color: #ffffff !important;
-            border: 2px solid #d1d5db !important;
+            border: 2px solid #d4a574 !important;
             border-radius: 8px !important;
-            color: #1f2937 !important;
+            color: #5c2e3e !important;
         }
         
         /* Dataframe styling */
@@ -509,7 +510,6 @@ if reset:
 # =========================================================
 # HISTORY
 # =========================================================
-
 st.subheader("Saved Audit History")
 
 try:
