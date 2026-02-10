@@ -8,7 +8,7 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 if "transcript_key" not in st.session_state:
     if "has_run" not in st.session_state:
-    st.session_state["has_run"] = False
+        st.session_state["has_run"] = False
     
     st.session_state["transcript_key"] = "transcript_0"
 
