@@ -371,6 +371,14 @@ for idx, param in enumerate(template_data["parameters"]):
         .element-container {
             margin-bottom: 0.5rem !important;
         }
+        div[data-baseweb="select"] > div {
+            background-color: #e6e6e6 !important;
+            border: 2px solid #d4a574 !important;
+            border-radius: 6px !important;
+            color: #6b2737 !important;
+            font-size: 13px !important;
+            min-height: 36px !important;
+        }
         </style>
     """, unsafe_allow_html=True)
     
