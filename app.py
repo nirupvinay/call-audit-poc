@@ -8,6 +8,9 @@ import json
 # SESSION STRUCTURE
 # =========================================================
 TEMPLATE_FILE = "templates.json"
+def save_templates():
+    with open(TEMPLATE_FILE, "w") as f:
+        json.dump(st.session_state.templates, f, indent=2)
 
 if "templates" not in st.session_state:
     try:
@@ -76,23 +79,31 @@ if st.session_state.rename_mode:
         )
         st.session_state.current_template = new_name
         st.session_state.rename_mode = False
+        
+        save_templates()  # auto-save rename
         st.rerun()
 
 with col_add:
     if st.button("➕", use_container_width=True):
         st.session_state.templates["New Template"] = {"active": False, "parameters": []}
         st.session_state.current_template = "New Template"
+
+        save_templates()  # auto-save
         st.rerun()
 
 with col_del:
     if st.button("🗑", use_container_width=True):
-        if st.session_state.current_template in st.session_state.templates:
+
+        # Prevent deleting last template
+        if len(st.session_state.templates) <= 1:
+            st.warning("At least one template must exist.")
+        else:
             del st.session_state.templates[st.session_state.current_template]
-        st.session_state.current_template = (
-            list(st.session_state.templates.keys())[0]
-            if st.session_state.templates else None
-        )
-        st.rerun()
+
+            st.session_state.current_template = list(st.session_state.templates.keys())[0]
+
+            save_templates()  # <-- important production fix
+            st.rerun()
 
 # =========================================================
 # STOP IF NO TEMPLATE
