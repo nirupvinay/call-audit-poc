@@ -527,7 +527,40 @@ if run:
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a strict call audit evaluator. Return only JSON."
+                    "content": """
+                    You are a strict call audit evaluator.
+                    
+                    Your task:
+                    Evaluate the call transcript against the provided audit parameters.
+                    
+                    Rules:
+                    - Use ONLY the transcript.
+                    - Do NOT assume anything not spoken.
+                    - Each parameter must return:
+                      - result → "YES" or "NO"
+                      - reasoning → short, strong justification
+                      - timestamps → list of transcript timestamps proving the reasoning
+                    - If parameter type = "Flag":
+                      - Return only YES or NO.
+                      - Ignore fatal and score impact.
+                    - If parameter is fatal and result = NO:
+                      - Mark result = "FATAL".
+                    - Output MUST be valid JSON.
+                    - No extra text.
+                    
+                    JSON format:
+                    
+                    {
+                      "parameters": [
+                        {
+                          "name": "<parameter name>",
+                          "result": "YES | NO | FATAL",
+                          "reasoning": "<clear reasoning>",
+                          "timestamps": ["mm:ss", "mm:ss"]
+                        }
+                      ]
+                    }
+                    """
                 },
                 {
                     "role": "user",
