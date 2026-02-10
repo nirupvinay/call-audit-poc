@@ -175,9 +175,9 @@ for idx, param in enumerate(template_data["parameters"]):
     # Custom CSS for smaller prompt buttons and 90% width container
     st.markdown("""
         <style>
-        /* Rich burgundy gradient background */
+        /* Rich burgundy gradient background - more pronounced */
         .stApp {
-            background: linear-gradient(135deg, #6b2737 0%, #8b454e 50%, #5c2e3e 100%);
+            background: linear-gradient(135deg, #4a1f2a 0%, #6b2737 25%, #8b454e 50%, #6b2737 75%, #5c2e3e 100%);
             background-attachment: fixed;
         }
         
@@ -223,76 +223,87 @@ for idx, param in enumerate(template_data["parameters"]):
             box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.3) !important;
         }
         
-        /* Prompt delete/add buttons - cream with burgundy text */
+        /* Prompt delete/add buttons - MUCH smaller, centered icons, beige icons */
         .small-button button {
-            height: 24px !important;
-            min-height: 24px !important;
-            padding: 2px 4px !important;
-            font-size: 12px !important;
-            min-width: 28px !important;
-            max-width: 32px !important;
-            border-radius: 5px !important;
+            height: 20px !important;
+            min-height: 20px !important;
+            padding: 0px !important;
+            font-size: 11px !important;
+            min-width: 22px !important;
+            max-width: 22px !important;
+            width: 22px !important;
+            border-radius: 4px !important;
             font-weight: 500 !important;
             transition: all 0.2s ease !important;
             border: none !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            line-height: 1 !important;
         }
         
-        /* Delete button - cream background with burgundy text */
+        /* Delete button - gradient with beige icon */
         .small-button button:first-child {
-            background: #f5ebe0 !important;
-            color: #6b2737 !important;
-            box-shadow: 0 1px 3px rgba(245, 235, 224, 0.4) !important;
+            background: linear-gradient(135deg, #6b2737 0%, #8b454e 100%) !important;
+            color: #f5ebe0 !important;
+            box-shadow: 0 1px 3px rgba(107, 39, 55, 0.4) !important;
         }
         
         .small-button button:first-child:hover {
-            background: #ede0d1 !important;
-            box-shadow: 0 2px 6px rgba(245, 235, 224, 0.5) !important;
+            background: linear-gradient(135deg, #5c2e3e 0%, #6b2737 100%) !important;
+            box-shadow: 0 2px 6px rgba(107, 39, 55, 0.5) !important;
         }
         
-        /* Add button - golden cream */
+        /* Add button - gradient with beige icon */
         .small-button button:last-child {
-            background: #d4a574 !important;
-            color: #5c2e3e !important;
-            box-shadow: 0 1px 3px rgba(212, 165, 116, 0.4) !important;
+            background: linear-gradient(135deg, #8b454e 0%, #6b2737 100%) !important;
+            color: #f5ebe0 !important;
+            box-shadow: 0 1px 3px rgba(139, 69, 78, 0.4) !important;
         }
         
         .small-button button:last-child:hover {
-            background: #c89860 !important;
-            box-shadow: 0 2px 6px rgba(212, 165, 116, 0.5) !important;
+            background: linear-gradient(135deg, #6b2737 0%, #5c2e3e 100%) !important;
+            box-shadow: 0 2px 6px rgba(139, 69, 78, 0.5) !important;
         }
         
-        /* Parameter buttons - cream/gold */
+        /* Parameter buttons - HALF size with gradient and beige text */
         div[data-testid="column"] > div > div > button {
-            background: #d4a574 !important;
-            color: #5c2e3e !important;
+            background: linear-gradient(135deg, #6b2737 0%, #8b454e 100%) !important;
+            color: #f5ebe0 !important;
             border: none !important;
-            border-radius: 6px !important;
-            padding: 8px 16px !important;
+            border-radius: 5px !important;
+            padding: 5px 10px !important;
             font-weight: 500 !important;
-            font-size: 13px !important;
+            font-size: 12px !important;
             transition: all 0.2s ease !important;
-            box-shadow: 0 2px 6px rgba(212, 165, 116, 0.4) !important;
+            box-shadow: 0 2px 6px rgba(107, 39, 55, 0.4) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
         
         div[data-testid="column"] > div > div > button:hover {
-            background: #c89860 !important;
-            box-shadow: 0 3px 8px rgba(212, 165, 116, 0.5) !important;
+            background: linear-gradient(135deg, #5c2e3e 0%, #6b2737 100%) !important;
+            box-shadow: 0 3px 8px rgba(107, 39, 55, 0.5) !important;
         }
         
-        /* Save Templates button - golden */
+        /* Save Templates button - HALF size with gradient and beige text */
         .stButton > button:first-child {
-            background: #d4a574 !important;
-            color: #5c2e3e !important;
-            border-radius: 6px !important;
+            background: linear-gradient(135deg, #8b454e 0%, #6b2737 100%) !important;
+            color: #f5ebe0 !important;
+            border-radius: 5px !important;
             font-weight: 500 !important;
-            font-size: 13px !important;
-            padding: 8px 16px !important;
-            box-shadow: 0 2px 6px rgba(212, 165, 116, 0.4) !important;
+            font-size: 12px !important;
+            padding: 5px 10px !important;
+            box-shadow: 0 2px 6px rgba(139, 69, 78, 0.4) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
         
         .stButton > button:first-child:hover {
-            background: #c89860 !important;
-            box-shadow: 0 3px 8px rgba(212, 165, 116, 0.5) !important;
+            background: linear-gradient(135deg, #6b2737 0%, #5c2e3e 100%) !important;
+            box-shadow: 0 3px 8px rgba(139, 69, 78, 0.5) !important;
         }
         
         /* Labels and text - cream colors for visibility */
