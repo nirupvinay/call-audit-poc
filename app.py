@@ -485,7 +485,11 @@ for idx, param in enumerate(template_data["parameters"]):
 # =========================================================
 # TRANSCRIPT + RUN
 # =========================================================
-transcript = st.text_area("Paste transcript here", key="transcript")
+transcript = st.text_area(
+    "Paste transcript here",
+    key="transcript",
+    value=st.session_state.get("transcript", "")
+)
 
 col1, col2 = st.columns(2)
 run = col1.button("Run Audit")
@@ -574,5 +578,5 @@ if run:
 # RESET + LOG
 # =========================================================
 if reset:
-    st.session_state.pop("transcript", None)
+    st.session_state["transcript"] = ""
     st.rerun()
