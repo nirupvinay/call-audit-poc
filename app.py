@@ -30,7 +30,7 @@ if "current_template" not in st.session_state:
 # =========================================================
 # PAGE HEADER
 # =========================================================
-st.title("AI Call Audit – Phase 1 POC")
+st.title("Khatabook AI Auditor – Phase 1 POC")
 
 if st.button("💾 Save Templates"):
     with open(TEMPLATE_FILE, "w") as f:
@@ -38,7 +38,7 @@ if st.button("💾 Save Templates"):
     st.success("Templates saved.")
 
 st.divider()
-st.subheader("Audit Parameter Designer")
+st.subheader("Audit Rule Engine")
 
 # =========================================================
 # TEMPLATE TOOLBAR
