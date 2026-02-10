@@ -520,7 +520,6 @@ if run:
         st.stop()
 
     ai_results = None
-    st.write("RUN BUTTON STATE:", run)
 
     try:
         response = client.chat.completions.create(
