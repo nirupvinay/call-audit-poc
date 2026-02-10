@@ -574,7 +574,5 @@ if run:
 # RESET + LOG
 # =========================================================
 if reset:
-    with open("audit_log.csv", "a", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow([datetime.now(), transcript])
+    st.session_state.clear()
     st.rerun()
