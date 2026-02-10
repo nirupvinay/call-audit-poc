@@ -3,6 +3,9 @@ import csv
 from datetime import datetime
 import pandas as pd
 import json
+if "transcript_key" not in st.session_state:
+    st.session_state["transcript_key"] = "transcript_0"
+
 def clear_transcript():
     st.session_state["transcript_box"] = ""
 
@@ -483,11 +486,9 @@ for idx, param in enumerate(template_data["parameters"]):
 # =========================================================
 # TRANSCRIPT + RUN
 # =========================================================
-
 transcript = st.text_area(
     "Paste transcript here",
-    key="transcript_box",
-    value=st.session_state.get("transcript_box", "")
+    key=st.session_state["transcript_key"]
 )
 
 col1, col2 = st.columns(2)
@@ -577,7 +578,8 @@ if run:
 # RESET + LOG
 # =========================================================
 if reset:
-    st.session_state["transcript_box"] = ""
+    num = int(st.session_state["transcript_key"].split("_")[-1]) + 1
+    st.session_state["transcript_key"] = f"transcript_{num}"
     st.rerun()
     
 
