@@ -487,7 +487,11 @@ if st.session_state.get("reset_flag"):
     st.session_state.pop("transcript_box", None)
     st.session_state["reset_flag"] = False
 
-transcript = st.text_area("Paste transcript here", key="transcript_box")
+transcript = st.text_area(
+    "Paste transcript here",
+    key="transcript_box",
+    value=st.session_state.get("transcript_box", "")
+)
 
 col1, col2 = st.columns(2)
 run = col1.button("Run Audit")
