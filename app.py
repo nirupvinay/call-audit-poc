@@ -578,14 +578,3 @@ if reset:
         writer = csv.writer(f)
         writer.writerow([datetime.now(), transcript])
     st.rerun()
-
-# =========================================================
-# HISTORY
-# =========================================================
-st.subheader("Saved Audit History")
-
-try:
-    df = pd.read_csv("audit_log.csv")
-    st.dataframe(df)
-except FileNotFoundError:
-    st.write("No audits saved yet.")
