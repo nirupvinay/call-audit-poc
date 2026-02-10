@@ -508,7 +508,6 @@ transcript = st.text_area(
 
 col1, col2 = st.columns(2)
 run = col1.button("Run Audit")
-st.write("RUN BUTTON STATE:", run)
 reset = col2.button("Reset")
 
 # =========================================================
