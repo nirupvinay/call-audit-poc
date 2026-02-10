@@ -574,5 +574,5 @@ if run:
 # RESET + LOG
 # =========================================================
 if reset:
-    st.session_state["transcript"] = ""
+    st.session_state.pop("transcript", None)
     st.rerun()
