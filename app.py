@@ -512,7 +512,8 @@ if run:
     if transcript.strip() == "":
         st.error("Paste transcript first.")
         st.stop()
-
+        
+    ai_results = None  # placeholder for future single AI response
     for template_name, template in st.session_state.templates.items():
 
         if not template.get("active"):
