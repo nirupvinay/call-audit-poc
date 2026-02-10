@@ -175,12 +175,10 @@ for idx, param in enumerate(template_data["parameters"]):
     # Custom CSS for smaller prompt buttons and 90% width container
     st.markdown("""
         <style>
-        /* Cream/beige background with visible fine texture */
+        /* Rich burgundy gradient background */
         .stApp {
-            background: #f5ebe0;
-            background-image: 
-                repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(139,69,78,.04) 4px, rgba(139,69,78,.04) 8px),
-                repeating-linear-gradient(-45deg, transparent, transparent 4px, rgba(139,69,78,.035) 4px, rgba(139,69,78,.035) 8px);
+            background: linear-gradient(135deg, #6b2737 0%, #8b454e 50%, #5c2e3e 100%);
+            background-attachment: fixed;
         }
         
         .block-container {
@@ -190,122 +188,165 @@ for idx, param in enumerate(template_data["parameters"]):
             background: transparent !important;
         }
         
-        /* Input fields styling */
+        /* Scale down all fonts globally */
+        html, body, .stApp {
+            font-size: 13px !important;
+        }
+        
+        h1 {
+            font-size: 1.8rem !important;
+            color: #f5ebe0 !important;
+        }
+        
+        h2, h3 {
+            font-size: 1.3rem !important;
+            color: #f5ebe0 !important;
+        }
+        
+        /* Input fields styling - smaller with cream colors */
         .stTextInput input, .stTextArea textarea, .stSelectbox select {
-            background-color: #ffffff !important;
+            background-color: #f5ebe0 !important;
             border: 2px solid #d4a574 !important;
-            border-radius: 8px !important;
+            border-radius: 6px !important;
             color: #5c2e3e !important;
             font-weight: 500;
+            font-size: 13px !important;
+            padding: 6px 10px !important;
+        }
+        
+        .stTextArea textarea {
+            min-height: 60px !important;
         }
         
         .stTextInput input:focus, .stTextArea textarea:focus, .stSelectbox select:focus {
-            border-color: #8b454e !important;
-            box-shadow: 0 0 0 2px rgba(139, 69, 78, 0.15) !important;
+            border-color: #d4a574 !important;
+            box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.3) !important;
         }
         
-        /* Prompt delete/add buttons - burgundy/maroon with white text */
+        /* Prompt delete/add buttons - cream with burgundy text */
         .small-button button {
-            height: 28px !important;
-            min-height: 28px !important;
+            height: 24px !important;
+            min-height: 24px !important;
             padding: 2px 4px !important;
-            font-size: 14px !important;
-            min-width: 30px !important;
-            max-width: 35px !important;
-            border-radius: 6px !important;
+            font-size: 12px !important;
+            min-width: 28px !important;
+            max-width: 32px !important;
+            border-radius: 5px !important;
             font-weight: 500 !important;
             transition: all 0.2s ease !important;
             border: none !important;
-            color: #ffffff !important;
         }
         
-        /* Delete button - deep burgundy */
+        /* Delete button - cream background with burgundy text */
         .small-button button:first-child {
-            background: #6b2737 !important;
-            color: #ffffff !important;
-            box-shadow: 0 1px 3px rgba(107, 39, 55, 0.4) !important;
+            background: #f5ebe0 !important;
+            color: #6b2737 !important;
+            box-shadow: 0 1px 3px rgba(245, 235, 224, 0.4) !important;
         }
         
         .small-button button:first-child:hover {
-            background: #5c2e3e !important;
-            box-shadow: 0 2px 6px rgba(107, 39, 55, 0.5) !important;
+            background: #ede0d1 !important;
+            box-shadow: 0 2px 6px rgba(245, 235, 224, 0.5) !important;
         }
         
-        /* Add button - rich maroon */
+        /* Add button - golden cream */
         .small-button button:last-child {
-            background: #8b454e !important;
-            color: #ffffff !important;
-            box-shadow: 0 1px 3px rgba(139, 69, 78, 0.4) !important;
+            background: #d4a574 !important;
+            color: #5c2e3e !important;
+            box-shadow: 0 1px 3px rgba(212, 165, 116, 0.4) !important;
         }
         
         .small-button button:last-child:hover {
-            background: #6b2737 !important;
-            box-shadow: 0 2px 6px rgba(139, 69, 78, 0.5) !important;
+            background: #c89860 !important;
+            box-shadow: 0 2px 6px rgba(212, 165, 116, 0.5) !important;
         }
         
-        /* Parameter buttons - deep burgundy */
+        /* Parameter buttons - cream/gold */
         div[data-testid="column"] > div > div > button {
-            background: #6b2737 !important;
-            color: #ffffff !important;
+            background: #d4a574 !important;
+            color: #5c2e3e !important;
             border: none !important;
-            border-radius: 8px !important;
-            padding: 10px 20px !important;
+            border-radius: 6px !important;
+            padding: 8px 16px !important;
             font-weight: 500 !important;
+            font-size: 13px !important;
             transition: all 0.2s ease !important;
-            box-shadow: 0 2px 6px rgba(107, 39, 55, 0.4) !important;
+            box-shadow: 0 2px 6px rgba(212, 165, 116, 0.4) !important;
         }
         
         div[data-testid="column"] > div > div > button:hover {
-            background: #5c2e3e !important;
-            box-shadow: 0 3px 8px rgba(107, 39, 55, 0.5) !important;
+            background: #c89860 !important;
+            box-shadow: 0 3px 8px rgba(212, 165, 116, 0.5) !important;
         }
         
-        /* Save Templates button - warm maroon */
+        /* Save Templates button - golden */
         .stButton > button:first-child {
-            background: #8b454e !important;
-            color: #ffffff !important;
-            border-radius: 8px !important;
+            background: #d4a574 !important;
+            color: #5c2e3e !important;
+            border-radius: 6px !important;
             font-weight: 500 !important;
-            box-shadow: 0 2px 6px rgba(139, 69, 78, 0.4) !important;
+            font-size: 13px !important;
+            padding: 8px 16px !important;
+            box-shadow: 0 2px 6px rgba(212, 165, 116, 0.4) !important;
         }
         
         .stButton > button:first-child:hover {
-            background: #6b2737 !important;
-            box-shadow: 0 3px 8px rgba(139, 69, 78, 0.5) !important;
+            background: #c89860 !important;
+            box-shadow: 0 3px 8px rgba(212, 165, 116, 0.5) !important;
         }
         
-        /* Headers and text - dark burgundy for contrast */
-        h1, h2, h3 {
-            color: #5c2e3e !important;
-        }
-        
+        /* Labels and text - cream colors for visibility */
         .stMarkdown {
-            color: #6b2737 !important;
+            color: #f5ebe0 !important;
+            font-size: 13px !important;
         }
         
-        /* Checkbox and labels - burgundy tones */
         label {
-            color: #5c2e3e !important;
+            color: #f5ebe0 !important;
             font-weight: 500;
+            font-size: 13px !important;
         }
         
         /* Dividers */
         hr {
-            border-color: rgba(139, 69, 78, 0.2) !important;
+            border-color: rgba(245, 235, 224, 0.3) !important;
         }
         
-        /* Number input styling */
+        /* Number input styling - smaller */
         .stNumberInput input {
-            background-color: #ffffff !important;
+            background-color: #f5ebe0 !important;
             border: 2px solid #d4a574 !important;
-            border-radius: 8px !important;
+            border-radius: 6px !important;
             color: #5c2e3e !important;
+            font-size: 13px !important;
+            padding: 6px 10px !important;
+        }
+        
+        /* Checkbox styling */
+        .stCheckbox {
+            font-size: 13px !important;
+        }
+        
+        /* Selectbox styling */
+        .stSelectbox label {
+            font-size: 13px !important;
         }
         
         /* Dataframe styling */
         .stDataFrame {
-            background-color: white !important;
-            border-radius: 8px !important;
+            background-color: #f5ebe0 !important;
+            border-radius: 6px !important;
+            font-size: 12px !important;
+        }
+        
+        /* Table text */
+        table {
+            font-size: 12px !important;
+        }
+        
+        /* Reduce spacing */
+        .element-container {
+            margin-bottom: 0.5rem !important;
         }
         </style>
     """, unsafe_allow_html=True)
