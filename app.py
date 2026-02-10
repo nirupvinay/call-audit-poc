@@ -370,6 +370,11 @@ for idx, param in enumerate(template_data["parameters"]):
         .element-container {
             margin-bottom: 0.5rem !important;
         }
+        /* Force dropdown box colors to match text inputs */
+        div[data-baseweb="select"] > div {
+            background-color: #e6e6e6 !important;  /* light grey */
+            color: #6b2737 !important;             /* burgundy */
+        }
         </style>
     """, unsafe_allow_html=True)
     
