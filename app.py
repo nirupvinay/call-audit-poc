@@ -541,7 +541,7 @@ if run:
 
         ai_results = response.choices[0].message.content
 
-except Exception as e:
+    except Exception as e:
     st.error(f"OpenAI error: {e}")
 
     for template_name, template in st.session_state.templates.items():
