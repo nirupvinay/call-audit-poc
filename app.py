@@ -385,9 +385,10 @@ for idx, param in enumerate(template_data["parameters"]):
             background-color: #e6e6e6 !important;  /* light grey */
             color: #6b2737 !important;             /* burgundy */
         }
-                /* Beige checkbox label text */
-        .stCheckbox label {
+        /* Force beige color for all checkbox text */
+        div[data-testid="stCheckbox"] label {
             color: #f5ebe0 !important;
+        }
         }
         </style>
     """, unsafe_allow_html=True)
