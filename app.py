@@ -516,7 +516,29 @@ if run:
         st.error("Paste transcript first.")
         st.stop()
         
-    ai_results = None  # placeholder for future single AI response
+    ai_results = None
+
+try:
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a strict call audit evaluator. Return only JSON."
+            },
+            {
+                "role": "user",
+                "content": transcript
+            }
+        ],
+        temperature=0
+    )
+
+    ai_results = response.choices[0].message.content
+
+except Exception as e:
+    st.error(f"OpenAI error: {e}")
+
     for template_name, template in st.session_state.templates.items():
 
         if not template.get("active"):
