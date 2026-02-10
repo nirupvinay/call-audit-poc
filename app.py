@@ -3,6 +3,8 @@ import csv
 from datetime import datetime
 import pandas as pd
 import json
+def clear_transcript():
+    st.session_state["transcript_box"] = ""
 
 # =========================================================
 # SESSION STRUCTURE
