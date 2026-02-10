@@ -520,6 +520,24 @@ if run:
         st.stop()
 
     ai_results = None
+    # Build audit definition to send to AI
+    audit_payload = []
+    
+    for template_name, template in st.session_state.templates.items():
+    
+        if not template.get("active"):
+            continue
+    
+        for param in template["parameters"]:
+            audit_payload.append({
+                "template": template_name,
+                "name": param["title"],
+                "type": param["type"],
+                "fatal": param["fatal"],
+                "prompts": param["prompts"],
+                "logic": param["logic"]
+            })
+
 
     try:
         response = client.chat.completions.create(
@@ -564,8 +582,12 @@ if run:
                 },
                 {
                     "role": "user",
-                    "content": transcript
+                    "content": json.dumps({
+                        "transcript": transcript,
+                        "audit_parameters": audit_payload
+                    })
                 }
+
             ],
             temperature=0
         )
