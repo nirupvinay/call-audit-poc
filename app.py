@@ -519,28 +519,27 @@ if run:
     if transcript.strip() == "":
         st.error("Paste transcript first.")
         st.stop()
-        
+
     ai_results = None
     st.write("RUN BUTTON STATE:", run)
 
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a strict call audit evaluator. Return only JSON."
+                },
+                {
+                    "role": "user",
+                    "content": transcript
+                }
+            ],
+            temperature=0
+        )
 
-try:
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a strict call audit evaluator. Return only JSON."
-            },
-            {
-                "role": "user",
-                "content": transcript
-            }
-        ],
-        temperature=0
-    )
-
-    ai_results = response.choices[0].message.content
+        ai_results = response.choices[0].message.content
 
 except Exception as e:
     st.error(f"OpenAI error: {e}")
