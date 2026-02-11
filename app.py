@@ -594,6 +594,7 @@ if run:
         )
 
         raw_ai = response.choices[0].message.content
+        st.write("RAW AI:", raw_ai)
 
         # --- SAFE JSON EXTRACTION ---
         try:
