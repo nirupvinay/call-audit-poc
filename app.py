@@ -49,7 +49,7 @@ st.write("CSS TEST")
 st.markdown("""
     <style>
     /* Rich burgundy gradient background - more pronounced */
-    html, body, [data-testid="stAppViewContainer"] {
+    [data-testid="stAppViewContainer"] {
         background:
             linear-gradient(115deg, rgba(255,120,120,0.16) 0%, transparent 32%),
             linear-gradient(295deg, rgba(220,50,70,0.18) 0%, transparent 38%),
@@ -249,14 +249,14 @@ st.markdown("""
         color: #f5ebe0 !important;
     }
     /* 🔴 force Streamlit main background transparent */
-    [data-testid="stAppViewContainer"] > .main {
+    /* 🔥 hard override final Streamlit layer */
+    [data-testid="stAppViewContainer"] > div:first-child {
         background: transparent !important;
     }
     
-    [data-testid="stAppViewContainer"] section.main > div {
+    [data-testid="stAppViewContainer"] section {
         background: transparent !important;
-}
-
+    }
     </style>
 """, unsafe_allow_html=True)
 
