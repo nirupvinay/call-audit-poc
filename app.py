@@ -566,12 +566,8 @@ if run:
 
 
     try:
-        st.write("TRANSCRIPT SENT TO AI ↓")
-        st.write(transcript)
-        st.json(audit_payload)
-        
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4.1-mini",
             messages=[
                 {
                     "role": "system",
