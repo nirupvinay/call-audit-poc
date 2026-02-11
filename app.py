@@ -634,15 +634,6 @@ if run:
                 if found:
                     matches.append(prompt)
 
-            if not checks:
-                param_yes = False
-            else:
-                result = checks[0]
-                for i, logic in enumerate(param["logic"]):
-                    if i + 1 >= len(checks):
-                        break
-                    result = result and checks[i + 1] if logic == "AND" else result or checks[i + 1]
-                param_yes = result
 
             # --- FLAG handling (no score, no fatal impact) ---
             if param["type"] == "Flag":
