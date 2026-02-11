@@ -593,6 +593,15 @@ if run:
         )
 
         ai_results = response.choices[0].message.content
+        try:
+            ai_results = json.loads(ai_results)
+        except:
+            st.error("AI returned invalid JSON. Try again.")
+            st.stop()
+        
+        if "parameters" not in ai_results:
+            st.error("Invalid AI structure.")
+            st.stop()
 
     except Exception as e:
         st.error(f"OpenAI error: {e}")
@@ -619,7 +628,6 @@ if run:
                         for r in results
                     )
                 else:
-                    found = prompt and prompt.lower() in transcript.lower()
 
                 checks.append(found)
 
