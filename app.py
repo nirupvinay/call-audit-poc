@@ -647,42 +647,6 @@ if run:
                     score = 0
 
 
-            matches = []
-            checks = []
-
-            for prompt in param["prompts"]:
-
-                if param["type"] == "Conditional":
-                    found = any(
-                        r["Parameter"] == prompt and r["Result"] == "YES"
-                        for r in results
-                    )
-                else:
-
-                checks.append(found)
-
-                if found:
-                    matches.append(prompt)
-
-
-            # --- FLAG handling (no score, no fatal impact) ---
-            if param["type"] == "Flag":
-                final_result = "YES" if param_yes else "NO"
-                score = 0
-            
-            else:
-                if param_yes:
-                    final_result = "YES"
-                    score = param["score"]
-                else:
-                    if param["fatal"]:
-                        final_result = "FATAL"
-                        score = 0
-                        fatal_triggered = True
-                    else:
-                        final_result = "NO"
-                        score = 0
-
 
             template_total += score
             evidence = ", ".join(matches) if matches else "—"
