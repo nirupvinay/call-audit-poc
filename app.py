@@ -664,8 +664,18 @@ if run:
 
 
 
-            template_total += score
-            evidence = ", ".join(matches) if matches else "—"
+                template_total += score
+                
+                timestamps = ai_param.get("timestamps", []) if ai_param else []
+                evidence = ", ".join(timestamps) if timestamps else "—"
+                
+                results.append({
+                    "Parameter": param["title"],
+                    "Result": final_result,
+                    "Score": score,
+                    "Evidence": evidence
+                })
+
 
             results.append({
                 "Parameter": param["title"],
