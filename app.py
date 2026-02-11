@@ -49,7 +49,7 @@ st.write("CSS TEST")
 st.markdown("""
     <style>
     /* Rich burgundy gradient background - more pronounced */
-    .stApp {
+    html, body, [data-testid="stAppViewContainer"] {
         background:
             linear-gradient(115deg, rgba(255,120,120,0.16) 0%, transparent 32%),
             linear-gradient(295deg, rgba(220,50,70,0.18) 0%, transparent 38%),
