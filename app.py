@@ -399,7 +399,28 @@ for idx, param in enumerate(template_data["parameters"]):
         table, th, td {
             color: #f5ebe0 !important;
         }
+        /* ===== Audit Table Styling ===== */
 
+        /* Center all column headers */
+        thead tr th {
+            text-align: center !important;
+        }
+        
+        /* Column alignments */
+        tbody tr td:nth-child(1) {  /* Parameter */
+            text-align: left !important;
+        }
+        
+        tbody tr td:nth-child(2),  /* Result */
+        tbody tr td:nth-child(3),  /* Score */
+        tbody tr td:nth-child(4) { /* Evidence */
+            text-align: center !important;
+        }
+        
+        /* Reason column left for readability */
+        tbody tr td:nth-child(5) {
+            text-align: left !important;
+        }
         </style>
     """, unsafe_allow_html=True)
     
@@ -677,19 +698,23 @@ if run:
             
             evidence = ", ".join(timestamps) if timestamps else "—"
             
+            reason = ai_param.get("reasoning", "—") if ai_param else "—"
+
             results.append({
                 "Parameter": param["title"],
                 "Result": final_result,
                 "Score": score,
-                "Evidence": evidence
+                "Evidence": evidence,
+                "Reason": reason
             })
+
 
         if fatal_triggered:
             template_total = 0
 
         if results:
             st.subheader(f"Template: {template_name}")
-            df = pd.DataFrame(results)
+            df = pd.DataFrame(results).reset_index(drop=True)
             st.dataframe(df, use_container_width=True)
             st.markdown(f"**Total Score: {template_total}**")
 
