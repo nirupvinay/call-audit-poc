@@ -45,6 +45,7 @@ if "current_template" not in st.session_state:
 # PAGE HEADER
 # =========================================================
 st.title("Khatabook AI Auditor – Phase 1 POC")
+st.write("CSS TEST")
 st.markdown("""
     <style>
     /* Rich burgundy gradient background - more pronounced */
