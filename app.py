@@ -566,6 +566,8 @@ if run:
 
 
     try:
+        st.write("TRANSCRIPT SENT TO AI ↓")
+        st.write(transcript)
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
