@@ -617,6 +617,36 @@ if run:
 
         for param in template["parameters"]:
 
+            ai_param = next(
+                (p for p in ai_results["parameters"] if p["name"] == param["title"]),
+                None
+            )
+        
+            if not ai_param:
+                final_result = "NO"
+                score = 0
+        
+            else:
+                result = ai_param["result"]
+        
+                if param["type"] == "Flag":
+                    final_result = result
+                    score = 0
+        
+                elif result == "YES":
+                    final_result = "YES"
+                    score = param["score"]
+        
+                elif result == "FATAL":
+                    final_result = "FATAL"
+                    score = 0
+                    fatal_triggered = True
+        
+                else:
+                    final_result = "NO"
+                    score = 0
+
+
             matches = []
             checks = []
 
