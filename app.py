@@ -395,6 +395,11 @@ for idx, param in enumerate(template_data["parameters"]):
         div[data-testid="stCheckbox"] p {
             color: #f5ebe0 !important;
         }
+        /* Make table text beige */
+        table, th, td {
+            color: #f5ebe0 !important;
+        }
+
         </style>
     """, unsafe_allow_html=True)
     
