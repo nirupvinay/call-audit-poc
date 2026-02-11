@@ -205,9 +205,10 @@ for idx, param in enumerate(template_data["parameters"]):
         /* Rich burgundy gradient background - more pronounced */
         .stApp {
             background:
-                linear-gradient(120deg, rgba(255,120,120,0.08) 0%, transparent 30%),
-                linear-gradient(300deg, rgba(200,40,60,0.10) 0%, transparent 35%),
-                radial-gradient(ellipse at 70% 20%, rgba(255,90,90,0.12) 0%, transparent 45%),
+                linear-gradient(115deg, rgba(255,120,120,0.16) 0%, transparent 32%),
+                linear-gradient(295deg, rgba(220,50,70,0.18) 0%, transparent 38%),
+                radial-gradient(ellipse at 75% 18%, rgba(255,110,110,0.22) 0%, transparent 48%),
+                radial-gradient(ellipse at 20% 85%, rgba(200,40,60,0.18) 0%, transparent 50%),
                 linear-gradient(135deg, #4a1f2a 0%, #6b2737 25%, #8b454e 50%, #6b2737 75%, #5c2e3e 100%);
             background-attachment: fixed;
         }
