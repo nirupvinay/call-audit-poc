@@ -44,39 +44,7 @@ if "current_template" not in st.session_state:
 # =========================================================
 # PAGE HEADER
 # =========================================================
-st.set_page_config(layout="wide")
 st.title("Khatabook AI Auditor – Phase 1 POC")
-st.write("CSS TEST")
-st.markdown("""
-<style>
-
-/* FULL PAGE BACKGROUND — forced layer */
-[data-testid="stAppViewContainer"] {
-    background: linear-gradient(135deg, #4a1f2a 0%, #6b2737 40%, #8b454e 70%, #5c2e3e 100%) !important;
-}
-
-/* Abstract red streak overlay */
-[data-testid="stAppViewContainer"]::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background:
-        linear-gradient(120deg, rgba(255,80,80,0.18) 0%, transparent 40%),
-        radial-gradient(circle at 80% 20%, rgba(255,120,120,0.18), transparent 50%),
-        radial-gradient(circle at 20% 80%, rgba(200,40,60,0.15), transparent 50%);
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Make main container slightly visible glass */
-.block-container {
-    background: rgba(255,245,235,0.08) !important;
-    backdrop-filter: blur(8px);
-    border-radius: 14px;
-}
-
-</style>
-""", unsafe_allow_html=True)
 
 if st.button("💾 Save Templates"):
     with open(TEMPLATE_FILE, "w") as f:
@@ -228,6 +196,207 @@ for idx, param in enumerate(template_data["parameters"]):
             label_visibility="collapsed",
             disabled=is_flag
         )
+
+
+    # ---------- HORIZONTAL PROMPTS ----------
+    # Custom CSS for smaller prompt buttons and 90% width container
+    st.markdown("""
+        <style>
+        /* Rich burgundy gradient background - more pronounced */
+        .stApp {
+            background: linear-gradient(135deg, #4a1f2a 0%, #6b2737 25%, #8b454e 50%, #6b2737 75%, #5c2e3e 100%);
+            background-attachment: fixed;
+        }
+        
+        .block-container {
+            max-width: 90%;
+            padding-left: 5%;
+            padding-right: 5%;
+            background: transparent !important;
+        }
+        
+        /* Scale down all fonts globally */
+        html, body, .stApp {
+            font-size: 13px !important;
+        }
+        
+        h1 {
+            font-size: 1.8rem !important;
+            color: #f5ebe0 !important;
+        }
+        
+        h2, h3 {
+            font-size: 1.3rem !important;
+            color: #f5ebe0 !important;
+        }
+        
+        /* Input fields styling - smaller with cream colors */
+        .stTextInput input, .stTextArea textarea, .stSelectbox select {
+            background-color: #e6e6e6 !important;  /* light grey */
+            border: 2px solid #d4a574 !important;
+            border-radius: 6px !important;
+            color: #6b2737 !important;             /* burgundy */
+            font-weight: 500;
+            font-size: 13px !important;
+            padding: 6px 10px !important;
+        }
+        
+        .stTextArea textarea {
+            min-height: 60px !important;
+        }
+        
+        .stTextInput input:focus, .stTextArea textarea:focus, .stSelectbox select:focus {
+            border-color: #d4a574 !important;
+            box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.3) !important;
+        }
+        
+        /* Prompt delete/add buttons - MUCH smaller, centered icons, beige icons */
+        .small-button button {
+            height: 20px !important;
+            min-height: 20px !important;
+            padding: 2px !important;
+            font-size: 11px !important;
+            min-width: 22px !important;
+            max-width: 22px !important;
+            width: 22px !important;
+            border-radius: 4px !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease !important;
+            border: none !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            line-height: 1 !important;
+        }
+        
+        /* Delete button - gradient with beige icon */
+        .small-button button:first-child {
+            background: linear-gradient(135deg, #6b2737 0%, #8b454e 100%) !important;
+            color: #f5ebe0 !important;
+            box-shadow: 0 1px 3px rgba(107, 39, 55, 0.4) !important;
+        }
+        
+        .small-button button:first-child:hover {
+            background: linear-gradient(135deg, #5c2e3e 0%, #6b2737 100%) !important;
+            box-shadow: 0 2px 6px rgba(107, 39, 55, 0.5) !important;
+        }
+        
+        /* Add button - gradient with beige icon */
+        .small-button button:last-child {
+            background: linear-gradient(135deg, #8b454e 0%, #6b2737 100%) !important;
+            color: #f5ebe0 !important;
+            box-shadow: 0 1px 3px rgba(139, 69, 78, 0.4) !important;
+        }
+        
+        .small-button button:last-child:hover {
+            background: linear-gradient(135deg, #6b2737 0%, #5c2e3e 100%) !important;
+            box-shadow: 0 2px 6px rgba(139, 69, 78, 0.5) !important;
+        }
+        
+        /* Parameter buttons - HALF size with gradient and beige text */
+        div[data-testid="column"] > div > div > button {
+            background: linear-gradient(135deg, #6b2737 0%, #8b454e 100%) !important;
+            color: #f5ebe0 !important;
+            border: none !important;
+            border-radius: 5px !important;
+            padding: 5px 10px !important;
+            font-weight: 500 !important;
+            font-size: 12px !important;
+            transition: all 0.2s ease !important;
+            box-shadow: 0 2px 6px rgba(107, 39, 55, 0.4) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        
+        div[data-testid="column"] > div > div > button:hover {
+            background: linear-gradient(135deg, #5c2e3e 0%, #6b2737 100%) !important;
+            box-shadow: 0 3px 8px rgba(107, 39, 55, 0.5) !important;
+        }
+        
+        /* Save Templates button - HALF size with gradient and beige text */
+        .stButton > button:first-child {
+            background: linear-gradient(135deg, #8b454e 0%, #6b2737 100%) !important;
+            color: #f5ebe0 !important;
+            border-radius: 5px !important;
+            font-weight: 500 !important;
+            font-size: 12px !important;
+            padding: 5px 10px !important;
+            box-shadow: 0 2px 6px rgba(139, 69, 78, 0.4) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        
+        .stButton > button:first-child:hover {
+            background: linear-gradient(135deg, #6b2737 0%, #5c2e3e 100%) !important;
+            box-shadow: 0 3px 8px rgba(139, 69, 78, 0.5) !important;
+        }
+        
+        /* Labels and text - cream colors for visibility */
+        .stMarkdown {
+            color: #f5ebe0 !important;
+            font-size: 13px !important;
+        }
+        
+        label {
+            color: #f5ebe0 !important;
+            font-weight: 500;
+            font-size: 13px !important;
+        }
+        
+        /* Dividers */
+        hr {
+            border-color: rgba(245, 235, 224, 0.3) !important;
+        }
+        
+        /* Number input styling - smaller */
+        .stNumberInput input {
+            background-color: #f5ebe0 !important;
+            border: 2px solid #d4a574 !important;
+            border-radius: 6px !important;
+            color: #5c2e3e !important;
+            font-size: 13px !important;
+            padding: 6px 10px !important;
+        }
+        
+        /* Checkbox styling */
+        .stCheckbox {
+            font-size: 13px !important;
+        }
+        
+        /* Selectbox styling */
+        .stSelectbox label {
+            font-size: 13px !important;
+        }
+        
+        /* Dataframe styling */
+        .stDataFrame {
+            background-color: #f5ebe0 !important;
+            border-radius: 6px !important;
+            font-size: 12px !important;
+        }
+        
+        /* Table text */
+        table {
+            font-size: 12px !important;
+        }
+        
+        /* Reduce spacing */
+        .element-container {
+            margin-bottom: 0.5rem !important;
+        }
+        /* Force dropdown box colors to match text inputs */
+        div[data-baseweb="select"] > div {
+            background-color: #e6e6e6 !important;  /* light grey */
+            color: #6b2737 !important;             /* burgundy */
+        }
+        /* Force beige color for checkbox side text (Streamlit new structure) */
+        div[data-testid="stCheckbox"] p {
+            color: #f5ebe0 !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
     
     # Calculate column widths to give more space to prompts
     # For each prompt: large prompt column, tiny button column, medium logic column
