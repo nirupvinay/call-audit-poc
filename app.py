@@ -641,6 +641,8 @@ if run:
             if not ai_param:
                 final_result = "NO"
                 score = 0
+                timestamps = []
+
         
             else:
                 result = ai_param["result"]
@@ -662,19 +664,18 @@ if run:
                     final_result = "NO"
                     score = 0
 
+                timestamps = ai_param.get("timestamps", [])
 
-
-                template_total += score
-                
-                timestamps = ai_param.get("timestamps", []) if ai_param else []
-                evidence = ", ".join(timestamps) if timestamps else "—"
-                
-                results.append({
-                    "Parameter": param["title"],
-                    "Result": final_result,
-                    "Score": score,
-                    "Evidence": evidence
-                })
+            template_total += score
+            
+            evidence = ", ".join(timestamps) if timestamps else "—"
+            
+            results.append({
+                "Parameter": param["title"],
+                "Result": final_result,
+                "Score": score,
+                "Evidence": evidence
+            })
 
         if fatal_triggered:
             template_total = 0
