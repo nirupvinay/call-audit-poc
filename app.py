@@ -204,15 +204,22 @@ for idx, param in enumerate(template_data["parameters"]):
         <style>
         /* Rich burgundy gradient background - more pronounced */
         .stApp {
-            background: linear-gradient(135deg, #4a1f2a 0%, #6b2737 25%, #8b454e 50%, #6b2737 75%, #5c2e3e 100%);
+            background:
+                radial-gradient(circle at 20% 30%, rgba(180,40,60,0.18) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(200,60,80,0.14) 0%, transparent 45%),
+                linear-gradient(135deg, #4a1f2a 0%, #6b2737 25%, #8b454e 50%, #6b2737 75%, #5c2e3e 100%);
             background-attachment: fixed;
         }
+
         
         .block-container {
             max-width: 90%;
             padding-left: 5%;
             padding-right: 5%;
-            background: transparent !important;
+            background: rgba(255, 245, 235, 0.06) !important;
+            backdrop-filter: blur(6px);
+            border-radius: 12px;
+
         }
         
         /* Scale down all fonts globally */
