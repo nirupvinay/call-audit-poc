@@ -248,6 +248,15 @@ st.markdown("""
     div[data-testid="stCheckbox"] p {
         color: #f5ebe0 !important;
     }
+    /* 🔴 force Streamlit main background transparent */
+    [data-testid="stAppViewContainer"] > .main {
+        background: transparent !important;
+    }
+    
+    [data-testid="stAppViewContainer"] section.main > div {
+        background: transparent !important;
+}
+
     </style>
 """, unsafe_allow_html=True)
 
