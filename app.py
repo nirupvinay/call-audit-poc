@@ -56,7 +56,6 @@ st.markdown("""
             radial-gradient(ellipse at 75% 18%, rgba(255,110,110,0.22) 0%, transparent 48%),
             radial-gradient(ellipse at 20% 85%, rgba(200,40,60,0.18) 0%, transparent 50%),
             linear-gradient(135deg, #4a1f2a 0%, #6b2737 25%, #8b454e 50%, #6b2737 75%, #5c2e3e 100%);
-        background-attachment: fixed;
     }
     
     .block-container {
