@@ -676,14 +676,6 @@ if run:
                     "Evidence": evidence
                 })
 
-
-            results.append({
-                "Parameter": param["title"],
-                "Result": final_result,
-                "Score": score,
-                "Evidence": evidence
-            })
-
         if fatal_triggered:
             template_total = 0
 
