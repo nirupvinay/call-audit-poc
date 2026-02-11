@@ -690,7 +690,7 @@ if run:
         if results:
             st.subheader(f"Template: {template_name}")
             df = pd.DataFrame(results)
-            st.table(df)
+            st.dataframe(df, use_container_width=True)
             st.markdown(f"**Total Score: {template_total}**")
 
 # =========================================================
