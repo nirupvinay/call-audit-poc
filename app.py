@@ -45,161 +45,6 @@ if "current_template" not in st.session_state:
 # PAGE HEADER
 # =========================================================
 st.title("Khatabook AI Auditor – Phase 1 POC")
-
-if st.button("💾 Save Templates"):
-    with open(TEMPLATE_FILE, "w") as f:
-        json.dump(st.session_state.templates, f, indent=2)
-    st.success("Templates saved.")
-
-st.divider()
-st.subheader("Audit Rule Engine")
-
-# =========================================================
-# TEMPLATE TOOLBAR
-# =========================================================
-col_dd, col_edit, col_add, col_del = st.columns([6, 1, 1, 1])
-
-template_names = list(st.session_state.templates.keys())
-
-with col_dd:
-    selected_template = st.selectbox(
-        "Template",
-        template_names,
-        index=template_names.index(st.session_state.current_template)
-        if st.session_state.current_template in template_names else 0,
-        label_visibility="collapsed"
-    )
-    st.session_state.current_template = selected_template
-
-if "rename_mode" not in st.session_state:
-    st.session_state.rename_mode = False
-
-with col_edit:
-    if st.button("✏️", use_container_width=True):
-        st.session_state.rename_mode = not st.session_state.rename_mode
-
-if st.session_state.rename_mode:
-    new_name = st.text_input(
-        "Rename Template",
-        value=st.session_state.current_template,
-        key="rename_input"
-    )
-    if new_name and new_name != st.session_state.current_template:
-        st.session_state.templates[new_name] = st.session_state.templates.pop(
-            st.session_state.current_template
-        )
-        st.session_state.current_template = new_name
-        st.session_state.rename_mode = False
-        
-        save_templates()  # auto-save rename
-        st.rerun()
-
-with col_add:
-    if st.button("➕", use_container_width=True):
-        st.session_state.templates["New Template"] = {"active": False, "parameters": []}
-        st.session_state.current_template = "New Template"
-
-        save_templates()  # auto-save
-        st.rerun()
-
-with col_del:
-    if st.button("🗑", use_container_width=True):
-
-        # Prevent deleting last template
-        if len(st.session_state.templates) <= 1:
-            st.warning("At least one template must exist.")
-        else:
-            del st.session_state.templates[st.session_state.current_template]
-
-            st.session_state.current_template = list(st.session_state.templates.keys())[0]
-
-            save_templates()  # <-- important production fix
-            st.rerun()
-
-# =========================================================
-# STOP IF NO TEMPLATE
-# =========================================================
-if not st.session_state.templates:
-    st.info("No templates available.")
-    if st.button("➕ Add New Template"):
-        st.session_state.templates["New Template"] = {"active": True, "parameters": []}
-        st.session_state.current_template = "New Template"
-        st.rerun()
-    st.stop()
-
-# =========================================================
-# TEMPLATE ACTIVE FLAG
-# =========================================================
-template_data = st.session_state.templates[st.session_state.current_template]
-template_data["active"] = st.checkbox("Template Active", value=template_data.get("active", True))
-
-# =========================================================
-# ENSURE PARAMETER EXISTS
-# =========================================================
-if len(template_data["parameters"]) == 0:
-    template_data["parameters"].append({
-        "title": "Parameter",
-        "type": "Regular",
-        "fatal": False,
-        "score": 0,
-        "prompts": [""],
-        "logic": []
-    })
-
-# =========================================================
-# PARAMETERS UI
-# =========================================================
-st.divider()
-
-for idx, param in enumerate(template_data["parameters"]):
-
-    st.markdown("---")  # simple clean separator instead of container
-
-    # TITLE
-    param["title"] = st.text_input(
-        "Title",
-        value=param["title"],
-        key=f"title_{selected_template}_{idx}",
-        label_visibility="collapsed",
-        placeholder="Parameter title"
-    )
-
-    # TYPE / FATAL / SCORE
-    col1, col2, col3 = st.columns([3, 1, 1])
-
-    with col1:
-        param["type"] = st.selectbox(
-            "Type",
-            ["Regular", "Conditional", "Flag"],
-            index=["Regular", "Conditional", "Flag"].index(param["type"]),
-            key=f"type_{selected_template}_{idx}",
-            label_visibility="collapsed"
-        )
-
-    is_flag = param["type"] == "Flag"
-    
-    with col2:
-        param["fatal"] = st.checkbox(
-            "Fatal",
-            value=param["fatal"],
-            key=f"fatal_{selected_template}_{idx}",
-            disabled=is_flag
-        )
-    
-    with col3:
-        param["score"] = st.number_input(
-            "Score",
-            min_value=0,
-            step=1,
-            value=param["score"],
-            key=f"score_{selected_template}_{idx}",
-            label_visibility="collapsed",
-            disabled=is_flag
-        )
-
-
-    # ---------- HORIZONTAL PROMPTS ----------
-    # Custom CSS for smaller prompt buttons and 90% width container
     st.markdown("""
         <style>
         /* Rich burgundy gradient background - more pronounced */
@@ -405,6 +250,157 @@ for idx, param in enumerate(template_data["parameters"]):
         }
         </style>
     """, unsafe_allow_html=True)
+
+if st.button("💾 Save Templates"):
+    with open(TEMPLATE_FILE, "w") as f:
+        json.dump(st.session_state.templates, f, indent=2)
+    st.success("Templates saved.")
+
+st.divider()
+st.subheader("Audit Rule Engine")
+
+# =========================================================
+# TEMPLATE TOOLBAR
+# =========================================================
+col_dd, col_edit, col_add, col_del = st.columns([6, 1, 1, 1])
+
+template_names = list(st.session_state.templates.keys())
+
+with col_dd:
+    selected_template = st.selectbox(
+        "Template",
+        template_names,
+        index=template_names.index(st.session_state.current_template)
+        if st.session_state.current_template in template_names else 0,
+        label_visibility="collapsed"
+    )
+    st.session_state.current_template = selected_template
+
+if "rename_mode" not in st.session_state:
+    st.session_state.rename_mode = False
+
+with col_edit:
+    if st.button("✏️", use_container_width=True):
+        st.session_state.rename_mode = not st.session_state.rename_mode
+
+if st.session_state.rename_mode:
+    new_name = st.text_input(
+        "Rename Template",
+        value=st.session_state.current_template,
+        key="rename_input"
+    )
+    if new_name and new_name != st.session_state.current_template:
+        st.session_state.templates[new_name] = st.session_state.templates.pop(
+            st.session_state.current_template
+        )
+        st.session_state.current_template = new_name
+        st.session_state.rename_mode = False
+        
+        save_templates()  # auto-save rename
+        st.rerun()
+
+with col_add:
+    if st.button("➕", use_container_width=True):
+        st.session_state.templates["New Template"] = {"active": False, "parameters": []}
+        st.session_state.current_template = "New Template"
+
+        save_templates()  # auto-save
+        st.rerun()
+
+with col_del:
+    if st.button("🗑", use_container_width=True):
+
+        # Prevent deleting last template
+        if len(st.session_state.templates) <= 1:
+            st.warning("At least one template must exist.")
+        else:
+            del st.session_state.templates[st.session_state.current_template]
+
+            st.session_state.current_template = list(st.session_state.templates.keys())[0]
+
+            save_templates()  # <-- important production fix
+            st.rerun()
+
+# =========================================================
+# STOP IF NO TEMPLATE
+# =========================================================
+if not st.session_state.templates:
+    st.info("No templates available.")
+    if st.button("➕ Add New Template"):
+        st.session_state.templates["New Template"] = {"active": True, "parameters": []}
+        st.session_state.current_template = "New Template"
+        st.rerun()
+    st.stop()
+
+# =========================================================
+# TEMPLATE ACTIVE FLAG
+# =========================================================
+template_data = st.session_state.templates[st.session_state.current_template]
+template_data["active"] = st.checkbox("Template Active", value=template_data.get("active", True))
+
+# =========================================================
+# ENSURE PARAMETER EXISTS
+# =========================================================
+if len(template_data["parameters"]) == 0:
+    template_data["parameters"].append({
+        "title": "Parameter",
+        "type": "Regular",
+        "fatal": False,
+        "score": 0,
+        "prompts": [""],
+        "logic": []
+    })
+
+# =========================================================
+# PARAMETERS UI
+# =========================================================
+st.divider()
+
+for idx, param in enumerate(template_data["parameters"]):
+
+    st.markdown("---")  # simple clean separator instead of container
+
+    # TITLE
+    param["title"] = st.text_input(
+        "Title",
+        value=param["title"],
+        key=f"title_{selected_template}_{idx}",
+        label_visibility="collapsed",
+        placeholder="Parameter title"
+    )
+
+    # TYPE / FATAL / SCORE
+    col1, col2, col3 = st.columns([3, 1, 1])
+
+    with col1:
+        param["type"] = st.selectbox(
+            "Type",
+            ["Regular", "Conditional", "Flag"],
+            index=["Regular", "Conditional", "Flag"].index(param["type"]),
+            key=f"type_{selected_template}_{idx}",
+            label_visibility="collapsed"
+        )
+
+    is_flag = param["type"] == "Flag"
+    
+    with col2:
+        param["fatal"] = st.checkbox(
+            "Fatal",
+            value=param["fatal"],
+            key=f"fatal_{selected_template}_{idx}",
+            disabled=is_flag
+        )
+    
+    with col3:
+        param["score"] = st.number_input(
+            "Score",
+            min_value=0,
+            step=1,
+            value=param["score"],
+            key=f"score_{selected_template}_{idx}",
+            label_visibility="collapsed",
+            disabled=is_flag
+        )
     
     # Calculate column widths to give more space to prompts
     # For each prompt: large prompt column, tiny button column, medium logic column
