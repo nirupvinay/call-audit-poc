@@ -540,6 +540,7 @@ if run:
 
 
     try:
+        st.write("Calling OpenAI now...")
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
