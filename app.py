@@ -592,16 +592,32 @@ if run:
             temperature=0
         )
 
-        ai_results = response.choices[0].message.content
+        raw_ai = response.choices[0].message.content
+
+        # --- SAFE JSON EXTRACTION ---
         try:
-            ai_results = json.loads(ai_results)
-        except:
-            st.error("AI returned invalid JSON. Try again.")
+            # Handle extra text before/after JSON
+            start = raw_ai.find("{")
+            end = raw_ai.rfind("}") + 1
+            cleaned = raw_ai[start:end]
+        
+            ai_results = json.loads(cleaned)
+        
+        except Exception as e:
+            st.error("AI returned unreadable JSON.")
+            st.code(raw_ai)
             st.stop()
         
-        if "parameters" not in ai_results:
-            st.error("Invalid AI structure.")
+        # --- STRUCTURE VALIDATION ---
+        if not isinstance(ai_results, dict) or "parameters" not in ai_results:
+            st.error("AI JSON missing 'parameters' field.")
+            st.code(raw_ai)
             st.stop()
+        
+        if not isinstance(ai_results["parameters"], list):
+            st.error("'parameters' must be a list.")
+            st.stop()
+
 
     except Exception as e:
         st.error(f"OpenAI error: {e}")
