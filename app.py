@@ -566,7 +566,6 @@ if run:
 
 
     try:
-        st.write("Calling OpenAI now...")
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
@@ -620,8 +619,6 @@ if run:
         )
 
         raw_ai = response.choices[0].message.content
-        st.write("RAW AI:", raw_ai)
-
         # --- SAFE JSON EXTRACTION ---
         try:
             # Handle extra text before/after JSON
