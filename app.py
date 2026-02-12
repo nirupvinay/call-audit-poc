@@ -566,8 +566,8 @@ if run:
 
     st.markdown(
         """
-        <div style="font-size:28px; font-weight:700; color:#FFD700;">
-            🧠 Running audit… Please wait
+        <div style="font-size:12px; font-weight:500; color:#C0C0C0;">
+            🕕>🕔>🕓 Running audit… Please wait
         </div>
         """,
         unsafe_allow_html=True
