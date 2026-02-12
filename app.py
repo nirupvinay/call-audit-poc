@@ -269,6 +269,7 @@ for idx, param in enumerate(template_data["parameters"]):
             justify-content: center !important;
             line-height: 1 !important;
             overflow: hidden !important;   /* keeps emoji perfectly inside & centered */
+            text-indent: -1px !important;   /* ← TRUE centering fix for emoji glyph */
         }
         
         /* Delete button - gradient with beige icon */
