@@ -255,21 +255,20 @@ for idx, param in enumerate(template_data["parameters"]):
         .small-button button {
             height: 20px !important;
             min-height: 20px !important;
-            padding: 0px !important;
-            font-size: 9px !important;
-            min-width: 22px !important;
-            max-width: 22px !important;
-            width: 22px !important;
-            border-radius: 4px !important;
-            font-weight: 500 !important;
-            transition: all 0.2s ease !important;
-            border: none !important;
+        
+            width: 20px !important;
+            min-width: 20px !important;
+            max-width: 20px !important;
+        
+            padding: 0 !important;
+            font-size: 11px !important;
+        
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
+        
             line-height: 1 !important;
-            overflow: hidden !important;   /* keeps emoji perfectly inside & centered */
-            text-indent: -1px !important;   /* ← TRUE centering fix for emoji glyph */
+            overflow: hidden !important;
         }
         
         /* Delete button - gradient with beige icon */
