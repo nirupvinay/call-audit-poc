@@ -688,7 +688,8 @@ if run:
                 • Keep reasoning concise and factual.
                 • Write reasoning in natural human audit language.
                 • Do NOT mention prompts, parameters, rules, or evaluation logic.
-                • Explain only what happened in the conversation and why it passes or fails.
+                • Explain only what happened in the conversation.
+                • Do NOT use jargons.
                 
                 Provide timestamps when detectable.
                 If unavailable → return empty list.
