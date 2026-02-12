@@ -252,6 +252,11 @@ for idx, param in enumerate(template_data["parameters"]):
         
         /* Prompt delete/add buttons - MUCH smaller, centered icons, beige icons */
         /* beige icons */
+        .small-button {
+            display: flex !important;
+            justify-content: center !important;
+        }
+
         .small-button button {
             height: 20px !important;
             min-height: 20px !important;
