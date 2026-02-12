@@ -438,84 +438,87 @@ for idx, param in enumerate(template_data["parameters"]):
         if p_idx < len(param["prompts"]) - 1:
             col_widths.append(2)  # AND/OR - medium
     
-    scroll_container = st.container()
+        scroll_container = st.container()
+
     with scroll_container:
         st.markdown(
             '<div style="overflow-x:auto; white-space:nowrap;">',
             unsafe_allow_html=True
         )
-    
-    cols = st.columns(col_widths)
 
-    c = 0
-    for p_idx in range(len(param["prompts"])):
+        cols = st.columns(col_widths)
 
-        # PROMPT INPUT
-        with cols[c]:
-            param_titles = [p["title"] for p in template_data["parameters"][:idx]]
+        c = 0
+        for p_idx in range(len(param["prompts"])):
 
-            if param["type"] == "Conditional" and param_titles:
-                param["prompts"][p_idx] = st.selectbox(
-                    "Cond",
-                    param_titles,
-                    index=param_titles.index(param["prompts"][p_idx])
-                    if param["prompts"][p_idx] in param_titles else 0,
-                    key=f"prompt_{selected_template}_{idx}_{p_idx}",
-                    label_visibility="collapsed"
-                )
-            else:
-                param["prompts"][p_idx] = st.text_area(
-                    "Prompt",
-                    value=param["prompts"][p_idx],
-                    key=f"prompt_{selected_template}_{idx}_{p_idx}",
-                    height=100,
-                    label_visibility="collapsed",
-                    placeholder="Enter Prompt"
-                )
-
-        c += 1
-
-        # DELETE BUTTON (only show for non-last prompts OR if more than 1 prompt)
-        with cols[c]:
-            st.markdown('<div class="small-button">', unsafe_allow_html=True)
-            # Show delete button for all prompts if more than 1 exists
-            if len(param["prompts"]) > 1:
-                if st.button(
-                    "🗑",
-                    key=f"del_prompt_{selected_template}_{idx}_{p_idx}",
-                    use_container_width=False
-                ):
-                    param["prompts"].pop(p_idx)
-                    if p_idx < len(param["logic"]):
-                        param["logic"].pop(p_idx)
-                    st.rerun()
-            
-            # Show ADD button ONLY on the last prompt
-            if p_idx == len(param["prompts"]) - 1:
-                if st.button(
-                    "➕",
-                    key=f"add_prompt_{selected_template}_{idx}_{p_idx}",
-                    use_container_width=False
-                ):
-                    param["prompts"].append("")
-                    param["logic"].append("AND")
-                    st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
-        
-        c += 1
-        
-        # AND / OR (show for all prompts EXCEPT the last one)
-        if p_idx < len(param["prompts"]) - 1:
+            # PROMPT INPUT
             with cols[c]:
-                param["logic"][p_idx] = st.selectbox(
-                    "",
-                    ["AND", "OR"],
-                    index=["AND", "OR"].index(param["logic"][p_idx])
-                    if p_idx < len(param["logic"]) else 0,
-                    key=f"logic_{selected_template}_{idx}_{p_idx}"
-                )
+                param_titles = [p["title"] for p in template_data["parameters"][:idx]]
+
+                if param["type"] == "Conditional" and param_titles:
+                    param["prompts"][p_idx] = st.selectbox(
+                        "Cond",
+                        param_titles,
+                        index=param_titles.index(param["prompts"][p_idx])
+                        if param["prompts"][p_idx] in param_titles else 0,
+                        key=f"prompt_{selected_template}_{idx}_{p_idx}",
+                        label_visibility="collapsed"
+                    )
+                else:
+                    param["prompts"][p_idx] = st.text_area(
+                        "Prompt",
+                        value=param["prompts"][p_idx],
+                        key=f"prompt_{selected_template}_{idx}_{p_idx}",
+                        height=100,
+                        label_visibility="collapsed",
+                        placeholder="Enter Prompt"
+                    )
+
             c += 1
-    st.markdown('</div>', unsafe_allow_html=True)
+
+            # DELETE / ADD BUTTONS
+            with cols[c]:
+                st.markdown('<div class="small-button">', unsafe_allow_html=True)
+
+                if len(param["prompts"]) > 1:
+                    if st.button(
+                        "🗑",
+                        key=f"del_prompt_{selected_template}_{idx}_{p_idx}",
+                        use_container_width=False
+                    ):
+                        param["prompts"].pop(p_idx)
+                        if p_idx < len(param["logic"]):
+                            param["logic"].pop(p_idx)
+                        st.rerun()
+
+                if p_idx == len(param["prompts"]) - 1:
+                    if st.button(
+                        "➕",
+                        key=f"add_prompt_{selected_template}_{idx}_{p_idx}",
+                        use_container_width=False
+                    ):
+                        param["prompts"].append("")
+                        param["logic"].append("AND")
+                        st.rerun()
+
+                st.markdown('</div>', unsafe_allow_html=True)
+
+            c += 1
+
+            # AND / OR DROPDOWN
+            if p_idx < len(param["prompts"]) - 1:
+                with cols[c]:
+                    param["logic"][p_idx] = st.selectbox(
+                        "",
+                        ["AND", "OR"],
+                        index=["AND", "OR"].index(param["logic"][p_idx])
+                        if p_idx < len(param["logic"]) else 0,
+                        key=f"logic_{selected_template}_{idx}_{p_idx}"
+                    )
+                c += 1
+
+        # CLOSE SCROLL DIV  ✅ (this is the important one)
+        st.markdown('</div>', unsafe_allow_html=True)
 
     # ADD / DELETE PARAMETER
     col_add, col_del = st.columns(2)
