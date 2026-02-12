@@ -564,8 +564,8 @@ if run:
         st.error("Paste transcript first.")
         st.stop()
 
-    with st.spinner("Running audit >>>"):
-        ai_results = None
+    st.write("⏳ Running audit...Be Patient with me")
+
     # Build audit definition to send to AI
     audit_payload = []
     
