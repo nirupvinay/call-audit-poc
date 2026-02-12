@@ -251,25 +251,22 @@ for idx, param in enumerate(template_data["parameters"]):
         }
         
         /* Prompt delete/add buttons - MUCH smaller, centered icons, beige icons */
-        /* beige icons */
-        .small-button {
-            display: flex !important;
-            justify-content: center !important;
-        }
-
         .small-button button {
             height: 20px !important;
             min-height: 20px !important;
-                
-            padding: 0 !important;
+            padding: 2px !important;
             font-size: 11px !important;
-        
+            min-width: 22px !important;
+            max-width: 22px !important;
+            width: 22px !important;
+            border-radius: 4px !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease !important;
+            border: none !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-        
             line-height: 1 !important;
-            overflow: hidden !important;
         }
         
         /* Delete button - gradient with beige icon */
@@ -294,8 +291,6 @@ for idx, param in enumerate(template_data["parameters"]):
         .small-button button:last-child:hover {
             background: linear-gradient(135deg, #6b2737 0%, #5c2e3e 100%) !important;
             box-shadow: 0 2px 6px rgba(139, 69, 78, 0.5) !important;
-        }
-
         }
         
         /* Parameter buttons - HALF size with gradient and beige text */
@@ -434,7 +429,7 @@ for idx, param in enumerate(template_data["parameters"]):
     col_widths = []
     for p_idx in range(len(param["prompts"])):
         col_widths.append(10)  # Prompt - larger
-        col_widths.append(2)   # Buttons - tiny
+        col_widths.append(1)   # Buttons - tiny
         if p_idx < len(param["prompts"]) - 1:
             col_widths.append(2)  # AND/OR - medium
     
@@ -468,36 +463,46 @@ for idx, param in enumerate(template_data["parameters"]):
 
         c += 1
 
-        # DELETE + AND/OR stacked vertically
+        # DELETE BUTTON (only show for non-last prompts OR if more than 1 prompt)
         with cols[c]:
             st.markdown('<div class="small-button">', unsafe_allow_html=True)
-        
+            # Show delete button for all prompts if more than 1 exists
             if len(param["prompts"]) > 1:
-                if st.button("🗑", key=f"del_prompt_{selected_template}_{idx}_{p_idx}", use_container_width=False):
+                if st.button(
+                    "🗑",
+                    key=f"del_prompt_{selected_template}_{idx}_{p_idx}",
+                    use_container_width=False
+                ):
                     param["prompts"].pop(p_idx)
                     if p_idx < len(param["logic"]):
                         param["logic"].pop(p_idx)
                     st.rerun()
-        
-            # AND / OR directly BELOW delete
-            if p_idx < len(param["prompts"]) - 1:
-                param["logic"][p_idx] = st.selectbox(
-                    "",
-                    ["AND", "OR"],
-                    index=["AND", "OR"].index(param["logic"][p_idx]) if p_idx < len(param["logic"]) else 0,
-                    key=f"logic_{selected_template}_{idx}_{p_idx}"
-                )
-        
-            # ADD button only on last prompt
+            
+            # Show ADD button ONLY on the last prompt
             if p_idx == len(param["prompts"]) - 1:
-                if st.button("➕", key=f"add_prompt_{selected_template}_{idx}_{p_idx}", use_container_width=False):
+                if st.button(
+                    "➕",
+                    key=f"add_prompt_{selected_template}_{idx}_{p_idx}",
+                    use_container_width=False
+                ):
                     param["prompts"].append("")
                     param["logic"].append("AND")
                     st.rerun()
-        
             st.markdown('</div>', unsafe_allow_html=True)
         
         c += 1
+        
+        # AND / OR (show for all prompts EXCEPT the last one)
+        if p_idx < len(param["prompts"]) - 1:
+            with cols[c]:
+                param["logic"][p_idx] = st.selectbox(
+                    "",
+                    ["AND", "OR"],
+                    index=["AND", "OR"].index(param["logic"][p_idx])
+                    if p_idx < len(param["logic"]) else 0,
+                    key=f"logic_{selected_template}_{idx}_{p_idx}"
+                )
+            c += 1
 
     # ADD / DELETE PARAMETER
     col_add, col_del = st.columns(2)
@@ -562,7 +567,7 @@ if run:
 
     try:
         response = client.chat.completions.create(
-            model="gpt-5-mini",
+            model="gpt-4.1-mini",
             messages=[
                 {
                     "role": "system",
