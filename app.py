@@ -436,10 +436,10 @@ for idx, param in enumerate(template_data["parameters"]):
     # For each prompt: large prompt column, tiny button column, medium logic column
     col_widths = []
     for p_idx in range(len(param["prompts"])):
-        col_widths.append(10)  # Prompt - larger
-        col_widths.append(2)   # Buttons - tiny
+        col_widths.append(6)  # Prompt - larger
+        col_widths.append(1)   # Buttons - tiny
         if p_idx < len(param["prompts"]) - 1:
-            col_widths.append(2)  # AND/OR - medium
+            col_widths.append(1)  # AND/OR - medium
     
     scroll_container = st.container()
 
