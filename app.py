@@ -438,7 +438,7 @@ for idx, param in enumerate(template_data["parameters"]):
     unsafe_allow_html=True
     )
 
-    cols = st.container()
+    cols = st.columns(col_widths)
 
     c = 0
     for p_idx in range(len(param["prompts"])):
