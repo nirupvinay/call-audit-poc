@@ -443,7 +443,7 @@ for idx, param in enumerate(template_data["parameters"]):
     unsafe_allow_html=True
     )
 
-    cols = st.columns(col_widths)
+    cols = []
 
     c = 0
     for p_idx in range(len(param["prompts"])):
