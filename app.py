@@ -564,7 +564,14 @@ if run:
         st.error("Paste transcript first.")
         st.stop()
 
-    st.write("⏳ Running audit...Be Patient with me")
+    st.markdown(
+        """
+        <div style="font-size:28px; font-weight:700; color:#FFD700;">
+            🧠 Running audit… Please wait
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     # Build audit definition to send to AI
     audit_payload = []
