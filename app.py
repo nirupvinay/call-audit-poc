@@ -508,6 +508,7 @@ for idx, param in enumerate(template_data["parameters"]):
                     key=f"logic_{selected_template}_{idx}_{p_idx}"
                 )
             c += 1
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # ADD / DELETE PARAMETER
     col_add, col_del = st.columns(2)
