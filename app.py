@@ -468,46 +468,36 @@ for idx, param in enumerate(template_data["parameters"]):
 
         c += 1
 
-        # DELETE BUTTON (only show for non-last prompts OR if more than 1 prompt)
+        # DELETE + AND/OR stacked vertically
         with cols[c]:
             st.markdown('<div class="small-button">', unsafe_allow_html=True)
-            # Show delete button for all prompts if more than 1 exists
+        
             if len(param["prompts"]) > 1:
-                if st.button(
-                    "🗑",
-                    key=f"del_prompt_{selected_template}_{idx}_{p_idx}",
-                    use_container_width=False
-                ):
+                if st.button("🗑", key=f"del_prompt_{selected_template}_{idx}_{p_idx}", use_container_width=False):
                     param["prompts"].pop(p_idx)
                     if p_idx < len(param["logic"]):
                         param["logic"].pop(p_idx)
                     st.rerun()
-            
-            # Show ADD button ONLY on the last prompt
-            if p_idx == len(param["prompts"]) - 1:
-                if st.button(
-                    "➕",
-                    key=f"add_prompt_{selected_template}_{idx}_{p_idx}",
-                    use_container_width=False
-                ):
-                    param["prompts"].append("")
-                    param["logic"].append("AND")
-                    st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
         
-        c += 1
-        
-        # AND / OR (show for all prompts EXCEPT the last one)
-        if p_idx < len(param["prompts"]) - 1:
-            with cols[c]:
+            # AND / OR directly BELOW delete
+            if p_idx < len(param["prompts"]) - 1:
                 param["logic"][p_idx] = st.selectbox(
                     "",
                     ["AND", "OR"],
-                    index=["AND", "OR"].index(param["logic"][p_idx])
-                    if p_idx < len(param["logic"]) else 0,
+                    index=["AND", "OR"].index(param["logic"][p_idx]) if p_idx < len(param["logic"]) else 0,
                     key=f"logic_{selected_template}_{idx}_{p_idx}"
                 )
-            c += 1
+        
+            # ADD button only on last prompt
+            if p_idx == len(param["prompts"]) - 1:
+                if st.button("➕", key=f"add_prompt_{selected_template}_{idx}_{p_idx}", use_container_width=False):
+                    param["prompts"].append("")
+                    param["logic"].append("AND")
+                    st.rerun()
+        
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        c += 1
 
     # ADD / DELETE PARAMETER
     col_add, col_del = st.columns(2)
