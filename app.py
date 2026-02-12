@@ -429,7 +429,7 @@ for idx, param in enumerate(template_data["parameters"]):
     col_widths = []
     for p_idx in range(len(param["prompts"])):
         col_widths.append(10)  # Prompt - larger
-        col_widths.append(1)   # Buttons - tiny
+        col_widths.append(2)   # Buttons - tiny
         if p_idx < len(param["prompts"]) - 1:
             col_widths.append(2)  # AND/OR - medium
     
