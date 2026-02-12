@@ -209,11 +209,16 @@ for idx, param in enumerate(template_data["parameters"]):
         }
         
         .block-container {
-            max-width: 90%;
-            padding-left: 5%;
-            padding-right: 5%;
-            background: transparent !important;
+            max-width: none !important;   /* remove width restriction */
+            padding-left: 2rem;
+            padding-right: 2rem;
         }
+
+        /* allow full page horizontal scroll */
+        html, body, .stApp {
+            overflow-x: auto !important;
+        }
+
         
         /* Scale down all fonts globally */
         html, body, .stApp {
