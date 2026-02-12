@@ -564,7 +564,8 @@ if run:
         st.error("Paste transcript first.")
         st.stop()
 
-    ai_results = None
+    with st.spinner("Running audit >>>"):
+        ai_results = None
     # Build audit definition to send to AI
     audit_payload = []
     
