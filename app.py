@@ -4,6 +4,9 @@ from datetime import datetime
 import pandas as pd
 import json
 from openai import OpenAI
+
+st.set_page_config(layout="wide")
+
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 if "transcript_key" not in st.session_state:
