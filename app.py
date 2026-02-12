@@ -678,6 +678,9 @@ if run:
                 • No generic QA language.
                 • No speculation.
                 • Keep reasoning concise and factual.
+                • Write reasoning in natural human audit language.
+                • Do NOT mention prompts, parameters, rules, or evaluation logic.
+                • Explain only what happened in the conversation and why it passes or fails.
                 
                 Provide timestamps when detectable.
                 If unavailable → return empty list.
