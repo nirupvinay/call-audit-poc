@@ -449,7 +449,7 @@ for idx, param in enumerate(template_data["parameters"]):
     for p_idx in range(len(param["prompts"])):
 
         # PROMPT INPUT
-        with cols[c]:
+        with st.container():
             param_titles = [p["title"] for p in template_data["parameters"][:idx]]
 
             if param["type"] == "Conditional" and param_titles:
