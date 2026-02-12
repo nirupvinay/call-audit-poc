@@ -438,7 +438,7 @@ for idx, param in enumerate(template_data["parameters"]):
         if p_idx < len(param["prompts"]) - 1:
             col_widths.append(2)  # AND/OR - medium
     
-        scroll_container = st.container()
+    scroll_container = st.container()
 
     with scroll_container:
         st.markdown(
