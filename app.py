@@ -254,8 +254,8 @@ for idx, param in enumerate(template_data["parameters"]):
         .small-button button {
             height: 20px !important;
             min-height: 20px !important;
-            padding: 2px !important;
-            font-size: 11px !important;
+            padding: 0px !important;          /* remove extra space pushing emoji out */
+            font-size: 9px !important;        /* shrink emoji to fit inside button */
             min-width: 22px !important;
             max-width: 22px !important;
             width: 22px !important;
@@ -268,6 +268,7 @@ for idx, param in enumerate(template_data["parameters"]):
             justify-content: center !important;
             line-height: 1 !important;
         }
+
         
         /* Delete button - gradient with beige icon */
         .small-button button:first-child {
