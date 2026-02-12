@@ -433,6 +433,11 @@ for idx, param in enumerate(template_data["parameters"]):
         if p_idx < len(param["prompts"]) - 1:
             col_widths.append(2)  # AND/OR - medium
     
+    st.markdown(
+    '<div style="overflow-x:auto; white-space:nowrap;">',
+    unsafe_allow_html=True
+    )
+
     cols = st.columns(col_widths)
 
     c = 0
