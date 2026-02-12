@@ -251,11 +251,12 @@ for idx, param in enumerate(template_data["parameters"]):
         }
         
         /* Prompt delete/add buttons - MUCH smaller, centered icons, beige icons */
+        /* beige icons */
         .small-button button {
             height: 20px !important;
             min-height: 20px !important;
-            padding: 0px !important;          /* remove extra space pushing emoji out */
-            font-size: 9px !important;        /* shrink emoji to fit inside button */
+            padding: 0px !important;
+            font-size: 9px !important;
             min-width: 22px !important;
             max-width: 22px !important;
             width: 22px !important;
@@ -267,8 +268,8 @@ for idx, param in enumerate(template_data["parameters"]):
             align-items: center !important;
             justify-content: center !important;
             line-height: 1 !important;
+            overflow: hidden !important;   /* keeps emoji perfectly inside & centered */
         }
-
         
         /* Delete button - gradient with beige icon */
         .small-button button:first-child {
@@ -292,6 +293,8 @@ for idx, param in enumerate(template_data["parameters"]):
         .small-button button:last-child:hover {
             background: linear-gradient(135deg, #6b2737 0%, #5c2e3e 100%) !important;
             box-shadow: 0 2px 6px rgba(139, 69, 78, 0.5) !important;
+        }
+
         }
         
         /* Parameter buttons - HALF size with gradient and beige text */
