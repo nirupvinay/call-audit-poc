@@ -723,7 +723,6 @@ if run:
                 }
 
             ],
-            temperature=0
         )
 
         raw_ai = response.choices[0].message.content
@@ -754,7 +753,10 @@ if run:
 
     except Exception as e:
         st.error(f"OpenAI error: {e}")
-
+    
+    if not ai_results:
+        st.stop()
+        
     for template_name, template in st.session_state.templates.items():
 
         if not template.get("active"):
