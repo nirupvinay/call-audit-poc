@@ -444,7 +444,7 @@ for idx, param in enumerate(template_data["parameters"]):
             '<div style="overflow-x:auto; white-space:nowrap;">',
             unsafe_allow_html=True
         )
-
+    
     cols = st.columns(col_widths)
 
     c = 0
