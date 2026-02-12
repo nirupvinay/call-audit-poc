@@ -260,11 +260,7 @@ for idx, param in enumerate(template_data["parameters"]):
         .small-button button {
             height: 20px !important;
             min-height: 20px !important;
-        
-            width: 20px !important;
-            min-width: 20px !important;
-            max-width: 20px !important;
-        
+                
             padding: 0 !important;
             font-size: 11px !important;
         
