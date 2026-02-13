@@ -675,7 +675,7 @@ if run:
                 --------------------------------------------------
                 
                 • The transcript may contain ANY language:
-                  Hindi, Hinglish, English, mixed speech, broken grammar, STT errors, fillers.
+                  Hindi, Hinglish, English, mixed speech, broken grammar, STT errors, fillers, merged words.
                 
                 • Interpret SEMANTIC meaning, not grammar perfection.
                 
@@ -741,7 +741,7 @@ if run:
                 • No speculation.
                 • Keep reasoning concise and factual.
                 • Write reasoning in natural human audit language.
-                • Do NOT mention prompts, parameters, rules, or evaluation logic.
+                • Do NOT mention prompts, parameters, rules, transcript, fail, pass, or evaluation logic.
                 • Explain only what happened in the conversation.
                 • Do NOT use jargons.
                 
