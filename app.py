@@ -499,6 +499,18 @@ for idx, param in enumerate(template_data["parameters"]):
             height: 32px !important;
             font-size: 12px !important;
         }
+        /* Mini prompt buttons — completely isolated */
+        div[data-testid="column"] .mini-btn > button {
+            height: 20px !important;
+            min-height: 20px !important;
+            width: 22px !important;
+            min-width: 22px !important;
+            max-width: 22px !important;
+            padding: 0 !important;
+            font-size: 11px !important;
+            line-height: 1 !important;
+        }
+
         </style>
     """, unsafe_allow_html=True)
     
@@ -551,7 +563,8 @@ for idx, param in enumerate(template_data["parameters"]):
 
             # DELETE / ADD BUTTONS
             with cols[c]:
-                st.markdown('<div class="small-button">', unsafe_allow_html=True)
+                st.markdown('<div class="mini-btn">', unsafe_allow_html=True)
+
 
                 if len(param["prompts"]) > 1:
                     if st.button(
