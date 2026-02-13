@@ -62,10 +62,6 @@ st.download_button(
 )
 st.divider()
 st.subheader("Audit Rule Engine")
-
-# =========================================================
-# TEMPLATE TOOLBAR
-# =========================================================
 col_dd, col_edit, col_add, col_del = st.columns([6, 1, 1, 1])
 
 template_names = list(st.session_state.templates.keys())
