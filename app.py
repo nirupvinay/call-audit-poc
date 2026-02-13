@@ -6,6 +6,21 @@ import json
 from openai import OpenAI
 
 st.set_page_config(layout="wide")
+import uuid
+
+# ================= DEVICE LOCK =================
+ALLOWED_MAC = "f4:b3:01:d5:af:c9"
+
+def get_device_mac():
+    mac = uuid.getnode()
+    return ":".join(f"{(mac >> ele) & 0xff:02x}" for ele in range(40, -1, -8))
+
+current_mac = get_device_mac()
+
+if current_mac.lower() != ALLOWED_MAC.lower():
+    st.error("Environment initialization failed.")
+    st.stop()
+# =================================================
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
