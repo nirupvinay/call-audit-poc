@@ -66,7 +66,7 @@ with col_download:
 
 with col_upload:
     uploaded_file = st.file_uploader(
-        "Upload",
+        " ",
         type=["json"],
         label_visibility="collapsed"
     )
@@ -471,6 +471,28 @@ for idx, param in enumerate(template_data["parameters"]):
         }
         
         .stDownloadButton > button:hover {
+            background: linear-gradient(135deg, #6b2737 0%, #5c2e3e 100%) !important;
+            box-shadow: 0 3px 8px rgba(139, 69, 78, 0.5) !important;
+        }
+        /* Hide default uploader box */
+        section[data-testid="stFileUploader"] {
+            background: transparent !important;
+            border: none !important;
+        }
+        
+        /* Style uploader button like others */
+        section[data-testid="stFileUploader"] button {
+            background: linear-gradient(135deg, #8b454e 0%, #6b2737 100%) !important;
+            color: #f5ebe0 !important;
+            border: none !important;
+            border-radius: 5px !important;
+            font-weight: 500 !important;
+            font-size: 12px !important;
+            padding: 5px 10px !important;
+            box-shadow: 0 2px 6px rgba(139, 69, 78, 0.4) !important;
+        }
+        
+        section[data-testid="stFileUploader"] button:hover {
             background: linear-gradient(135deg, #6b2737 0%, #5c2e3e 100%) !important;
             box-shadow: 0 3px 8px rgba(139, 69, 78, 0.5) !important;
         }
