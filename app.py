@@ -563,6 +563,8 @@ for idx, param in enumerate(template_data["parameters"]):
 
             # DELETE / ADD BUTTONS
             with cols[c]:
+                bcol1, bcol2 = st.columns([1, 1], gap="small")
+
                 if len(param["prompts"]) > 1:
                     if st.button(
                         "🗑",
