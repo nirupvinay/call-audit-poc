@@ -450,7 +450,7 @@ for idx, param in enumerate(template_data["parameters"]):
         }
         
         tbody tr td:nth-child(2),  /* Result */
-        tbody tr td:nth-child(3),  /* Score */
+        tbody tr td:nth-child(3) { /* Score */
             text-align: center !important;
         }
         
@@ -481,7 +481,12 @@ for idx, param in enumerate(template_data["parameters"]):
             height: 32px !important;
             font-size: 12px !important;
         }
-
+        div[data-testid="stHorizontalBlock"] button:first-child {
+            background: linear-gradient(135deg, #00a86b 0%, #007a50 100%) !important;
+            color: white !important;
+            font-weight: 600 !important;
+            height: 44px !important;
+        }
         </style>
     """, unsafe_allow_html=True)
     
