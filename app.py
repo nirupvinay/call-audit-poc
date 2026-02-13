@@ -60,7 +60,6 @@ st.download_button(
     file_name="templates_backup.json",
     mime="application/json"
 )
-st.divider()
 st.subheader("Audit Rule Engine")
 col_dd, col_edit, col_add, col_del = st.columns([6, 1, 1, 1])
 
