@@ -290,15 +290,15 @@ for idx, param in enumerate(template_data["parameters"]):
             box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.3) !important;
         }
         
-        /* Prompt delete/add buttons - MUCH smaller, centered icons, beige icons */
+        /* FORCE tiny size for prompt + / delete buttons */
         .small-button button {
-            height: 20px !important;
-            min-height: 20px !important;
-            padding: 2px !important;
-            font-size: 11px !important;
-            min-width: 22px !important;
-            max-width: 22px !important;
-            width: 22px !important;
+            height: 18px !important;
+            min-height: 18px !important;
+            padding: 0px !important;
+            font-size: 10px !important;
+            width: 20px !important;
+            min-width: 20px !important;
+            max-width: 20px !important;
             border-radius: 4px !important;
             font-weight: 500 !important;
             transition: all 0.2s ease !important;
@@ -308,6 +308,7 @@ for idx, param in enumerate(template_data["parameters"]):
             justify-content: center !important;
             line-height: 1 !important;
         }
+
         
         /* Delete button - gradient with beige icon */
         .small-button button:first-child {
