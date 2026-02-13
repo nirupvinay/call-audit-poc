@@ -474,14 +474,22 @@ for idx, param in enumerate(template_data["parameters"]):
             background: linear-gradient(135deg, #6b2737 0%, #5c2e3e 100%) !important;
             box-shadow: 0 3px 8px rgba(139, 69, 78, 0.5) !important;
         }
-        /* Hide default uploader box */
-        section[data-testid="stFileUploader"] {
+        /* ===== Fully hide default uploader layout ===== */
+        section[data-testid="stFileUploader"] > div {
             background: transparent !important;
             border: none !important;
+            padding: 0 !important;
         }
         
-        /* Style uploader button like others */
+        /* Hide drag-drop text */
+        section[data-testid="stFileUploader"] small,
+        section[data-testid="stFileUploader"] span {
+            display: none !important;
+        }
+        
+        /* Make uploader button identical to others */
         section[data-testid="stFileUploader"] button {
+            width: 100% !important;
             background: linear-gradient(135deg, #8b454e 0%, #6b2737 100%) !important;
             color: #f5ebe0 !important;
             border: none !important;
@@ -496,6 +504,7 @@ for idx, param in enumerate(template_data["parameters"]):
             background: linear-gradient(135deg, #6b2737 0%, #5c2e3e 100%) !important;
             box-shadow: 0 3px 8px rgba(139, 69, 78, 0.5) !important;
         }
+
 
         </style>
     """, unsafe_allow_html=True)
