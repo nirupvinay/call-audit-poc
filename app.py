@@ -334,8 +334,9 @@ for idx, param in enumerate(template_data["parameters"]):
             box-shadow: 0 2px 6px rgba(139, 69, 78, 0.5) !important;
         }
         
-            /* Style only main action buttons, NOT prompt mini buttons */
-            div[data-testid="column"] > div > div > button[kind="secondary"] {
+            /* Style secondary buttons EXCEPT prompt mini-buttons */
+            div[data-testid="column"] > div > div > button[kind="secondary"]:not([aria-label="🗑"]):not([aria-label="➕"])
+ {
 
             background: linear-gradient(135deg, #6b2737 0%, #8b454e 100%) !important;
             color: #f5ebe0 !important;
