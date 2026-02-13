@@ -451,7 +451,6 @@ for idx, param in enumerate(template_data["parameters"]):
         
         tbody tr td:nth-child(2),  /* Result */
         tbody tr td:nth-child(3),  /* Score */
-        tbody tr td:nth-child(4) { /* Evidence */
             text-align: center !important;
         }
         
@@ -877,7 +876,6 @@ if run:
                 "Parameter": param["title"],
                 "Result": final_result,
                 "Score": score,
-                "Evidence": evidence,
                 "Reason": reason
             })
 
