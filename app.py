@@ -153,7 +153,6 @@ if len(template_data["parameters"]) == 0:
 # =========================================================
 # PARAMETERS UI
 # =========================================================
-st.divider()
 
 for idx, param in enumerate(template_data["parameters"]):
 
