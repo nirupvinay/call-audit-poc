@@ -349,6 +349,18 @@ for idx, param in enumerate(template_data["parameters"]):
             align-items: center !important;
             justify-content: center !important;
         }
+        /* Restore tiny size ONLY for prompt + / delete buttons */
+            div[data-testid="column"] .small-button button {
+                height: 20px !important;
+                min-height: 20px !important;
+                padding: 2px !important;
+                font-size: 11px !important;
+                width: 22px !important;
+                min-width: 22px !important;
+                max-width: 22px !important;
+                line-height: 1 !important;
+            }
+
         
         div[data-testid="column"] > div > div > button:hover {
             background: linear-gradient(135deg, #5c2e3e 0%, #6b2737 100%) !important;
