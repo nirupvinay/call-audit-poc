@@ -61,6 +61,7 @@ st.download_button(
     mime="application/json"
 )
 st.subheader("Audit Rule Engine")
+st.divider()
 col_dd, col_edit, col_add, col_del = st.columns([6, 1, 1, 1])
 
 template_names = list(st.session_state.templates.keys())
