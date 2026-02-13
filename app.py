@@ -597,6 +597,7 @@ for idx, param in enumerate(template_data["parameters"]):
         if st.button("🗑 Delete Parameter", key=f"delete_param_{idx}", use_container_width=True) and len(template_data["parameters"]) > 1:
             template_data["parameters"].pop(idx)
             st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
 # TRANSCRIPT + RUN
