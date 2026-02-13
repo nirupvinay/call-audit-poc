@@ -476,6 +476,13 @@ for idx, param in enumerate(template_data["parameters"]):
             background: linear-gradient(135deg, #6b2737 0%, #5c2e3e 100%) !important;
             box-shadow: 0 3px 8px rgba(139, 69, 78, 0.5) !important;
         }
+        /* Force smaller file uploader height */
+        section[data-testid="stFileUploader"] > div {
+            padding: 2px 8px !important;
+            height: 32px !important;
+            font-size: 12px !important;
+        }
+
         </style>
     """, unsafe_allow_html=True)
     
