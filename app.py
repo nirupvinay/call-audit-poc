@@ -185,7 +185,10 @@ if len(template_data["parameters"]) == 0:
 
 for idx, param in enumerate(template_data["parameters"]):
 
-    st.markdown("---")  # simple clean separator instead of container
+    st.markdown(
+        '<div style="background:#5c2e3e33;padding:12px;border-radius:10px;margin-bottom:8px;">',
+        unsafe_allow_html=True
+    )
 
     # TITLE
     param["title"] = st.text_input(
