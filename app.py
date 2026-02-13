@@ -6,16 +6,6 @@ import json
 from openai import OpenAI
 
 st.set_page_config(layout="wide")
-# ================= LOCAL DEVICE FILE LOCK =================
-import os
-import streamlit as st
-
-SECRET_FILE = "C:/Users/nirupvinay/.kb_local_lock"
-
-if not os.path.exists(SECRET_FILE):
-    st.error("Environment initialization failed.")
-    st.stop()
-# ==========================================================
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
