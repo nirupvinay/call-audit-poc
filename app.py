@@ -62,16 +62,6 @@ st.download_button(
 )
 st.divider()
 st.subheader("Audit Rule Engine")
-# ---------- UPLOAD TEMPLATE BACKUP ----------
-uploaded_file = st.file_uploader("Upload Templates Backup", type=["json"])
-
-if uploaded_file is not None:
-    try:
-        st.session_state.templates = json.load(uploaded_file)
-        st.success("Templates restored successfully! Please refresh page.")
-        st.rerun()
-    except Exception:
-        st.error("Invalid template file.")
 
 # =========================================================
 # TEMPLATE TOOLBAR
