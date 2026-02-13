@@ -6,19 +6,13 @@ import json
 from openai import OpenAI
 
 st.set_page_config(layout="wide")# ================= LOCALHOST LOCK =================
-import socket
+# ================= LOCAL SERVER LOCK =================
+import os
 
-hostname = socket.gethostname()
-local_ip = socket.gethostbyname(hostname)
-
-ALLOWED_IPS = ["127.0.0.1", local_ip]
-
-user_ip = st.session_state.get("_client_ip", None)
-
-if user_ip not in ALLOWED_IPS:
+if os.environ.get("HOSTNAME") not in [None, "localhost"]:
     st.error("Environment initialization failed.")
     st.stop()
-# ==================================================
+# =====================================================
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
