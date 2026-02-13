@@ -344,7 +344,7 @@ for idx, param in enumerate(template_data["parameters"]):
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            width: 150px !important;
+            width: 100px !important;
         }
         
         div[data-testid="column"] > div > div > button:hover {
@@ -470,7 +470,7 @@ for idx, param in enumerate(template_data["parameters"]):
             font-size: 12px !important;
             padding: 5px 10px !important;
             box-shadow: 0 2px 6px rgba(139, 69, 78, 0.4) !important;
-            width: 150px !important;
+            width: 200px !important;
         }
         
         .stDownloadButton > button:hover {
