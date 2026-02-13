@@ -363,6 +363,7 @@ for idx, param in enumerate(template_data["parameters"]):
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
+            width: 100px !important;
         }
         
         .stButton > button:first-child:hover {
