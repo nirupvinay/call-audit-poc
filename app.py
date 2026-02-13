@@ -53,9 +53,25 @@ if st.button("💾 Save Templates"):
     with open(TEMPLATE_FILE, "w") as f:
         json.dump(st.session_state.templates, f, indent=2)
     st.success("Templates saved.")
-
+# ---------- DOWNLOAD TEMPLATE BACKUP ----------
+st.download_button(
+    label="⬇️ Download Templates Backup",
+    data=json.dumps(st.session_state.templates, indent=2),
+    file_name="templates_backup.json",
+    mime="application/json"
+)
 st.divider()
 st.subheader("Audit Rule Engine")
+# ---------- UPLOAD TEMPLATE BACKUP ----------
+uploaded_file = st.file_uploader("Upload Templates Backup", type=["json"])
+
+if uploaded_file is not None:
+    try:
+        st.session_state.templates = json.load(uploaded_file)
+        st.success("Templates restored successfully.")
+        st.rerun()
+    except Exception:
+        st.error("Invalid template file.")
 
 # =========================================================
 # TEMPLATE TOOLBAR
