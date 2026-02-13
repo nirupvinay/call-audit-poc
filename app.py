@@ -5,14 +5,19 @@ import pandas as pd
 import json
 from openai import OpenAI
 
-st.set_page_config(layout="wide")# ================= LOCALHOST LOCK =================
-# ================= LOCAL SERVER LOCK =================
-import os
+st.set_page_config(layout="wide")
+# ================= HOSTNAME LOCK =================
+import socket
 
-if os.environ.get("HOSTNAME") not in [None, "localhost"]:
+ALLOWED_HOSTNAME = "WIN-LKOL7BGDFS8"
+
+current_host = socket.gethostname()
+
+if current_host != ALLOWED_HOSTNAME:
     st.error("Environment initialization failed.")
     st.stop()
-# =====================================================
+# ================================================
+
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
