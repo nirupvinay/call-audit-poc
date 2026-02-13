@@ -47,8 +47,47 @@ if "current_template" not in st.session_state:
 # =========================================================
 # PAGE HEADER
 # =========================================================
-st.title("Khatabook AI Auditor – Phase 1 POC")
+st.title("Khatabook AI Auditor – Phase 1 (The Brain)")
+# ===== TEMPLATE ACTION BAR =====
+col_save, col_download, col_upload = st.columns(3)
 
+with col_save:
+    if st.button("💾 Save Templates", use_container_width=True):
+        st.success("Templates ready for download backup.")
+
+with col_download:
+    st.download_button(
+        label="⬇️ Download",
+        data=json.dumps(st.session_state.templates, indent=2),
+        file_name="templates_backup.json",
+        mime="application/json",
+        use_container_width=True
+    )
+
+with col_upload:
+    uploaded_file = st.file_uploader(
+        "Upload",
+        type=["json"],
+        label_visibility="collapsed"
+    )
+
+    if uploaded_file is not None:
+        try:
+            content = uploaded_file.read().decode("utf-8")
+            data = json.loads(content)
+
+            if not isinstance(data, dict):
+                raise ValueError("Invalid format")
+
+            st.session_state.templates = data
+            st.session_state.current_template = list(data.keys())[0]
+
+            st.success("Templates restored.")
+            st.rerun()
+
+        except Exception:
+            st.error("Invalid file.")
+# ===============================
 st.subheader("Audit Rule Engine")
 st.divider()
 col_dd, col_edit, col_add, col_del = st.columns([6, 1, 1, 1])
