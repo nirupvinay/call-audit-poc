@@ -5,22 +5,20 @@ import pandas as pd
 import json
 from openai import OpenAI
 
-st.set_page_config(layout="wide")
-import uuid
+st.set_page_config(layout="wide")# ================= LOCALHOST LOCK =================
+import socket
 
-# ================= DEVICE LOCK =================
-ALLOWED_MAC = "f4:b3:01:d5:af:c9"
+hostname = socket.gethostname()
+local_ip = socket.gethostbyname(hostname)
 
-def get_device_mac():
-    mac = uuid.getnode()
-    return ":".join(f"{(mac >> ele) & 0xff:02x}" for ele in range(40, -1, -8))
+ALLOWED_IPS = ["127.0.0.1", local_ip]
 
-current_mac = get_device_mac()
+user_ip = st.session_state.get("_client_ip", None)
 
-if current_mac.lower() != ALLOWED_MAC.lower():
+if user_ip not in ALLOWED_IPS:
     st.error("Environment initialization failed.")
     st.stop()
-# =================================================
+# ==================================================
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
