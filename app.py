@@ -6,18 +6,16 @@ import json
 from openai import OpenAI
 
 st.set_page_config(layout="wide")
-# ================= HOSTNAME LOCK =================
-import socket
+# ================= LOCAL DEVICE FILE LOCK =================
+import os
+import streamlit as st
 
-ALLOWED_HOSTNAME = "WIN-LKOL7BGDFS8"
+SECRET_FILE = "C:/Users/nirupvinay/.kb_local_lock"
 
-current_host = socket.gethostname()
-
-if current_host != ALLOWED_HOSTNAME:
+if not os.path.exists(SECRET_FILE):
     st.error("Environment initialization failed.")
     st.stop()
-# ================================================
-
+# ==========================================================
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
