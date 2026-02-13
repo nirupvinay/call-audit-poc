@@ -49,17 +49,6 @@ if "current_template" not in st.session_state:
 # =========================================================
 st.title("Khatabook AI Auditor – Phase 1 POC")
 
-if st.button("💾 Save Templates"):
-    with open(TEMPLATE_FILE, "w") as f:
-        json.dump(st.session_state.templates, f, indent=2)
-    st.success("Templates saved.")
-# ---------- DOWNLOAD TEMPLATE BACKUP ----------
-st.download_button(
-    label="⬇️ Download Templates Backup",
-    data=json.dumps(st.session_state.templates, indent=2),
-    file_name="templates_backup.json",
-    mime="application/json"
-)
 st.subheader("Audit Rule Engine")
 st.divider()
 col_dd, col_edit, col_add, col_del = st.columns([6, 1, 1, 1])
