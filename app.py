@@ -563,9 +563,6 @@ for idx, param in enumerate(template_data["parameters"]):
 
             # DELETE / ADD BUTTONS
             with cols[c]:
-                st.markdown('<div class="mini-btn">', unsafe_allow_html=True)
-
-
                 if len(param["prompts"]) > 1:
                     if st.button(
                         "🗑",
@@ -586,8 +583,6 @@ for idx, param in enumerate(template_data["parameters"]):
                         param["prompts"].append("")
                         param["logic"].append("AND")
                         st.rerun()
-
-                st.markdown('</div>', unsafe_allow_html=True)
 
             c += 1
 
