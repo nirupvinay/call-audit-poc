@@ -57,7 +57,7 @@ with col_save:
 
 with col_download:
     st.download_button(
-        label="⬇️ Download",
+        label="⬇️ Download Templates",
         data=json.dumps(st.session_state.templates, indent=2),
         file_name="templates_backup.json",
         mime="application/json",
