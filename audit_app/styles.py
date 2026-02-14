@@ -213,6 +213,32 @@ div[data-baseweb="select"]:has(input[aria-label="Prompt Logic"]) input {
 </style>
 """
 
+
+
+PROMPT_ROW_SCROLL_STYLES = """
+<style>
+/* Keep prompt widgets in one horizontal line and allow horizontal scroll instead of squeeze */
+div[class*="st-key-prompt_row_"] div[data-testid="stHorizontalBlock"] {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding-bottom: 0.4rem;
+}
+
+div[class*="st-key-prompt_row_"] div[data-testid="column"] {
+    min-width: 220px !important;
+    flex: 0 0 auto !important;
+}
+
+div[class*="st-key-prompt_row_"] div[data-testid="column"]:nth-child(3n + 2) {
+    min-width: 88px !important;
+}
+
+div[class*="st-key-prompt_row_"] div[data-testid="column"]:nth-child(3n) {
+    min-width: 110px !important;
+}
+</style>
+"""
 PARAMETER_DIVIDER = """
 <div style="
     height:5px;

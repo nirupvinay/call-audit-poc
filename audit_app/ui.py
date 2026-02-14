@@ -5,7 +5,12 @@ import streamlit as st
 from openai import OpenAI
 
 from audit_app.audit_engine import AuditResponseParseError, build_audit_payload, run_openai_audit
-from audit_app.styles import APP_STYLES, LOGIC_DROPDOWN_STYLES, PARAMETER_DIVIDER
+from audit_app.styles import (
+    APP_STYLES,
+    LOGIC_DROPDOWN_STYLES,
+    PARAMETER_DIVIDER,
+    PROMPT_ROW_SCROLL_STYLES,
+)
 from audit_app.template_store import ensure_minimum_parameter, initialize_session_state, save_templates
 
 
@@ -168,60 +173,71 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
 
         st.markdown(APP_STYLES, unsafe_allow_html=True)
 
+        st.markdown(PROMPT_ROW_SCROLL_STYLES, unsafe_allow_html=True)
+
+        prompt_row = st.container(key=f"prompt_row_{selected_template}_{idx}")
+        param_titles = [p["title"] for p in template_data["parameters"][:idx]]
+
+        layout_weights = []
+        layout_items = []
+
         for p_idx in range(len(param["prompts"])):
-            empty_left, prompt_col, button_col, empty_right = st.columns([2, 5, 1, 4])
-
-            with prompt_col:
-                param_titles = [p["title"] for p in template_data["parameters"][:idx]]
-
-                if param["type"] == "Conditional" and param_titles:
-                    param["prompts"][p_idx] = st.selectbox(
-                        "Cond",
-                        param_titles,
-                        index=param_titles.index(param["prompts"][p_idx])
-                        if param["prompts"][p_idx] in param_titles
-                        else 0,
-                        key=f"prompt_{selected_template}_{idx}_{p_idx}",
-                        label_visibility="collapsed",
-                    )
-                else:
-                    param["prompts"][p_idx] = st.text_area(
-                        "Prompt",
-                        value=param["prompts"][p_idx],
-                        key=f"prompt_{selected_template}_{idx}_{p_idx}",
-                        height=60,
-                        label_visibility="collapsed",
-                        placeholder="Enter Prompt",
-                    )
-
-            with button_col:
-                if len(param["prompts"]) > 1 and st.button(
-                    "🗑",
-                    key=f"del_prompt_{selected_template}_{idx}_{p_idx}",
-                    use_container_width=True,
-                ):
-                    param["prompts"].pop(p_idx)
-                    if p_idx < len(param["logic"]):
-                        param["logic"].pop(p_idx)
-                    save_templates()
-                    st.rerun()
-
-                if p_idx == len(param["prompts"]) - 1 and st.button(
-                    "➕",
-                    key=f"add_prompt_{selected_template}_{idx}_{p_idx}",
-                    use_container_width=True,
-                ):
-                    param["prompts"].append("")
-                    param["logic"].append("AND")
-                    save_templates()
-                    st.rerun()
+            layout_weights.extend([7, 1.6])
+            layout_items.extend([("prompt", p_idx), ("buttons", p_idx)])
 
             if p_idx < len(param["prompts"]) - 1:
-                st.write("")
-                empty1, logic_col, empty2 = st.columns([4, 2, 6])
-                with logic_col:
-                    st.markdown(LOGIC_DROPDOWN_STYLES, unsafe_allow_html=True)
+                layout_weights.append(2)
+                layout_items.append(("logic", p_idx))
 
+        columns = prompt_row.columns(layout_weights, gap="small")
+
+        for column, (item_type, p_idx) in zip(columns, layout_items):
+            with column:
+                if item_type == "prompt":
+                    if param["type"] == "Conditional" and param_titles:
+                        param["prompts"][p_idx] = st.selectbox(
+                            "Cond",
+                            param_titles,
+                            index=param_titles.index(param["prompts"][p_idx])
+                            if param["prompts"][p_idx] in param_titles
+                            else 0,
+                            key=f"prompt_{selected_template}_{idx}_{p_idx}",
+                            label_visibility="collapsed",
+                        )
+                    else:
+                        param["prompts"][p_idx] = st.text_area(
+                            "Prompt",
+                            value=param["prompts"][p_idx],
+                            key=f"prompt_{selected_template}_{idx}_{p_idx}",
+                            height=60,
+                            label_visibility="collapsed",
+                            placeholder="Enter Prompt",
+                        )
+
+                elif item_type == "buttons":
+                    if len(param["prompts"]) > 1 and st.button(
+                        "🗑",
+                        key=f"del_prompt_{selected_template}_{idx}_{p_idx}",
+                        use_container_width=True,
+                    ):
+                        param["prompts"].pop(p_idx)
+                        if p_idx < len(param["logic"]):
+                            param["logic"].pop(p_idx)
+                        save_templates()
+                        st.rerun()
+
+                    if p_idx == len(param["prompts"]) - 1 and st.button(
+                        "➕",
+                        key=f"add_prompt_{selected_template}_{idx}_{p_idx}",
+                        use_container_width=True,
+                    ):
+                        param["prompts"].append("")
+                        param["logic"].append("AND")
+                        save_templates()
+                        st.rerun()
+
+                elif item_type == "logic":
+                    st.markdown(LOGIC_DROPDOWN_STYLES, unsafe_allow_html=True)
                     param["logic"][p_idx] = st.selectbox(
                         "Prompt Logic",
                         ["AND", "OR"],
@@ -231,7 +247,6 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
                         key=f"logic_{selected_template}_{idx}_{p_idx}",
                         label_visibility="collapsed",
                     )
-                st.write("")
 
         col_add, col_del = st.columns(2)
 
