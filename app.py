@@ -204,7 +204,7 @@ for idx, param in enumerate(template_data["parameters"]):
         value=param["title"],
         key=f"title_{selected_template}_{idx}",
         label_visibility="collapsed",
-        placeholder="Parameter title"
+        placeholder="Parameter title",
         max_chars=100
     )
 
