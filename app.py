@@ -444,7 +444,7 @@ for idx, param in enumerate(template_data["parameters"]):
             font-size: 12px !important;
         }
         /* Premium parameter title input */
-        input[id^="title_"] {
+        div[data-testid="stTextInput"] input[id^="title_"] {
             font-size: 15px !important;
             font-weight: 600 !important;
             background: rgba(245, 235, 224, 0.10) !important;
