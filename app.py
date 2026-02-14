@@ -509,9 +509,6 @@ for idx, param in enumerate(template_data["parameters"]):
                 )
             
     # ADD / DELETE PARAMETER
-    col_add, col_del = st.columns(2)
-
-    # ADD / DELETE PARAMETER
 col_add, col_del = st.columns(2)
 
 with col_add:
