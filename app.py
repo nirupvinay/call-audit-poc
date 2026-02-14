@@ -558,7 +558,7 @@ for idx, param in enumerate(template_data["parameters"]):
     st.markdown(
     """
     <div style="
-        height:1px;
+        height:3px;
         background: linear-gradient(
             to right,
             transparent,
