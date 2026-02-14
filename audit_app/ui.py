@@ -223,7 +223,7 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
                     st.markdown(LOGIC_DROPDOWN_STYLES, unsafe_allow_html=True)
 
                     param["logic"][p_idx] = st.selectbox(
-                        "",
+                        "Prompt Logic",
                         ["AND", "OR"],
                         index=["AND", "OR"].index(param["logic"][p_idx])
                         if p_idx < len(param["logic"])

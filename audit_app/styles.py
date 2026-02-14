@@ -135,12 +135,6 @@ table {
     margin-bottom: 0.5rem !important;
 }
 
-/* Force dropdown box colors to match text inputs */
-div[data-baseweb="select"] > div {
-    background-color: #e6e6e6 !important;
-    color: #6b2737 !important;
-}
-
 /* Force beige color for checkbox side text */
 div[data-testid="stCheckbox"] p {
     color: #f5ebe0 !important;
@@ -199,16 +193,19 @@ section[data-testid="stFileUploader"] > div {
 
 LOGIC_DROPDOWN_STYLES = """
 <style>
-/* Style AND/OR dropdown - black background, white text */
-div[data-baseweb="select"] {
+/* Style only the Prompt Logic dropdown - black background, white text */
+div[data-baseweb="select"]:has(input[aria-label="Prompt Logic"]) {
     background-color: #000000 !important;
 }
-div[data-baseweb="select"] > div {
+div[data-baseweb="select"]:has(input[aria-label="Prompt Logic"]) > div {
     background-color: #000000 !important;
     color: #ffffff !important;
     text-align: center !important;
 }
-div[data-baseweb="select"] select {
+div[data-baseweb="select"]:has(input[aria-label="Prompt Logic"]) svg {
+    fill: #ffffff !important;
+}
+div[data-baseweb="select"]:has(input[aria-label="Prompt Logic"]) input {
     background-color: #000000 !important;
     color: #ffffff !important;
     text-align: center !important;
