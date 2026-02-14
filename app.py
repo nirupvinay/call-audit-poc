@@ -555,10 +555,10 @@ for idx, param in enumerate(template_data["parameters"]):
             st.rerun()
 
     with col_del:
-    if st.button("🗑 Delete Parameter", key=f"delete_param_{idx}", use_container_width=True) and len(template_data["parameters"]) > 1:
-        template_data["parameters"].pop(idx)
-        save_templates()
-        st.rerun()
+        if st.button("🗑 Delete Parameter", key=f"delete_param_{idx}", use_container_width=True) and len(template_data["parameters"]) > 1:
+            template_data["parameters"].pop(idx)
+            save_templates()
+            st.rerun()
 
     st.markdown(
         """
