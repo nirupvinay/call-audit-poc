@@ -541,7 +541,6 @@ for p_idx in range(len(param["prompts"])):
     
     **Result:**
     ```
-    [Prompt 1] [AND] [Prompt 2] [OR] [Prompt 3] [🗑🗑🗑➕]
             
     # ADD / DELETE PARAMETER
     col_add, col_del = st.columns(2)
