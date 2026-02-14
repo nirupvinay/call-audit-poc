@@ -529,18 +529,7 @@ for p_idx in range(len(param["prompts"])):
             param["logic"].append("AND")
             save_templates()
             st.rerun()
-    ```
-    
-    ---
-    
-    **What this does:**
-    - Prompts stack **horizontally** in a row
-    - AND/OR dropdowns appear **between** each prompt
-    - All delete buttons stack **vertically** in the last column
-    - Add button is at the bottom of the button column
-    
-    **Result:**
-            
+                
     # ADD / DELETE PARAMETER
     col_add, col_del = st.columns(2)
 
