@@ -554,30 +554,30 @@ for idx, param in enumerate(template_data["parameters"]):
             save_templates()
             st.rerun()
 
-        with col_del:
-        if st.button("🗑 Delete Parameter", key=f"delete_param_{idx}", use_container_width=True) and len(template_data["parameters"]) > 1:
-            template_data["parameters"].pop(idx)
-            save_templates()
-            st.rerun()
+    with col_del:
+    if st.button("🗑 Delete Parameter", key=f"delete_param_{idx}", use_container_width=True) and len(template_data["parameters"]) > 1:
+        template_data["parameters"].pop(idx)
+        save_templates()
+        st.rerun()
 
-        st.markdown(
-            """
-            <div style="
-                height:1px;
-                background: linear-gradient(
-                    to right,
-                    transparent,
-                    rgba(212,165,116,0.6),
-                    transparent
-                );
-                margin-top:12px;
-                margin-bottom:4px;
-            "></div>
-            """,
-            unsafe_allow_html=True
-        )
-    
-        st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div style="
+            height:1px;
+            background: linear-gradient(
+                to right,
+                transparent,
+                rgba(212,165,116,0.6),
+                transparent
+            );
+            margin-top:12px;
+            margin-bottom:4px;
+        "></div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
 # TRANSCRIPT + RUN
