@@ -540,7 +540,6 @@ for p_idx in range(len(param["prompts"])):
     - Add button is at the bottom of the button column
     
     **Result:**
-    ```
             
     # ADD / DELETE PARAMETER
     col_add, col_del = st.columns(2)
