@@ -507,19 +507,6 @@ for p_idx in range(len(param["prompts"])):
 
     # BUTTONS (delete and add) in the last column
     with cols[col_index]:
-        for p_idx in range(len(param["prompts"])):
-            if len(param["prompts"]) > 1:
-                if st.button(
-                    "🗑",
-                    key=f"del_prompt_{selected_template}_{idx}_{p_idx}",
-                    use_container_width=True
-                ):
-                    param["prompts"].pop(p_idx)
-                    if p_idx < len(param["logic"]):
-                        param["logic"].pop(p_idx)
-                    save_templates()
-                    st.rerun()
-        
         if st.button(
             "➕",
             key=f"add_prompt_{selected_template}_{idx}",
@@ -529,22 +516,22 @@ for p_idx in range(len(param["prompts"])):
             param["logic"].append("AND")
             save_templates()
             st.rerun()
-                
-    # ADD / DELETE PARAMETER
-    col_add, col_del = st.columns(2)
-
-    with col_add:
-        if st.button("➕ Add Parameter", key=f"add_param_{idx}", use_container_width=True):
-            template_data["parameters"].insert(idx + 1, {
-                "title": "Parameter",
-                "type": "Regular",
-                "fatal": False,
-                "score": 0,
-                "prompts": [""],
-                "logic": []
-            })
-            save_templates()
-            st.rerun()
+                    
+        # ADD / DELETE PARAMETER
+        col_add, col_del = st.columns(2)
+    
+        with col_add:
+            if st.button("➕ Add Parameter", key=f"add_param_{idx}", use_container_width=True):
+                template_data["parameters"].insert(idx + 1, {
+                    "title": "Parameter",
+                    "type": "Regular",
+                    "fatal": False,
+                    "score": 0,
+                    "prompts": [""],
+                    "logic": []
+                })
+                save_templates()
+                st.rerun()
 
     with col_del:
         if st.button("🗑 Delete Parameter", key=f"delete_param_{idx}", use_container_width=True) and len(template_data["parameters"]) > 1:
