@@ -529,7 +529,8 @@ with col_del:
         template_data["parameters"].pop(idx)
         save_templates()
         st.rerun()
-
+        
+    st.markdown("</div>", unsafe_allow_html=True)
 # =========================================================
 # TRANSCRIPT + RUN
 # =========================================================
