@@ -166,8 +166,6 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
                     disabled=is_flag,
                 )
 
-        st.markdown(APP_STYLES, unsafe_allow_html=True)
-
         for p_idx in range(len(param["prompts"])):
             empty_left, prompt_col, button_col, empty_right = st.columns([2, 5, 1, 4])
 
@@ -357,17 +355,15 @@ def evaluate_and_render(client, transcript: str) -> None:
             render_results(template_name, results, template_total)
 
 
-def run_app() -> None:
-    st.set_page_config(layout="wide")
-    initialize_session_state()
 
-    client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-
+def render_shared_header() -> None:
     st.title("Khatabook AI Auditor – Phase 1 (The Brain)")
-    render_template_action_bar()
     st.subheader("Audit Rule Engine")
     st.divider()
 
+
+def render_backend_page() -> None:
+    render_template_action_bar()
     selected_template, template_data = render_template_selector()
 
     new_active_state = st.checkbox("Template Active", value=template_data.get("active", True))
@@ -379,6 +375,8 @@ def run_app() -> None:
 
     render_parameters(selected_template, template_data)
 
+
+def render_frontend_page(client) -> None:
     transcript = st.text_area("Paste transcript here", key=st.session_state["transcript_key"])
 
     col1, col2 = st.columns(2)
@@ -392,3 +390,24 @@ def run_app() -> None:
         num = int(st.session_state["transcript_key"].split("_")[-1]) + 1
         st.session_state["transcript_key"] = f"transcript_{num}"
         st.rerun()
+
+def run_app() -> None:
+    st.set_page_config(layout="wide")
+    initialize_session_state()
+
+    client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+    st.markdown(APP_STYLES, unsafe_allow_html=True)
+    render_shared_header()
+
+    page = st.radio(
+        "Page",
+        ["Frontend", "Backend"],
+        horizontal=True,
+        key="app_page",
+    )
+
+    if page == "Frontend":
+        render_frontend_page(client)
+    else:
+        render_backend_page()
