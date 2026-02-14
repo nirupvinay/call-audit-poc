@@ -92,7 +92,9 @@ with col_upload:
 # ===============================
 st.subheader("Audit Rule Engine")
 st.divider()
-col_dd, col_edit, col_add, col_del = st.columns([6, 1, 1, 1])
+
+# TEMPLATE SELECTOR - 1/2 width
+empty1, col_dd, col_edit, col_add, col_del, empty2 = st.columns([2, 3, 1, 1, 1, 2])
 
 template_names = list(st.session_state.templates.keys())
 
@@ -198,18 +200,20 @@ for idx, param in enumerate(template_data["parameters"]):
         unsafe_allow_html=True
     )
 
-    # TITLE
-    param["title"] = st.text_input(
-        "Title",
-        value=param["title"],
-        key=f"title_{selected_template}_{idx}",
-        label_visibility="collapsed",
-        placeholder="Parameter title",
-        max_chars=100
-    )
+    # TITLE - 1/4 width
+    title_col, empty_col = st.columns([3, 9])
+    with title_col:
+        param["title"] = st.text_input(
+            "Title",
+            value=param["title"],
+            key=f"title_{selected_template}_{idx}",
+            label_visibility="collapsed",
+            placeholder="Parameter title",
+            max_chars=100
+        )
 
     # TYPE / FATAL / SCORE
-    col1, col2, col3 = st.columns([3, 1, 1])
+    col1, col2, col3 = st.columns([2, 1, 1])
 
     with col1:
         param["type"] = st.selectbox(
@@ -231,18 +235,22 @@ for idx, param in enumerate(template_data["parameters"]):
         )
     
     with col3:
-        param["score"] = st.number_input(
-            "Score",
-            min_value=0,
-            step=1,
-            value=param["score"],
-            key=f"score_{selected_template}_{idx}",
-            label_visibility="collapsed",
-            disabled=is_flag
-        )
+        # Score box - only 3 digits width
+        score_col, empty_score = st.columns([1, 2])
+        with score_col:
+            param["score"] = st.number_input(
+                "Score",
+                min_value=0,
+                max_value=999,
+                step=1,
+                value=param["score"],
+                key=f"score_{selected_template}_{idx}",
+                label_visibility="collapsed",
+                disabled=is_flag
+            )
 
 
-    # ---------- VERTICAL PROMPTS LAYOUT (FIXED) ----------
+    # ---------- VERTICAL PROMPTS LAYOUT ----------
     # Custom CSS for styling
     st.markdown("""
         <style>
@@ -443,11 +451,11 @@ for idx, param in enumerate(template_data["parameters"]):
         </style>
     """, unsafe_allow_html=True)
     
-    # FIXED: Vertical layout for prompts
+    # PROMPTS LAYOUT - 1/3 width
     for p_idx in range(len(param["prompts"])):
         
         # Create a row for each prompt with its controls
-        prompt_col, button_col = st.columns([10, 1])
+        prompt_col, button_col, empty_prompt = st.columns([4, 1, 7])
         
         with prompt_col:
             param_titles = [p["title"] for p in template_data["parameters"][:idx]]
@@ -496,10 +504,10 @@ for idx, param in enumerate(template_data["parameters"]):
                     save_templates()
                     st.rerun()
     
-        # Show AND/OR dropdown BETWEEN prompts (centered)
+        # Show AND/OR dropdown BETWEEN prompts - 1/4 width, centered
         if p_idx < len(param["prompts"]) - 1:
             st.write("")
-            empty1, logic_col, empty2 = st.columns([4, 2, 4])
+            empty1, logic_col, empty2 = st.columns([4.5, 1.5, 6])
             with logic_col:
                 param["logic"][p_idx] = st.selectbox(
                     "",
