@@ -205,7 +205,7 @@ for idx, param in enumerate(template_data["parameters"]):
         key=f"title_{selected_template}_{idx}",
         label_visibility="collapsed",
         placeholder="Parameter title",
-        max_chars=50
+        max_chars=100
     )
 
     # TYPE / FATAL / SCORE
@@ -283,12 +283,6 @@ for idx, param in enumerate(template_data["parameters"]):
             font-size: 13px !important;
             padding: 6px 10px !important;
         }
-
-/* Make parameter title input smaller */
-.stTextInput input {
-    height: 35px !important;
-    min-height: 35px !important;
-}
         
         .stTextArea textarea {
             min-height: 60px !important;
@@ -472,7 +466,7 @@ for idx, param in enumerate(template_data["parameters"]):
                     "Prompt",
                     value=param["prompts"][p_idx],
                     key=f"prompt_{selected_template}_{idx}_{p_idx}",
-                    height=100,
+                    height=60,
                     label_visibility="collapsed",
                     placeholder="Enter Prompt"
                 )
@@ -502,9 +496,10 @@ for idx, param in enumerate(template_data["parameters"]):
                     save_templates()
                     st.rerun()
     
-        # Show AND/OR dropdown BETWEEN prompts (not in the same row)
+        # Show AND/OR dropdown BETWEEN prompts (centered)
         if p_idx < len(param["prompts"]) - 1:
-            logic_col = st.columns([1])[0]
+            st.write("")
+            empty1, logic_col, empty2 = st.columns([4, 2, 4])
             with logic_col:
                 param["logic"][p_idx] = st.selectbox(
                     "",
@@ -514,30 +509,32 @@ for idx, param in enumerate(template_data["parameters"]):
                     key=f"logic_{selected_template}_{idx}_{p_idx}",
                     label_visibility="collapsed"
                 )
+            st.write("")
             
     # ADD / DELETE PARAMETER
-col_add, col_del = st.columns(2)
+    col_add, col_del = st.columns(2)
 
-with col_add:
-    if st.button("➕ Add Parameter", key=f"add_param_{idx}", use_container_width=True):
-        template_data["parameters"].insert(idx + 1, {
-            "title": "Parameter",
-            "type": "Regular",
-            "fatal": False,
-            "score": 0,
-            "prompts": [""],
-            "logic": []
-        })
-        save_templates()
-        st.rerun()
+    with col_add:
+        if st.button("➕ Add Parameter", key=f"add_param_{idx}", use_container_width=True):
+            template_data["parameters"].insert(idx + 1, {
+                "title": "Parameter",
+                "type": "Regular",
+                "fatal": False,
+                "score": 0,
+                "prompts": [""],
+                "logic": []
+            })
+            save_templates()
+            st.rerun()
 
-with col_del:
-    if st.button("🗑 Delete Parameter", key=f"delete_param_{idx}", use_container_width=True) and len(template_data["parameters"]) > 1:
-        template_data["parameters"].pop(idx)
-        save_templates()
-        st.rerun()
+    with col_del:
+        if st.button("🗑 Delete Parameter", key=f"delete_param_{idx}", use_container_width=True) and len(template_data["parameters"]) > 1:
+            template_data["parameters"].pop(idx)
+            save_templates()
+            st.rerun()
         
     st.markdown("</div>", unsafe_allow_html=True)
+
 # =========================================================
 # TRANSCRIPT + RUN
 # =========================================================
