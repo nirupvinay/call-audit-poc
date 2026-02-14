@@ -196,7 +196,7 @@ if len(template_data["parameters"]) == 0:
 for idx, param in enumerate(template_data["parameters"]):
 
     st.markdown(
-        '<div style="background:#5c2e3e;padding:16px;border-radius:10px;margin-bottom:16px;border:2px solid #8b454e;">',
+        '<div style="background:#5c2e3e;padding:16px;border-radius:10px;margin-bottom:4px;border:2px solid #8b454e;">',
         unsafe_allow_html=True
     )
 
