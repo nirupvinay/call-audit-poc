@@ -401,13 +401,13 @@ def run_app() -> None:
     render_shared_header()
 
     page = st.radio(
-        "Page",
-        ["Frontend", "Backend"],
+        "Workspace",
+        ["Audit", "Rule Engine"],
         horizontal=True,
         key="app_page",
     )
 
-    if page == "Frontend":
+    if page == "Audit":
         render_frontend_page(client)
     else:
         render_backend_page()

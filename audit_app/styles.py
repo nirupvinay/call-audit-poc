@@ -216,7 +216,7 @@ div[class*="st-key-logic_"] div[data-baseweb="select"] svg {
 
 PARAMETER_DIVIDER = """
 <div style="
-    height:5px;
+    height:10px;
     background: linear-gradient(
         to right,
         transparent,
