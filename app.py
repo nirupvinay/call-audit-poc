@@ -446,11 +446,11 @@ for idx, param in enumerate(template_data["parameters"]):
     for p_idx in range(len(param["prompts"])):
         
         # Create a row for each prompt with its controls
-        prompt_col, button_col, logic_col = st.columns([10, 1, 2])
+        prompt_col, button_col = st.columns([10, 1])
         
         with prompt_col:
             param_titles = [p["title"] for p in template_data["parameters"][:idx]]
-
+    
             if param["type"] == "Conditional" and param_titles:
                 param["prompts"][p_idx] = st.selectbox(
                     "Cond",
@@ -469,7 +469,7 @@ for idx, param in enumerate(template_data["parameters"]):
                     label_visibility="collapsed",
                     placeholder="Enter Prompt"
                 )
-
+    
         with button_col:
             # Stack delete and add buttons vertically
             if len(param["prompts"]) > 1:
@@ -483,7 +483,7 @@ for idx, param in enumerate(template_data["parameters"]):
                         param["logic"].pop(p_idx)
                     save_templates()
                     st.rerun()
-        
+    
             if p_idx == len(param["prompts"]) - 1:
                 if st.button(
                     "➕",
@@ -494,9 +494,11 @@ for idx, param in enumerate(template_data["parameters"]):
                     param["logic"].append("AND")
                     save_templates()
                     st.rerun()
-        with logic_col:
-            # Show AND/OR dropdown only between prompts
-            if p_idx < len(param["prompts"]) - 1:
+    
+        # Show AND/OR dropdown BETWEEN prompts (not in the same row)
+        if p_idx < len(param["prompts"]) - 1:
+            logic_col = st.columns([1])[0]
+            with logic_col:
                 param["logic"][p_idx] = st.selectbox(
                     "",
                     ["AND", "OR"],
@@ -505,10 +507,31 @@ for idx, param in enumerate(template_data["parameters"]):
                     key=f"logic_{selected_template}_{idx}_{p_idx}",
                     label_visibility="collapsed"
                 )
-            else:
-                # Empty space for last prompt to maintain alignment
-                st.write("")
-
+    ```
+    
+    ---
+    
+    ## **What Changed:**
+    
+    1. **Removed the `logic_col` from the main column layout:**
+       - Changed from `st.columns([10, 1, 2])` to `st.columns([10, 1])`
+       - Now only prompt and buttons are on the same row
+    
+    2. **Moved AND/OR dropdown outside the row:**
+       - It now appears **between** prompt boxes instead of aligned to the right
+       - Creates a new single-column layout just for the AND/OR dropdown
+    
+    3. **Result:**
+    ```
+       [Prompt Box 1              ] [🗑➕]
+       
+       [AND ▼]
+       
+       [Prompt Box 2              ] [🗑➕]
+       
+       [OR ▼]
+       
+       [Prompt Box 3              ] [🗑➕]
     # ADD / DELETE PARAMETER
     col_add, col_del = st.columns(2)
 
