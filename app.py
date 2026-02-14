@@ -443,15 +443,6 @@ for idx, param in enumerate(template_data["parameters"]):
             height: 32px !important;
             font-size: 12px !important;
         }
-        /* Premium parameter title input */
-        div[data-testid="stTextInput"] input[id^="title_"] {
-            font-size: 15px !important;
-            font-weight: 600 !important;
-            background: rgba(245, 235, 224, 0.10) !important;
-            border: 1px solid rgba(212,165,116,0.45) !important;
-            border-radius: 8px !important;
-            color: #5c2e3e !important;
-        }
         </style>
     """, unsafe_allow_html=True)
     
