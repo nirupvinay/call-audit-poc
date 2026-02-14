@@ -205,6 +205,7 @@ for idx, param in enumerate(template_data["parameters"]):
         key=f"title_{selected_template}_{idx}",
         label_visibility="collapsed",
         placeholder="Parameter title"
+        max_chars=100
     )
 
     # TYPE / FATAL / SCORE
