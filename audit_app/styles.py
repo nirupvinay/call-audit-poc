@@ -193,49 +193,66 @@ section[data-testid="stFileUploader"] > div {
 
 LOGIC_DROPDOWN_STYLES = """
 <style>
-/* Style only the Prompt Logic dropdown - black background, white text */
-div[data-baseweb="select"]:has(input[aria-label="Prompt Logic"]) {
-    background-color: #000000 !important;
-}
-div[data-baseweb="select"]:has(input[aria-label="Prompt Logic"]) > div {
+/* Style only logic dropdown widgets by stable widget key prefix */
+div[class*="st-key-logic_"] div[data-baseweb="select"],
+div[class*="st-key-logic_"] div[data-baseweb="select"] > div {
     background-color: #000000 !important;
     color: #ffffff !important;
     text-align: center !important;
 }
-div[data-baseweb="select"]:has(input[aria-label="Prompt Logic"]) svg {
+
+div[class*="st-key-logic_"] div[data-baseweb="select"] input {
+    color: #ffffff !important;
+    text-align: center !important;
+}
+
+div[class*="st-key-logic_"] div[data-baseweb="select"] svg {
     fill: #ffffff !important;
-}
-div[data-baseweb="select"]:has(input[aria-label="Prompt Logic"]) input {
-    background-color: #000000 !important;
-    color: #ffffff !important;
-    text-align: center !important;
 }
 </style>
 """
 
 
-
 PROMPT_ROW_SCROLL_STYLES = """
 <style>
-/* Keep prompt widgets in one horizontal line and allow horizontal scroll instead of squeeze */
-div[class*="st-key-prompt_row_"] div[data-testid="stHorizontalBlock"] {
-    flex-wrap: nowrap !important;
+/* Keep each parameter's prompts in one row and allow full horizontal scroll */
+div[class*="st-key-prompt_row_"] {
     overflow-x: auto !important;
     overflow-y: hidden !important;
-    padding-bottom: 0.4rem;
+    padding-bottom: 0.35rem;
+}
+
+div[class*="st-key-prompt_row_"] div[data-testid="stHorizontalBlock"] {
+    flex-wrap: nowrap !important;
+    width: max-content !important;
+    min-width: 100% !important;
+    gap: 0.6rem !important;
 }
 
 div[class*="st-key-prompt_row_"] div[data-testid="column"] {
-    min-width: 220px !important;
     flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 320px !important;
 }
 
-div[class*="st-key-prompt_row_"] div[data-testid="column"]:nth-child(3n + 2) {
-    min-width: 88px !important;
+/* Prompt action button column (delete/add) */
+div[class*="st-key-prompt_row_"] div[data-testid="column"]:has(div[class*="st-key-del_prompt_"]),
+div[class*="st-key-prompt_row_"] div[data-testid="column"]:has(div[class*="st-key-add_prompt_"]) {
+    min-width: 92px !important;
 }
 
-div[class*="st-key-prompt_row_"] div[data-testid="column"]:nth-child(3n) {
-    min-width: 110px !important;
+/* Logic dropdown column */
+div[class*="st-key-prompt_row_"] div[data-testid="column"]:has(div[class*="st-key-logic_"]) {
+    min-width: 128px !important;
+}
+
+/* Keep icon buttons readable and prevent icon spill-over */
+div[class*="st-key-del_prompt_"] button,
+div[class*="st-key-add_prompt_"] button {
+    min-width: 82px !important;
+    height: 36px !important;
+    padding: 0.35rem 0.45rem !important;
+    line-height: 1 !important;
 }
 </style>
 """
