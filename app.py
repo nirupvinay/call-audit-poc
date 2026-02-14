@@ -53,7 +53,8 @@ col_save, col_download, col_upload = st.columns(3)
 
 with col_save:
     if st.button("💾 Save Templates", use_container_width=True):
-        st.success("Templates ready for download backup.")
+        save_templates()
+        st.success("Templates saved successfully!")
 
 with col_download:
     st.download_button(
@@ -75,16 +76,17 @@ with col_upload:
         try:
             content = uploaded_file.read().decode("utf-8")
             data = json.loads(content)
-
+    
             if not isinstance(data, dict):
                 raise ValueError("Invalid format")
-
+    
             st.session_state.templates = data
             st.session_state.current_template = list(data.keys())[0]
-
-            st.success("Templates restored.")
+            
+            save_templates()
+            st.success("Templates restored and saved.")
             st.rerun()
-
+    
         except Exception:
             st.error("Invalid file.")
 # ===============================
@@ -157,6 +159,7 @@ if not st.session_state.templates:
     if st.button("➕ Add New Template"):
         st.session_state.templates["New Template"] = {"active": True, "parameters": []}
         st.session_state.current_template = "New Template"
+        save_templates()
         st.rerun()
     st.stop()
 
@@ -164,7 +167,12 @@ if not st.session_state.templates:
 # TEMPLATE ACTIVE FLAG
 # =========================================================
 template_data = st.session_state.templates[st.session_state.current_template]
-template_data["active"] = st.checkbox("Template Active", value=template_data.get("active", True))
+new_active_state = st.checkbox("Template Active", value=template_data.get("active", True))
+if new_active_state != template_data.get("active", True):
+    template_data["active"] = new_active_state
+    save_templates()
+else:
+    template_data["active"] = new_active_state
 
 # =========================================================
 # ENSURE PARAMETER EXISTS
@@ -473,8 +481,9 @@ for idx, param in enumerate(template_data["parameters"]):
                     param["prompts"].pop(p_idx)
                     if p_idx < len(param["logic"]):
                         param["logic"].pop(p_idx)
+                    save_templates()
                     st.rerun()
-
+        
             if p_idx == len(param["prompts"]) - 1:
                 if st.button(
                     "➕",
@@ -483,8 +492,8 @@ for idx, param in enumerate(template_data["parameters"]):
                 ):
                     param["prompts"].append("")
                     param["logic"].append("AND")
+                    save_templates()
                     st.rerun()
-
         with logic_col:
             # Show AND/OR dropdown only between prompts
             if p_idx < len(param["prompts"]) - 1:
@@ -503,23 +512,27 @@ for idx, param in enumerate(template_data["parameters"]):
     # ADD / DELETE PARAMETER
     col_add, col_del = st.columns(2)
 
-    with col_add:
-        if st.button("➕ Add Parameter", key=f"add_param_{idx}", use_container_width=True):
-            template_data["parameters"].insert(idx + 1, {
-                "title": "Parameter",
-                "type": "Regular",
-                "fatal": False,
-                "score": 0,
-                "prompts": [""],
-                "logic": []
-            })
-            st.rerun()
+    # ADD / DELETE PARAMETER
+col_add, col_del = st.columns(2)
 
-    with col_del:
-        if st.button("🗑 Delete Parameter", key=f"delete_param_{idx}", use_container_width=True) and len(template_data["parameters"]) > 1:
-            template_data["parameters"].pop(idx)
-            st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
+with col_add:
+    if st.button("➕ Add Parameter", key=f"add_param_{idx}", use_container_width=True):
+        template_data["parameters"].insert(idx + 1, {
+            "title": "Parameter",
+            "type": "Regular",
+            "fatal": False,
+            "score": 0,
+            "prompts": [""],
+            "logic": []
+        })
+        save_templates()
+        st.rerun()
+
+with col_del:
+    if st.button("🗑 Delete Parameter", key=f"delete_param_{idx}", use_container_width=True) and len(template_data["parameters"]) > 1:
+        template_data["parameters"].pop(idx)
+        save_templates()
+        st.rerun()
 
 # =========================================================
 # TRANSCRIPT + RUN
