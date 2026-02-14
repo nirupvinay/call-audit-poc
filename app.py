@@ -507,31 +507,7 @@ for idx, param in enumerate(template_data["parameters"]):
                     key=f"logic_{selected_template}_{idx}_{p_idx}",
                     label_visibility="collapsed"
                 )
-    ```
-    
-    ---
-    
-    ## **What Changed:**
-    
-    1. **Removed the `logic_col` from the main column layout:**
-       - Changed from `st.columns([10, 1, 2])` to `st.columns([10, 1])`
-       - Now only prompt and buttons are on the same row
-    
-    2. **Moved AND/OR dropdown outside the row:**
-       - It now appears **between** prompt boxes instead of aligned to the right
-       - Creates a new single-column layout just for the AND/OR dropdown
-    
-    3. **Result:**
-    ```
-       [Prompt Box 1              ] [🗑➕]
-       
-       [AND ▼]
-       
-       [Prompt Box 2              ] [🗑➕]
-       
-       [OR ▼]
-       
-       [Prompt Box 3              ] [🗑➕]
+            
     # ADD / DELETE PARAMETER
     col_add, col_del = st.columns(2)
 
