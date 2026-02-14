@@ -196,7 +196,7 @@ if len(template_data["parameters"]) == 0:
 for idx, param in enumerate(template_data["parameters"]):
 
     st.markdown(
-        '<div style="background:#5c2e3e33;padding:12px;border-radius:10px;margin-bottom:8px;">',
+        '<div style="background:#5c2e3e;padding:16px;border-radius:10px;margin-bottom:16px;border:2px solid #8b454e;">',
         unsafe_allow_html=True
     )
 
@@ -212,8 +212,8 @@ for idx, param in enumerate(template_data["parameters"]):
             max_chars=100
         )
 
-    # TYPE / FATAL / SCORE
-    col1, col2, col3 = st.columns([2, 1, 1])
+    # TYPE / FATAL / SCORE - Type dropdown 1/6 width
+    col1, empty_type, col2, col3 = st.columns([1.5, 5.5, 1, 1])
 
     with col1:
         param["type"] = st.selectbox(
@@ -451,11 +451,11 @@ for idx, param in enumerate(template_data["parameters"]):
         </style>
     """, unsafe_allow_html=True)
     
-    # PROMPTS LAYOUT - 1/3 width
+    # PROMPTS LAYOUT - CENTERED
     for p_idx in range(len(param["prompts"])):
         
-        # Create a row for each prompt with its controls
-        prompt_col, button_col, empty_prompt = st.columns([4, 1, 7])
+        # Create a row for each prompt with its controls - CENTERED
+        empty_left, prompt_col, button_col, empty_right = st.columns([2, 5, 1, 4])
         
         with prompt_col:
             param_titles = [p["title"] for p in template_data["parameters"][:idx]]
@@ -504,11 +504,30 @@ for idx, param in enumerate(template_data["parameters"]):
                     save_templates()
                     st.rerun()
     
-        # Show AND/OR dropdown BETWEEN prompts - 1/4 width, centered
+        # Show AND/OR dropdown BETWEEN prompts - CENTERED, BLACK BG, WHITE TEXT, 1/3 SIZE
         if p_idx < len(param["prompts"]) - 1:
             st.write("")
-            empty1, logic_col, empty2 = st.columns([4.5, 1.5, 6])
+            empty1, logic_col, empty2 = st.columns([4, 2, 6])
             with logic_col:
+                st.markdown("""
+                    <style>
+                    /* Style AND/OR dropdown - black background, white text */
+                    div[data-baseweb="select"] {
+                        background-color: #000000 !important;
+                    }
+                    div[data-baseweb="select"] > div {
+                        background-color: #000000 !important;
+                        color: #ffffff !important;
+                        text-align: center !important;
+                    }
+                    div[data-baseweb="select"] select {
+                        background-color: #000000 !important;
+                        color: #ffffff !important;
+                        text-align: center !important;
+                    }
+                    </style>
+                """, unsafe_allow_html=True)
+                
                 param["logic"][p_idx] = st.selectbox(
                     "",
                     ["AND", "OR"],
