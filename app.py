@@ -233,8 +233,8 @@ for idx, param in enumerate(template_data["parameters"]):
         )
 
 
-    # ---------- HORIZONTAL PROMPTS ----------
-    # Custom CSS for smaller prompt buttons and 90% width container
+    # ---------- VERTICAL PROMPTS LAYOUT (FIXED) ----------
+    # Custom CSS for styling
     st.markdown("""
         <style>
         /* Rich burgundy gradient background - more pronounced */
@@ -244,16 +244,10 @@ for idx, param in enumerate(template_data["parameters"]):
         }
         
         .block-container {
-            max-width: none !important;   /* remove width restriction */
+            max-width: none !important;
             padding-left: 2rem;
             padding-right: 2rem;
         }
-
-        /* allow full page horizontal scroll */
-        html, body, .stApp {
-            overflow-x: auto !important;
-        }
-
         
         /* Scale down all fonts globally */
         html, body, .stApp {
@@ -272,10 +266,10 @@ for idx, param in enumerate(template_data["parameters"]):
         
         /* Input fields styling - smaller with cream colors */
         .stTextInput input, .stTextArea textarea, .stSelectbox select {
-            background-color: #e6e6e6 !important;  /* light grey */
+            background-color: #e6e6e6 !important;
             border: 2px solid #d4a574 !important;
             border-radius: 6px !important;
-            color: #6b2737 !important;             /* burgundy */
+            color: #6b2737 !important;
             font-weight: 500;
             font-size: 13px !important;
             padding: 6px 10px !important;
@@ -290,54 +284,8 @@ for idx, param in enumerate(template_data["parameters"]):
             box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.3) !important;
         }
         
-        /* FORCE tiny size for prompt + / delete buttons */
-        .small-button button {
-            height: 18px !important;
-            min-height: 18px !important;
-            padding: 0px !important;
-            font-size: 10px !important;
-            width: 20px !important;
-            min-width: 20px !important;
-            max-width: 20px !important;
-            border-radius: 4px !important;
-            font-weight: 500 !important;
-            transition: all 0.2s ease !important;
-            border: none !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            line-height: 1 !important;
-        }
-
-        
-        /* Delete button - gradient with beige icon */
-        .small-button button:first-child {
-            background: linear-gradient(135deg, #6b2737 0%, #8b454e 100%) !important;
-            color: #f5ebe0 !important;
-            box-shadow: 0 1px 3px rgba(107, 39, 55, 0.4) !important;
-        }
-        
-        .small-button button:first-child:hover {
-            background: linear-gradient(135deg, #5c2e3e 0%, #6b2737 100%) !important;
-            box-shadow: 0 2px 6px rgba(107, 39, 55, 0.5) !important;
-        }
-        
-        /* Add button - gradient with beige icon */
-        .small-button button:last-child {
-            background: linear-gradient(135deg, #8b454e 0%, #6b2737 100%) !important;
-            color: #f5ebe0 !important;
-            box-shadow: 0 1px 3px rgba(139, 69, 78, 0.4) !important;
-        }
-        
-        .small-button button:last-child:hover {
-            background: linear-gradient(135deg, #6b2737 0%, #5c2e3e 100%) !important;
-            box-shadow: 0 2px 6px rgba(139, 69, 78, 0.5) !important;
-        }
-        
-            /* Style secondary buttons EXCEPT prompt mini-buttons */
-            div[data-testid="column"] > div > div > button[kind="secondary"]:not([aria-label="🗑"]):not([aria-label="➕"])
- {
-
+        /* Style secondary buttons */
+        div[data-testid="column"] > div > div > button[kind="secondary"] {
             background: linear-gradient(135deg, #6b2737 0%, #8b454e 100%) !important;
             color: #f5ebe0 !important;
             border: none !important;
@@ -347,29 +295,14 @@ for idx, param in enumerate(template_data["parameters"]):
             font-size: 12px !important;
             transition: all 0.2s ease !important;
             box-shadow: 0 2px 6px rgba(107, 39, 55, 0.4) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
         }
-        /* Restore tiny size ONLY for prompt + / delete buttons */
-            div[data-testid="column"] .small-button button {
-                height: 20px !important;
-                min-height: 20px !important;
-                padding: 2px !important;
-                font-size: 11px !important;
-                width: 22px !important;
-                min-width: 22px !important;
-                max-width: 22px !important;
-                line-height: 1 !important;
-            }
-
         
         div[data-testid="column"] > div > div > button:hover {
             background: linear-gradient(135deg, #5c2e3e 0%, #6b2737 100%) !important;
             box-shadow: 0 3px 8px rgba(107, 39, 55, 0.5) !important;
         }
         
-        /* Save Templates button - HALF size with gradient and beige text */
+        /* Save Templates button */
         .stButton > button:first-child {
             background: linear-gradient(135deg, #8b454e 0%, #6b2737 100%) !important;
             color: #f5ebe0 !important;
@@ -378,10 +311,6 @@ for idx, param in enumerate(template_data["parameters"]):
             font-size: 12px !important;
             padding: 5px 10px !important;
             box-shadow: 0 2px 6px rgba(139, 69, 78, 0.4) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            width: 150px !important;
         }
         
         .stButton > button:first-child:hover {
@@ -406,12 +335,12 @@ for idx, param in enumerate(template_data["parameters"]):
             border-color: rgba(245, 235, 224, 0.3) !important;
         }
         
-        /* Number input styling - smaller */
+        /* Number input styling */
         .stNumberInput input {
-            background-color: #f5ebe0 !important;
+            background-color: #e6e6e6 !important;
             border: 2px solid #d4a574 !important;
             border-radius: 6px !important;
-            color: #5c2e3e !important;
+            color: #6b2737 !important;
             font-size: 13px !important;
             padding: 6px 10px !important;
         }
@@ -442,41 +371,43 @@ for idx, param in enumerate(template_data["parameters"]):
         .element-container {
             margin-bottom: 0.5rem !important;
         }
+        
         /* Force dropdown box colors to match text inputs */
         div[data-baseweb="select"] > div {
-            background-color: #e6e6e6 !important;  /* light grey */
-            color: #6b2737 !important;             /* burgundy */
+            background-color: #e6e6e6 !important;
+            color: #6b2737 !important;
         }
-        /* Force beige color for checkbox side text (Streamlit new structure) */
+        
+        /* Force beige color for checkbox side text */
         div[data-testid="stCheckbox"] p {
             color: #f5ebe0 !important;
         }
+        
         /* Make table text beige */
         table, th, td {
             color: #f5ebe0 !important;
         }
-        /* ===== Audit Table Styling ===== */
-
+        
         /* Center all column headers */
         thead tr th {
             text-align: center !important;
         }
         
         /* Column alignments */
-        tbody tr td:nth-child(1) {  /* Parameter */
+        tbody tr td:nth-child(1) {
             text-align: left !important;
         }
         
-        tbody tr td:nth-child(2),  /* Result */
-        tbody tr td:nth-child(3) { /* Score */
+        tbody tr td:nth-child(2),
+        tbody tr td:nth-child(3) {
             text-align: center !important;
         }
         
-        /* Reason column left for readability */
         tbody tr td:nth-child(5) {
             text-align: left !important;
         }
-        /* ===== Make download button match normal buttons ===== */
+        
+        /* Download button styling */
         .stDownloadButton > button {
             background: linear-gradient(135deg, #8b454e 0%, #6b2737 100%) !important;
             color: #f5ebe0 !important;
@@ -493,115 +424,81 @@ for idx, param in enumerate(template_data["parameters"]):
             background: linear-gradient(135deg, #6b2737 0%, #5c2e3e 100%) !important;
             box-shadow: 0 3px 8px rgba(139, 69, 78, 0.5) !important;
         }
-        /* Force smaller file uploader height */
+        
+        /* File uploader styling */
         section[data-testid="stFileUploader"] > div {
             padding: 2px 8px !important;
             height: 32px !important;
             font-size: 12px !important;
         }
-        /* Mini prompt buttons — completely isolated */
-        div[data-testid="column"] .mini-btn > button {
-            height: 20px !important;
-            min-height: 20px !important;
-            width: 22px !important;
-            min-width: 22px !important;
-            max-width: 22px !important;
-            padding: 0 !important;
-            font-size: 11px !important;
-            line-height: 1 !important;
-        }
-
         </style>
     """, unsafe_allow_html=True)
     
-    # Calculate column widths to give more space to prompts
-    # For each prompt: large prompt column, tiny button column, medium logic column
-    col_widths = []
+    # FIXED: Vertical layout for prompts
     for p_idx in range(len(param["prompts"])):
-        col_widths.append(6)  # Prompt - larger
-        col_widths.append(1)   # Buttons - tiny
-        if p_idx < len(param["prompts"]) - 1:
-            col_widths.append(1)  # AND/OR - medium
-    
-    scroll_container = st.container()
+        
+        # Create a row for each prompt with its controls
+        prompt_col, button_col, logic_col = st.columns([10, 1, 2])
+        
+        with prompt_col:
+            param_titles = [p["title"] for p in template_data["parameters"][:idx]]
 
-    with scroll_container:
-        st.markdown(
-            '<div style="overflow-x:auto; white-space:nowrap;">',
-            unsafe_allow_html=True
-        )
+            if param["type"] == "Conditional" and param_titles:
+                param["prompts"][p_idx] = st.selectbox(
+                    "Cond",
+                    param_titles,
+                    index=param_titles.index(param["prompts"][p_idx])
+                    if param["prompts"][p_idx] in param_titles else 0,
+                    key=f"prompt_{selected_template}_{idx}_{p_idx}",
+                    label_visibility="collapsed"
+                )
+            else:
+                param["prompts"][p_idx] = st.text_area(
+                    "Prompt",
+                    value=param["prompts"][p_idx],
+                    key=f"prompt_{selected_template}_{idx}_{p_idx}",
+                    height=100,
+                    label_visibility="collapsed",
+                    placeholder="Enter Prompt"
+                )
 
-        cols = st.columns(col_widths)
+        with button_col:
+            # Stack delete and add buttons vertically
+            if len(param["prompts"]) > 1:
+                if st.button(
+                    "🗑",
+                    key=f"del_prompt_{selected_template}_{idx}_{p_idx}",
+                    use_container_width=True
+                ):
+                    param["prompts"].pop(p_idx)
+                    if p_idx < len(param["logic"]):
+                        param["logic"].pop(p_idx)
+                    st.rerun()
 
-        c = 0
-        for p_idx in range(len(param["prompts"])):
+            if p_idx == len(param["prompts"]) - 1:
+                if st.button(
+                    "➕",
+                    key=f"add_prompt_{selected_template}_{idx}_{p_idx}",
+                    use_container_width=True
+                ):
+                    param["prompts"].append("")
+                    param["logic"].append("AND")
+                    st.rerun()
 
-            # PROMPT INPUT
-            with cols[c]:
-                param_titles = [p["title"] for p in template_data["parameters"][:idx]]
-
-                if param["type"] == "Conditional" and param_titles:
-                    param["prompts"][p_idx] = st.selectbox(
-                        "Cond",
-                        param_titles,
-                        index=param_titles.index(param["prompts"][p_idx])
-                        if param["prompts"][p_idx] in param_titles else 0,
-                        key=f"prompt_{selected_template}_{idx}_{p_idx}",
-                        label_visibility="collapsed"
-                    )
-                else:
-                    param["prompts"][p_idx] = st.text_area(
-                        "Prompt",
-                        value=param["prompts"][p_idx],
-                        key=f"prompt_{selected_template}_{idx}_{p_idx}",
-                        height=100,
-                        label_visibility="collapsed",
-                        placeholder="Enter Prompt"
-                    )
-
-            c += 1
-
-            # DELETE / ADD BUTTONS
-            with cols[c]:
-                bcol1, bcol2 = st.columns([1, 1], gap="small")
-
-                if len(param["prompts"]) > 1:
-                    if st.button(
-                        "🗑",
-                        key=f"del_prompt_{selected_template}_{idx}_{p_idx}",
-                        use_container_width=False
-                    ):
-                        param["prompts"].pop(p_idx)
-                        if p_idx < len(param["logic"]):
-                            param["logic"].pop(p_idx)
-                        st.rerun()
-
-                if p_idx == len(param["prompts"]) - 1:
-                    if st.button(
-                        "➕",
-                        key=f"add_prompt_{selected_template}_{idx}_{p_idx}",
-                        use_container_width=False
-                    ):
-                        param["prompts"].append("")
-                        param["logic"].append("AND")
-                        st.rerun()
-
-            c += 1
-
-            # AND / OR DROPDOWN
+        with logic_col:
+            # Show AND/OR dropdown only between prompts
             if p_idx < len(param["prompts"]) - 1:
-                with cols[c]:
-                    param["logic"][p_idx] = st.selectbox(
-                        "",
-                        ["AND", "OR"],
-                        index=["AND", "OR"].index(param["logic"][p_idx])
-                        if p_idx < len(param["logic"]) else 0,
-                        key=f"logic_{selected_template}_{idx}_{p_idx}"
-                    )
-                c += 1
-
-        # CLOSE SCROLL DIV  ✅ (this is the important one)
-        st.markdown('</div>', unsafe_allow_html=True)
+                param["logic"][p_idx] = st.selectbox(
+                    "",
+                    ["AND", "OR"],
+                    index=["AND", "OR"].index(param["logic"][p_idx])
+                    if p_idx < len(param["logic"]) else 0,
+                    key=f"logic_{selected_template}_{idx}_{p_idx}",
+                    label_visibility="collapsed"
+                )
+            else:
+                # Empty space for last prompt to maintain alignment
+                st.write("")
 
     # ADD / DELETE PARAMETER
     col_add, col_del = st.columns(2)
@@ -801,7 +698,7 @@ if run:
                     • Add commentary outside JSON  
                     • Explain reasoning process  
                     • Invent evidence  
-                    • Use probability words (“maybe”, “likely”, etc.)
+                    • Use probability words ("maybe", "likely", etc.)
                     
                     You are a deterministic audit engine.
                     Return structured compliance decisions only.
