@@ -559,6 +559,7 @@ for idx, param in enumerate(template_data["parameters"]):
             template_data["parameters"].pop(idx)
             save_templates()
             st.rerun()
+            
      st.markdown(
         """
         <div style="
