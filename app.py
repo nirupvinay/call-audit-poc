@@ -554,13 +554,13 @@ for idx, param in enumerate(template_data["parameters"]):
             save_templates()
             st.rerun()
 
-    with col_del:
+        with col_del:
         if st.button("🗑 Delete Parameter", key=f"delete_param_{idx}", use_container_width=True) and len(template_data["parameters"]) > 1:
             template_data["parameters"].pop(idx)
             save_templates()
             st.rerun()
-            
-     st.markdown(
+
+    st.markdown(
         """
         <div style="
             height:1px;
@@ -576,7 +576,7 @@ for idx, param in enumerate(template_data["parameters"]):
         """,
         unsafe_allow_html=True
     )
-   
+
     st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
