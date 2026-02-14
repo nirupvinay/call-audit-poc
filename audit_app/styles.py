@@ -213,49 +213,7 @@ div[class*="st-key-logic_"] div[data-baseweb="select"] svg {
 """
 
 
-PROMPT_ROW_SCROLL_STYLES = """
-<style>
-/* Keep each parameter's prompts in one row and allow full horizontal scroll */
-div[class*="st-key-prompt_row_"] {
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    padding-bottom: 0.35rem;
-}
 
-div[class*="st-key-prompt_row_"] div[data-testid="stHorizontalBlock"] {
-    flex-wrap: nowrap !important;
-    width: max-content !important;
-    min-width: 100% !important;
-    gap: 0.6rem !important;
-}
-
-div[class*="st-key-prompt_row_"] div[data-testid="column"] {
-    flex: 0 0 auto !important;
-    width: auto !important;
-    min-width: 320px !important;
-}
-
-/* Prompt action button column (delete/add) */
-div[class*="st-key-prompt_row_"] div[data-testid="column"]:has(div[class*="st-key-del_prompt_"]),
-div[class*="st-key-prompt_row_"] div[data-testid="column"]:has(div[class*="st-key-add_prompt_"]) {
-    min-width: 92px !important;
-}
-
-/* Logic dropdown column */
-div[class*="st-key-prompt_row_"] div[data-testid="column"]:has(div[class*="st-key-logic_"]) {
-    min-width: 128px !important;
-}
-
-/* Keep icon buttons readable and prevent icon spill-over */
-div[class*="st-key-del_prompt_"] button,
-div[class*="st-key-add_prompt_"] button {
-    min-width: 82px !important;
-    height: 36px !important;
-    padding: 0.35rem 0.45rem !important;
-    line-height: 1 !important;
-}
-</style>
-"""
 PARAMETER_DIVIDER = """
 <div style="
     height:5px;
