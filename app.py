@@ -451,36 +451,63 @@ for idx, param in enumerate(template_data["parameters"]):
         </style>
     """, unsafe_allow_html=True)
     
-    # PROMPTS LAYOUT - 1/3 width
-    for p_idx in range(len(param["prompts"])):
-        
-        # Create a row for each prompt with its controls
-        prompt_col, button_col, empty_prompt = st.columns([4, 1, 7])
-        
-        with prompt_col:
-            param_titles = [p["title"] for p in template_data["parameters"][:idx]]
+    # PROMPTS LAYOUT - HORIZONTAL
+# Build dynamic columns for horizontal layout
+col_widths = []
+for p_idx in range(len(param["prompts"])):
+    col_widths.append(3)  # Prompt
+    if p_idx < len(param["prompts"]) - 1:
+        col_widths.append(1)  # AND/OR
+
+# Add column for buttons at the end
+col_widths.append(1)  # Buttons column
+
+cols = st.columns(col_widths)
+
+col_index = 0
+for p_idx in range(len(param["prompts"])):
     
-            if param["type"] == "Conditional" and param_titles:
-                param["prompts"][p_idx] = st.selectbox(
-                    "Cond",
-                    param_titles,
-                    index=param_titles.index(param["prompts"][p_idx])
-                    if param["prompts"][p_idx] in param_titles else 0,
-                    key=f"prompt_{selected_template}_{idx}_{p_idx}",
-                    label_visibility="collapsed"
-                )
-            else:
-                param["prompts"][p_idx] = st.text_area(
-                    "Prompt",
-                    value=param["prompts"][p_idx],
-                    key=f"prompt_{selected_template}_{idx}_{p_idx}",
-                    height=60,
-                    label_visibility="collapsed",
-                    placeholder="Enter Prompt"
-                )
+    # PROMPT
+    with cols[col_index]:
+        param_titles = [p["title"] for p in template_data["parameters"][:idx]]
+
+        if param["type"] == "Conditional" and param_titles:
+            param["prompts"][p_idx] = st.selectbox(
+                "Cond",
+                param_titles,
+                index=param_titles.index(param["prompts"][p_idx])
+                if param["prompts"][p_idx] in param_titles else 0,
+                key=f"prompt_{selected_template}_{idx}_{p_idx}",
+                label_visibility="collapsed"
+            )
+        else:
+            param["prompts"][p_idx] = st.text_area(
+                "Prompt",
+                value=param["prompts"][p_idx],
+                key=f"prompt_{selected_template}_{idx}_{p_idx}",
+                height=60,
+                label_visibility="collapsed",
+                placeholder="Enter Prompt"
+            )
     
-        with button_col:
-            # Stack delete and add buttons vertically
+    col_index += 1
+    
+    # AND/OR between prompts
+    if p_idx < len(param["prompts"]) - 1:
+        with cols[col_index]:
+            param["logic"][p_idx] = st.selectbox(
+                "",
+                ["AND", "OR"],
+                index=["AND", "OR"].index(param["logic"][p_idx])
+                if p_idx < len(param["logic"]) else 0,
+                key=f"logic_{selected_template}_{idx}_{p_idx}",
+                label_visibility="collapsed"
+            )
+        col_index += 1
+
+    # BUTTONS (delete and add) in the last column
+    with cols[col_index]:
+        for p_idx in range(len(param["prompts"])):
             if len(param["prompts"]) > 1:
                 if st.button(
                     "🗑",
@@ -492,32 +519,29 @@ for idx, param in enumerate(template_data["parameters"]):
                         param["logic"].pop(p_idx)
                     save_templates()
                     st.rerun()
+        
+        if st.button(
+            "➕",
+            key=f"add_prompt_{selected_template}_{idx}",
+            use_container_width=True
+        ):
+            param["prompts"].append("")
+            param["logic"].append("AND")
+            save_templates()
+            st.rerun()
+    ```
     
-            if p_idx == len(param["prompts"]) - 1:
-                if st.button(
-                    "➕",
-                    key=f"add_prompt_{selected_template}_{idx}_{p_idx}",
-                    use_container_width=True
-                ):
-                    param["prompts"].append("")
-                    param["logic"].append("AND")
-                    save_templates()
-                    st.rerun()
+    ---
     
-        # Show AND/OR dropdown BETWEEN prompts - 1/4 width, centered
-        if p_idx < len(param["prompts"]) - 1:
-            st.write("")
-            empty1, logic_col, empty2 = st.columns([4.5, 1.5, 6])
-            with logic_col:
-                param["logic"][p_idx] = st.selectbox(
-                    "",
-                    ["AND", "OR"],
-                    index=["AND", "OR"].index(param["logic"][p_idx])
-                    if p_idx < len(param["logic"]) else 0,
-                    key=f"logic_{selected_template}_{idx}_{p_idx}",
-                    label_visibility="collapsed"
-                )
-            st.write("")
+    **What this does:**
+    - Prompts stack **horizontally** in a row
+    - AND/OR dropdowns appear **between** each prompt
+    - All delete buttons stack **vertically** in the last column
+    - Add button is at the bottom of the button column
+    
+    **Result:**
+    ```
+    [Prompt 1] [AND] [Prompt 2] [OR] [Prompt 3] [🗑🗑🗑➕]
             
     # ADD / DELETE PARAMETER
     col_add, col_del = st.columns(2)
