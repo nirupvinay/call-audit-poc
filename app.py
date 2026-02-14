@@ -283,6 +283,12 @@ for idx, param in enumerate(template_data["parameters"]):
             font-size: 13px !important;
             padding: 6px 10px !important;
         }
+
+/* Make parameter title input smaller */
+.stTextInput input {
+    height: 35px !important;
+    min-height: 35px !important;
+}
         
         .stTextArea textarea {
             min-height: 60px !important;
