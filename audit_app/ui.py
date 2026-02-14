@@ -5,7 +5,13 @@ import streamlit as st
 from openai import OpenAI
 
 from audit_app.audit_engine import AuditResponseParseError, build_audit_payload, run_openai_audit
-from audit_app.styles import APP_STYLES, LOGIC_DROPDOWN_STYLES, PARAMETER_DIVIDER
+from audit_app.styles import (
+    APP_STYLES,
+    BACKEND_COMPACT_STYLES,
+    LOGIC_DROPDOWN_STYLES,
+    PARAMETER_DIVIDER,
+    SIDEBAR_NAV_STYLES,
+)
 from audit_app.template_store import ensure_minimum_parameter, initialize_session_state, save_templates
 
 
@@ -358,11 +364,27 @@ def evaluate_and_render(client, transcript: str) -> None:
 
 def render_shared_header() -> None:
     st.title("Khatabook AI Auditor – Phase 1 (The Brain)")
-    st.subheader("Audit Rule Engine")
-    st.divider()
+
+
+def render_workspace_selector() -> str:
+    st.markdown(SIDEBAR_NAV_STYLES, unsafe_allow_html=True)
+    with st.sidebar:
+        st.markdown("### ")
+        page = st.radio(
+            "Workspace",
+            ["Audit", "Rule Engine"],
+            format_func=lambda x: "🧾" if x == "Audit" else "⚙️",
+            label_visibility="collapsed",
+            key="app_page",
+        )
+    return page
 
 
 def render_backend_page() -> None:
+    st.subheader("Audit Rule Engine")
+    st.divider()
+    st.markdown(BACKEND_COMPACT_STYLES, unsafe_allow_html=True)
+
     render_template_action_bar()
     selected_template, template_data = render_template_selector()
 
@@ -377,6 +399,9 @@ def render_backend_page() -> None:
 
 
 def render_frontend_page(client) -> None:
+    st.subheader("Audit")
+    st.divider()
+
     transcript = st.text_area("Paste transcript here", key=st.session_state["transcript_key"])
 
     col1, col2 = st.columns(2)
@@ -399,13 +424,7 @@ def run_app() -> None:
 
     st.markdown(APP_STYLES, unsafe_allow_html=True)
     render_shared_header()
-
-    page = st.radio(
-        "Workspace",
-        ["Audit", "Rule Engine"],
-        horizontal=True,
-        key="app_page",
-    )
+    page = render_workspace_selector()
 
     if page == "Audit":
         render_frontend_page(client)

@@ -213,6 +213,50 @@ div[class*="st-key-logic_"] div[data-baseweb="select"] svg {
 """
 
 
+SIDEBAR_NAV_STYLES = """
+<style>
+/* Icon-like vertical workspace switcher */
+section[data-testid="stSidebar"] {
+    width: 78px !important;
+    min-width: 78px !important;
+}
+
+section[data-testid="stSidebar"] div[data-baseweb="radio"] > div {
+    flex-direction: column;
+    gap: 12px;
+}
+
+section[data-testid="stSidebar"] div[role="radiogroup"] label {
+    justify-content: center;
+    padding: 8px 0 !important;
+}
+
+section[data-testid="stSidebar"] div[role="radiogroup"] p {
+    font-size: 20px !important;
+}
+</style>
+"""
+
+
+BACKEND_COMPACT_STYLES = """
+<style>
+/* Reduce extra vertical gaps in Rule Engine page */
+div[data-testid="stVerticalBlock"] > div:has(div[class*="st-key-prompt_"]) {
+    margin-bottom: 0.2rem !important;
+}
+
+div[data-testid="stVerticalBlock"] > div:has(div[class*="st-key-logic_"]) {
+    margin-top: 0.05rem !important;
+    margin-bottom: 0.05rem !important;
+}
+
+div[data-testid="stVerticalBlock"] > div:has(div[class*="st-key-add_prompt_"]) {
+    margin-top: 0.1rem !important;
+}
+</style>
+"""
+
+
 
 PARAMETER_DIVIDER = """
 <div style="
