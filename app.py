@@ -27,8 +27,8 @@ h1, h2, h3, h4, h5, h6, label, p {
 }
 /* Login button styling */
 .stButton > button {
-    background: #F5E6D3;
-    color: #000000;
+    background: linear-gradient(135deg, #D4AF37, #F5E6A8);
+    color: #5a1f2b;
     font-weight: 600;
     border-radius: 10px;
     border: none;
