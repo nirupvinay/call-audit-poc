@@ -25,6 +25,20 @@ h1, h2, h3, h4, h5, h6, label, p {
     box-shadow: 0 10px 30px rgba(0,0,0,0.35);
     text-align: center;
 }
+/* Login button styling */
+.stButton > button {
+    background: linear-gradient(135deg, #D4AF37, #F5E6A8);
+    color: #5a1f2b;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    height: 42px;
+}
+
+.stButton > button:hover {
+    background: linear-gradient(135deg, #F5E6A8, #D4AF37);
+    color: #5a1f2b;
+}
 </style>
 """, unsafe_allow_html=True)
 
