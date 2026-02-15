@@ -246,6 +246,7 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
                 template_data["parameters"].insert(
                     idx + 1,
                     {
+                        "id": str(uuid.uuid4()),
                         "title": "Parameter",
                         "type": "Regular",
                         "fatal": False,
