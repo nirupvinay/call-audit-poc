@@ -36,8 +36,9 @@ h1, h2, h3, h4, h5, h6, label, p {
 }
 
 .stButton > button:hover {
-    background: linear-gradient(135deg, #F5E6A8, #D4AF37);
-    color: #5a1f2b;
+    background: #E6D5BF !important;
+    color: #000000 !important;
+    opacity: 1 !important;
 }
 </style>
 """, unsafe_allow_html=True)
