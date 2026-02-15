@@ -126,6 +126,9 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
     ensure_minimum_parameter(template_data)
 
     for idx, param in enumerate(template_data["parameters"]):
+        
+        param_id = param.get("id", idx)
+
         title_col, empty_col = st.columns([3, 9])
         with title_col:
             param["title"] = st.text_input(
@@ -239,7 +242,7 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
         col_add, col_del = st.columns(2)
 
         with col_add:
-            if st.button("➕ Add Parameter", key=f"add_param_{idx}", use_container_width=True):
+            if st.button("➕ Add Parameter", key=f"add_param_{param_id}", use_container_width=True):
                 template_data["parameters"].insert(
                     idx + 1,
                     {
@@ -257,7 +260,7 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
         with col_del:
             if st.button(
                 "🗑 Delete Parameter",
-                key=f"delete_param_{idx}",
+                key=f"delete_param_{param_id}",
                 use_container_width=True,
             ) and len(template_data["parameters"]) > 1:
                 template_data["parameters"].pop(idx)
