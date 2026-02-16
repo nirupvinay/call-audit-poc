@@ -215,24 +215,16 @@ div[class*="st-key-logic_"] div[data-baseweb="select"] svg {
 
 SIDEBAR_NAV_STYLES = """
 <style>
-/* Icon-like vertical workspace switcher */
 section[data-testid="stSidebar"] {
-    width: 210px !important;
-    min-width: 210px !important;
+    background: linear-gradient(180deg, #5c2e3e 0%, #6b2737 100%) !important;
 }
 
-section[data-testid="stSidebar"] div[data-baseweb="radio"] > div {
-    flex-direction: column;
-    gap: 12px;
+section[data-testid="stSidebar"] * {
+    color: #f5ebe0 !important;
 }
 
 section[data-testid="stSidebar"] div[role="radiogroup"] label {
-    justify-content: flex-start;
-    padding: 8px 10px !important;
-}
-
-section[data-testid="stSidebar"] div[role="radiogroup"] p {
-    font-size: 14px !important;
+    padding: 6px 8px !important;
 }
 </style>
 """
