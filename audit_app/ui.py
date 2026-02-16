@@ -664,22 +664,40 @@ def render_prioritization_model_page(client) -> None:
     reset = col2.button("Reset", key="reset_prioritization")
 
     if run:
-        if not template_data.get("active", True):
-            st.warning("Selected template is inactive.")
-            st.stop()
-
         if transcript.strip() == "":
             st.error("Paste transcript first.")
             st.stop()
 
-        logic_text = template_data.get("prioritization_logic", "").strip()
-        if logic_text == "":
-            st.error("Prioritization Logic cannot be empty.")
+        active_templates = [
+            (name, tdata)
+            for name, tdata in st.session_state.prioritization_templates.items()
+            if tdata.get("active", True)
+        ]
+
+        if not active_templates:
+            st.warning("No active templates available.")
             st.stop()
 
+        invalid_logic_templates = [
+            name
+            for name, tdata in active_templates
+            if str(tdata.get("prioritization_logic", "")).strip() == ""
+        ]
+
+        if invalid_logic_templates:
+            st.error(
+                "Prioritization Logic cannot be empty for active templates: "
+                + ", ".join(invalid_logic_templates)
+            )
+            st.stop()
+
+        results_by_template = []
         try:
             with st.spinner("Running prioritization logic..."):
-                result = run_openai_lead_classifier(client, transcript, logic_text)
+                for template_name, tdata in active_templates:
+                    logic_text = str(tdata.get("prioritization_logic", "")).strip()
+                    result = run_openai_lead_classifier(client, transcript, logic_text)
+                    results_by_template.append((template_name, result))
         except AuditResponseParseError:
             st.error("AI response is invalid.")
             st.stop()
@@ -687,16 +705,18 @@ def render_prioritization_model_page(client) -> None:
             st.error(f"OpenAI error: {e}")
             st.stop()
 
-        category = str(result.get("category", "")).upper().strip()
+        for template_name, result in results_by_template:
+            category = str(result.get("category", "")).upper().strip()
+            st.markdown(f"**Template: {template_name}**")
 
-        if category == "HOT":
-            st.markdown("<p style='font-size:28px;font-weight:700;color:#ff4d4f;'>🔥 HOT</p>", unsafe_allow_html=True)
-        elif category == "WARM":
-            st.markdown("<p style='font-size:28px;font-weight:700;color:#ff9f1a;'>🟠 WARM</p>", unsafe_allow_html=True)
-        elif category == "COLD":
-            st.markdown("<p style='font-size:28px;font-weight:700;color:#5dade2;'>❄️ COLD</p>", unsafe_allow_html=True)
-        else:
-            st.error("AI response is invalid.")
+            if category == "HOT":
+                st.markdown("<p style='font-size:28px;font-weight:700;color:#ff4d4f;'>🔥 HOT</p>", unsafe_allow_html=True)
+            elif category == "WARM":
+                st.markdown("<p style='font-size:28px;font-weight:700;color:#ff9f1a;'>🟠 WARM</p>", unsafe_allow_html=True)
+            elif category == "COLD":
+                st.markdown("<p style='font-size:28px;font-weight:700;color:#5dade2;'>❄️ COLD</p>", unsafe_allow_html=True)
+            else:
+                st.error(f"AI response is invalid for template: {template_name}")
 
     if reset:
         num = int(st.session_state.prioritization_transcript_key.split("_")[-1]) + 1
