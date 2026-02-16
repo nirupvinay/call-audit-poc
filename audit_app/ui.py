@@ -278,22 +278,14 @@ def evaluate_and_render(client, transcript: str) -> None:
         st.error("Paste transcript first.")
         st.stop()
 
-    st.markdown(
-        """
-        <div style="font-size:12px; font-weight:500; color:#C0C0C0;">
-            ⚙️ Running audit…! Please be patient, I'm new to this!
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    with st.spinner("Running AI audit… please wait"):
+        audit_payload = build_audit_payload(st.session_state.templates)
 
-    audit_payload = build_audit_payload(st.session_state.templates)
-
-    try:
-        ai_results = run_openai_audit(client, transcript, audit_payload)
-    except Exception as e:
-        st.error(f"OpenAI error: {e}")
-        st.stop()
+        try:
+            ai_results = run_openai_audit(client, transcript, audit_payload)
+        except Exception as e:
+            st.error(f"OpenAI error: {e}")
+            st.stop()
 
     for template_name, template in st.session_state.templates.items():
         if not template.get("active"):
