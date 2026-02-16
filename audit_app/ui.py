@@ -269,7 +269,22 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
 def render_results(template_name: str, template_results: list[dict], template_total: int) -> None:
     st.subheader(f"Template: {template_name}")
     df = pd.DataFrame(template_results).reset_index(drop=True)
-    st.dataframe(df, use_container_width=True)
+
+    def style_result(val):
+        if val == "YES":
+            return "color: #1b5e20; font-weight: 700;"
+        if val == "NO":
+            return "color: #8b0000; font-weight: 700;"
+        if val == "FATAL":
+            return "color: #8b0000; font-weight: 900;"
+        if val == "FLAG":
+            return "color: #0b3d0b; font-weight: 900;"
+        return ""
+    
+    styled_df = df.style.map(style_result, subset=["Result"])
+    
+    st.dataframe(styled_df, use_container_width=True)
+
     st.markdown(f"**Total Score: {template_total}**")
 
 
