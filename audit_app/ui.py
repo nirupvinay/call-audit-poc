@@ -1,11 +1,15 @@
 import json
-import uuid
 
 import pandas as pd
 import streamlit as st
 from openai import OpenAI
 
-from audit_app.audit_engine import AuditResponseParseError, build_audit_payload, run_openai_audit
+from audit_app.audit_engine import (
+    AuditResponseParseError,
+    build_audit_payload,
+    run_openai_audit,
+    run_openai_lead_classifier,
+)
 from audit_app.styles import (
     APP_STYLES,
     BACKEND_COMPACT_STYLES,
@@ -34,7 +38,11 @@ def render_template_action_bar() -> None:
         )
 
     with col_upload:
-        uploaded_file = st.file_uploader(" ", type=["json"], label_visibility="collapsed")
+        uploaded_file = st.file_uploader(
+            " ",
+            type=["json"],
+            label_visibility="collapsed",
+        )
 
         if uploaded_file is not None:
             try:
@@ -75,7 +83,11 @@ def render_template_selector() -> tuple[str, dict]:
             st.session_state.rename_mode = not st.session_state.rename_mode
 
     if st.session_state.rename_mode:
-        new_name = st.text_input("Rename Template", value=st.session_state.current_template, key="rename_input")
+        new_name = st.text_input(
+            "Rename Template",
+            value=st.session_state.current_template,
+            key="rename_input",
+        )
         if new_name and new_name != st.session_state.current_template:
             st.session_state.templates[new_name] = st.session_state.templates.pop(
                 st.session_state.current_template
@@ -119,19 +131,12 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
     ensure_minimum_parameter(template_data)
 
     for idx, param in enumerate(template_data["parameters"]):
-
-        # ensure stable id exists (safe for old templates)
-        if "id" not in param:
-            param["id"] = str(uuid.uuid4())
-
-        param_id = param["id"]
-
         title_col, empty_col = st.columns([3, 9])
         with title_col:
             param["title"] = st.text_input(
                 "Title",
                 value=param["title"],
-                key=f"title_{selected_template}_{param_id}",
+                key=f"title_{selected_template}_{idx}",
                 label_visibility="collapsed",
                 placeholder="Parameter title",
                 max_chars=100,
@@ -144,7 +149,7 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
                 "Type",
                 ["Regular", "Conditional", "Flag"],
                 index=["Regular", "Conditional", "Flag"].index(param["type"]),
-                key=f"type_{selected_template}_{param_id}",
+                key=f"type_{selected_template}_{idx}",
                 label_visibility="collapsed",
             )
 
@@ -154,12 +159,12 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
             param["fatal"] = st.checkbox(
                 "Fatal",
                 value=param["fatal"],
-                key=f"fatal_{selected_template}_{param_id}",
+                key=f"fatal_{selected_template}_{idx}",
                 disabled=is_flag,
             )
 
         with col3:
-            score_col, _ = st.columns([1, 2])
+            score_col, empty_score = st.columns([1, 2])
             with score_col:
                 param["score"] = st.number_input(
                     "Score",
@@ -167,13 +172,13 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
                     max_value=999,
                     step=1,
                     value=param["score"],
-                    key=f"score_{selected_template}_{param_id}",
+                    key=f"score_{selected_template}_{idx}",
                     label_visibility="collapsed",
                     disabled=is_flag,
                 )
 
         for p_idx in range(len(param["prompts"])):
-            _, prompt_col, button_col, _ = st.columns([2, 5, 1, 4])
+            empty_left, prompt_col, button_col, empty_right = st.columns([2, 5, 1, 4])
 
             with prompt_col:
                 param_titles = [p["title"] for p in template_data["parameters"][:idx]]
@@ -185,14 +190,14 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
                         index=param_titles.index(param["prompts"][p_idx])
                         if param["prompts"][p_idx] in param_titles
                         else 0,
-                        key=f"prompt_{selected_template}_{param_id}_{p_idx}",
+                        key=f"prompt_{selected_template}_{idx}_{p_idx}",
                         label_visibility="collapsed",
                     )
                 else:
                     param["prompts"][p_idx] = st.text_area(
                         "Prompt",
                         value=param["prompts"][p_idx],
-                        key=f"prompt_{selected_template}_{param_id}_{p_idx}",
+                        key=f"prompt_{selected_template}_{idx}_{p_idx}",
                         height=60,
                         label_visibility="collapsed",
                         placeholder="Enter Prompt",
@@ -201,7 +206,7 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
             with button_col:
                 if len(param["prompts"]) > 1 and st.button(
                     "🗑",
-                    key=f"del_prompt_{selected_template}_{param_id}_{p_idx}",
+                    key=f"del_prompt_{selected_template}_{idx}_{p_idx}",
                     use_container_width=True,
                 ):
                     param["prompts"].pop(p_idx)
@@ -212,7 +217,7 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
 
                 if p_idx == len(param["prompts"]) - 1 and st.button(
                     "➕",
-                    key=f"add_prompt_{selected_template}_{param_id}_{p_idx}",
+                    key=f"add_prompt_{selected_template}_{idx}_{p_idx}",
                     use_container_width=True,
                 ):
                     param["prompts"].append("")
@@ -221,7 +226,8 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
                     st.rerun()
 
             if p_idx < len(param["prompts"]) - 1:
-                _, logic_col, _ = st.columns([4, 2, 6])
+                st.write("")
+                empty1, logic_col, empty2 = st.columns([4, 2, 6])
                 with logic_col:
                     st.markdown(LOGIC_DROPDOWN_STYLES, unsafe_allow_html=True)
                     param["logic"][p_idx] = st.selectbox(
@@ -230,18 +236,18 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
                         index=["AND", "OR"].index(param["logic"][p_idx])
                         if p_idx < len(param["logic"])
                         else 0,
-                        key=f"logic_{selected_template}_{param_id}_{p_idx}",
+                        key=f"logic_{selected_template}_{idx}_{p_idx}",
                         label_visibility="collapsed",
                     )
+                st.write("")
 
         col_add, col_del = st.columns(2)
 
         with col_add:
-            if st.button("➕ Add Parameter", key=f"add_param_{param_id}", use_container_width=True):
+            if st.button("➕ Add Parameter", key=f"add_param_{idx}", use_container_width=True):
                 template_data["parameters"].insert(
                     idx + 1,
                     {
-                        "id": str(uuid.uuid4()),
                         "title": "Parameter",
                         "type": "Regular",
                         "fatal": False,
@@ -254,9 +260,11 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
                 st.rerun()
 
         with col_del:
-            if st.button("🗑 Delete Parameter", key=f"delete_param_{param_id}", use_container_width=True) and len(
-                template_data["parameters"]
-            ) > 1:
+            if st.button(
+                "🗑 Delete Parameter",
+                key=f"delete_param_{idx}",
+                use_container_width=True,
+            ) and len(template_data["parameters"]) > 1:
                 template_data["parameters"].pop(idx)
                 save_templates()
                 st.rerun()
@@ -265,33 +273,10 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
         st.markdown("</div>", unsafe_allow_html=True)
 
 
-# ---- rest unchanged ----
 def render_results(template_name: str, template_results: list[dict], template_total: int) -> None:
     st.subheader(f"Template: {template_name}")
     df = pd.DataFrame(template_results).reset_index(drop=True)
-
-    def style_result(val):
-        # Regular / Conditional
-        if val == "YES":
-            return "color: #1b5e20; font-weight: 700;"
-        if val == "NO":
-            return "color: #8b0000; font-weight: 700;"
-        if val == "FATAL":
-            return "color: #8b0000; font-weight: 900;"
-    
-        # Flag icons
-        if val == "🚩":
-            return "font-size: 18px;"   # red flag
-        if val == "🟢":
-            return "font-size: 18px;"   # green circle
-    
-        return ""
-
-    
-    styled_df = df.style.map(style_result, subset=["Result"])
-    
-    st.dataframe(styled_df, use_container_width=True)
-
+    st.dataframe(df, use_container_width=True)
     st.markdown(f"**Total Score: {template_total}**")
 
 
@@ -300,41 +285,78 @@ def evaluate_and_render(client, transcript: str) -> None:
         st.error("Paste transcript first.")
         st.stop()
 
-    with st.spinner("Running AI audit… please wait"):
-        audit_payload = build_audit_payload(st.session_state.templates)
+    st.markdown(
+        """
+        <div style="font-size:12px; font-weight:500; color:#C0C0C0;">
+            ⚙️ Running audit…! Please be patient, I'm new to this!
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-        try:
-            ai_results = run_openai_audit(client, transcript, audit_payload)
-        except Exception as e:
-            st.error(f"OpenAI error: {e}")
-            st.stop()
+    audit_payload = build_audit_payload(st.session_state.templates)
+    ai_results = None
+
+    try:
+        ai_results = run_openai_audit(client, transcript, audit_payload)
+    except AuditResponseParseError as e:
+        st.error("AI returned unreadable JSON.")
+        st.code(e.raw_response)
+        st.stop()
+    except Exception as e:
+        st.error(f"OpenAI error: {e}")
+        st.stop()
+
+    if not isinstance(ai_results, dict) or "parameters" not in ai_results:
+        st.error("AI JSON missing 'parameters' field.")
+        st.code(json.dumps(ai_results, indent=2))
+        st.stop()
+
+    if not isinstance(ai_results["parameters"], list):
+        st.error("'parameters' must be a list.")
+        st.stop()
 
     for template_name, template in st.session_state.templates.items():
         if not template.get("active"):
             continue
 
-        results, fatal_triggered, template_total = [], False, 0
+        results = []
+        fatal_triggered = False
+        template_total = 0
 
         for param in template["parameters"]:
             ai_param = next((p for p in ai_results["parameters"] if p["name"] == param["title"]), None)
 
             if not ai_param:
-                final_result, score = "NO", 0
+                final_result = "NO"
+                score = 0
             else:
                 result = ai_param["result"]
+
                 if param["type"] == "Flag":
-                    final_result = "🚩" if result == "YES" else "🟢"
+                    final_result = result
                     score = 0
                 elif result == "YES":
-                    final_result, score = "YES", param["score"]
+                    final_result = "YES"
+                    score = param["score"]
                 elif result == "FATAL":
-                    final_result, score, fatal_triggered = "FATAL", 0, True
+                    final_result = "FATAL"
+                    score = 0
+                    fatal_triggered = True
                 else:
-                    final_result, score = "NO", 0
+                    final_result = "NO"
+                    score = 0
 
             template_total += score
+            reason = ai_param.get("reasoning", "—") if ai_param else "—"
+
             results.append(
-                {"Parameter": param["title"], "Result": final_result, "Score": score, "Reason": ai_param.get("reasoning", "—") if ai_param else "—"}
+                {
+                    "Parameter": param["title"],
+                    "Result": final_result,
+                    "Score": score,
+                    "Reason": reason,
+                }
             )
 
         if fatal_triggered:
@@ -344,6 +366,7 @@ def evaluate_and_render(client, transcript: str) -> None:
             render_results(template_name, results, template_total)
 
 
+
 def render_shared_header() -> None:
     st.title("Khatabook AI Auditor – Phase 1 (The Brain)")
 
@@ -351,7 +374,16 @@ def render_shared_header() -> None:
 def render_workspace_selector() -> str:
     st.markdown(SIDEBAR_NAV_STYLES, unsafe_allow_html=True)
     with st.sidebar:
-        page = st.radio("Workspace", ["Audit", "Rule Engine"], format_func=lambda x: "🧾" if x == "Audit" else "⚙️", label_visibility="collapsed", key="app_page")
+        st.markdown("### ")
+        page = st.radio(
+            "Workspace",
+            ["Audit", "Rule Engine", "Lead Qualifier"],
+            format_func=lambda x: (
+                "🧾" if x == "Audit" else "⚙️" if x == "Rule Engine" else "🔥"
+            ),
+            label_visibility="collapsed",
+            key="app_page",
+        )
     return page
 
 
@@ -363,8 +395,12 @@ def render_backend_page() -> None:
     render_template_action_bar()
     selected_template, template_data = render_template_selector()
 
-    template_data["active"] = st.checkbox("Template Active", value=template_data.get("active", True))
-    save_templates()
+    new_active_state = st.checkbox("Template Active", value=template_data.get("active", True))
+    if new_active_state != template_data.get("active", True):
+        template_data["active"] = new_active_state
+        save_templates()
+    else:
+        template_data["active"] = new_active_state
 
     render_parameters(selected_template, template_data)
 
@@ -376,14 +412,67 @@ def render_frontend_page(client) -> None:
     transcript = st.text_area("Paste transcript here", key=st.session_state["transcript_key"])
 
     col1, col2 = st.columns(2)
-    if col1.button("Run Audit"):
+    run = col1.button("Run Audit")
+    reset = col2.button("Reset")
+
+    if run:
         evaluate_and_render(client, transcript)
 
-    if col2.button("Reset"):
+    if reset:
         num = int(st.session_state["transcript_key"].split("_")[-1]) + 1
         st.session_state["transcript_key"] = f"transcript_{num}"
         st.rerun()
 
+
+def render_lead_qualifier_page(client) -> None:
+    st.subheader("Lead Qualifier")
+    st.divider()
+
+    transcript = st.text_area("Paste transcript here", key="lead_transcript")
+    output_requirement = st.text_area(
+        "Output Requirement",
+        key="lead_output_requirement",
+        placeholder="Example: Classify strictly by buying intent + urgency and keep reasoning in one sentence.",
+        height=80,
+    )
+
+    col1, col2 = st.columns(2)
+    run = col1.button("Run Lead Qualification")
+    reset = col2.button("Reset Lead Qualifier")
+
+    if run:
+        if transcript.strip() == "":
+            st.error("Paste transcript first.")
+            st.stop()
+
+        try:
+            result = run_openai_lead_classifier(client, transcript, output_requirement)
+        except AuditResponseParseError as e:
+            st.error("AI returned unreadable JSON.")
+            st.code(e.raw_response)
+            st.stop()
+        except Exception as e:
+            st.error(f"OpenAI error: {e}")
+            st.stop()
+
+        category = str(result.get("category", "")).upper()
+        if category not in {"HOT", "WARM", "COLD"}:
+            st.error("AI response missing a valid category (HOT/WARM/COLD).")
+            st.code(json.dumps(result, indent=2))
+            st.stop()
+
+        reasoning = result.get("reasoning", "—")
+
+        st.success(f"Lead Category: {category}")
+        lead_df = pd.DataFrame(
+            [{"Category": category, "Reasoning": reasoning}]
+        ).reset_index(drop=True)
+        st.dataframe(lead_df, use_container_width=True)
+
+    if reset:
+        st.session_state["lead_transcript"] = ""
+        st.session_state["lead_output_requirement"] = ""
+        st.rerun()
 
 def run_app() -> None:
     st.set_page_config(layout="wide")
@@ -397,5 +486,7 @@ def run_app() -> None:
 
     if page == "Audit":
         render_frontend_page(client)
-    else:
+    elif page == "Rule Engine":
         render_backend_page()
+    else:
+        render_lead_qualifier_page(client)

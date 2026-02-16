@@ -1,6 +1,5 @@
 import json
 import streamlit as st
-import uuid
 
 TEMPLATE_FILE = "templates.json"
 
@@ -42,7 +41,6 @@ def ensure_minimum_parameter(template_data: dict) -> None:
     if len(template_data["parameters"]) == 0:
         template_data["parameters"].append(
             {
-                "id": str(uuid.uuid4()),
                 "title": "Parameter",
                 "type": "Regular",
                 "fatal": False,

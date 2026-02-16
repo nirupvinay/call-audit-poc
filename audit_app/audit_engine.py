@@ -181,3 +181,52 @@ def run_openai_audit(client, transcript: str, audit_payload: list[dict]) -> dict
         return json.loads(cleaned)
     except Exception as exc:
         raise AuditResponseParseError(raw_ai) from exc
+
+
+LEAD_CLASSIFIER_SYSTEM_PROMPT = """
+You are a deterministic lead qualifier.
+
+Classify the lead into exactly one category: HOT, WARM, or COLD, using only evidence from the transcript.
+
+Rules:
+1. Use only transcript evidence.
+2. If there is clear buying intent, urgency, budget fit, and next-step readiness, prefer HOT.
+3. If interest exists but commitment/clarity is partial, use WARM.
+4. If weak/no interest, mismatch, or refusal, use COLD.
+5. If uncertain, choose the lower-confidence category rather than overestimating.
+6. Follow any output requirements provided by the user, but category must still be one of HOT/WARM/COLD.
+
+Return JSON only in this exact shape:
+{
+  "category": "HOT | WARM | COLD",
+  "reasoning": "short factual explanation"
+}
+"""
+
+
+def run_openai_lead_classifier(client, transcript: str, output_requirement: str) -> dict:
+    response = client.chat.completions.create(
+        model="gpt-5-mini",
+        messages=[
+            {"role": "system", "content": LEAD_CLASSIFIER_SYSTEM_PROMPT},
+            {
+                "role": "user",
+                "content": json.dumps(
+                    {
+                        "transcript": transcript,
+                        "output_requirement": output_requirement,
+                    }
+                ),
+            },
+        ],
+    )
+
+    raw_ai = response.choices[0].message.content
+    start = raw_ai.find("{")
+    end = raw_ai.rfind("}") + 1
+    cleaned = raw_ai[start:end]
+
+    try:
+        return json.loads(cleaned)
+    except Exception as exc:
+        raise AuditResponseParseError(raw_ai) from exc
