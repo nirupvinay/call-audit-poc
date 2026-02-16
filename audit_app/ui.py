@@ -61,6 +61,9 @@ def initialize_prioritization_state() -> None:
     if "prioritization_transcript_key" not in st.session_state:
         st.session_state.prioritization_transcript_key = "prioritization_transcript_0"
 
+    if "prioritization_rename_mode" not in st.session_state:
+        st.session_state.prioritization_rename_mode = False
+
 
 def render_template_action_bar() -> None:
     col_save, col_download, col_upload = st.columns(3)
@@ -529,7 +532,7 @@ def render_prioritization_template_controls() -> dict:
             except Exception:
                 st.error("Invalid file.")
 
-    c1, c2, c3 = st.columns([5, 1, 1])
+    c1, c_edit, c2, c3 = st.columns([5, 1, 1, 1])
 
     with c1:
         names = list(st.session_state.prioritization_templates.keys())
@@ -542,6 +545,33 @@ def render_prioritization_template_controls() -> dict:
             key="prioritization_template_select",
         )
         st.session_state.prioritization_current_template = selected
+
+    with c_edit:
+        if st.button("✏️", key="prior_edit_template", use_container_width=True):
+            st.session_state.prioritization_rename_mode = (
+                not st.session_state.prioritization_rename_mode
+            )
+
+    if st.session_state.prioritization_rename_mode:
+        new_name = st.text_input(
+            "Rename Template",
+            value=st.session_state.prioritization_current_template,
+            key="prioritization_rename_input",
+        )
+        if (
+            new_name
+            and new_name != st.session_state.prioritization_current_template
+            and new_name not in st.session_state.prioritization_templates
+        ):
+            st.session_state.prioritization_templates[new_name] = (
+                st.session_state.prioritization_templates.pop(
+                    st.session_state.prioritization_current_template
+                )
+            )
+            st.session_state.prioritization_current_template = new_name
+            st.session_state.prioritization_rename_mode = False
+            save_prioritization_templates()
+            st.rerun()
 
     with c2:
         if st.button("➕", key="prior_add_template", use_container_width=True):
@@ -648,7 +678,8 @@ def render_prioritization_model_page(client) -> None:
             st.stop()
 
         try:
-            result = run_openai_lead_classifier(client, transcript, logic_text)
+            with st.spinner("Running prioritization logic..."):
+                result = run_openai_lead_classifier(client, transcript, logic_text)
         except AuditResponseParseError:
             st.error("AI response is invalid.")
             st.stop()
