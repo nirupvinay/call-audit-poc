@@ -374,14 +374,18 @@ def render_shared_header() -> None:
 def render_workspace_selector() -> str:
     st.markdown(SIDEBAR_NAV_STYLES, unsafe_allow_html=True)
     with st.sidebar:
-        st.markdown("### ")
+        st.markdown("### Workspace")
         page = st.radio(
             "Workspace",
             ["Audit", "Rule Engine", "Lead Qualifier"],
             format_func=lambda x: (
-                "🧾" if x == "Audit" else "⚙️" if x == "Rule Engine" else "🔥"
+                "🧾 Audit"
+                if x == "Audit"
+                else "⚙️ Rule Engine"
+                if x == "Rule Engine"
+                else "🔥 Lead Qualifier"
             ),
-            label_visibility="collapsed",
+            label_visibility="visible",
             key="app_page",
         )
     return page

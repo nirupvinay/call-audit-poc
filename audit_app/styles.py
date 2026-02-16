@@ -217,8 +217,8 @@ SIDEBAR_NAV_STYLES = """
 <style>
 /* Icon-like vertical workspace switcher */
 section[data-testid="stSidebar"] {
-    width: 78px !important;
-    min-width: 78px !important;
+    width: 210px !important;
+    min-width: 210px !important;
 }
 
 section[data-testid="stSidebar"] div[data-baseweb="radio"] > div {
@@ -227,12 +227,12 @@ section[data-testid="stSidebar"] div[data-baseweb="radio"] > div {
 }
 
 section[data-testid="stSidebar"] div[role="radiogroup"] label {
-    justify-content: center;
-    padding: 8px 0 !important;
+    justify-content: flex-start;
+    padding: 8px 10px !important;
 }
 
 section[data-testid="stSidebar"] div[role="radiogroup"] p {
-    font-size: 20px !important;
+    font-size: 14px !important;
 }
 </style>
 """
