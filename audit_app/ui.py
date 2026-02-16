@@ -414,6 +414,18 @@ def render_shared_header() -> None:
 
 def render_workspace_selector() -> str:
     st.markdown(SIDEBAR_NAV_STYLES, unsafe_allow_html=True)
+
+    if "app_page_nav" not in st.session_state:
+        legacy = st.session_state.get("app_page")
+        st.session_state["app_page_nav"] = {
+            "🧾 Audit": "Audit",
+            "⚙️ Rule Engine": "Rule Engine",
+            "🔥 Prioritization Model": "Prioritization Model",
+            "Audit": "Audit",
+            "Rule Engine": "Rule Engine",
+            "Prioritization Model": "Prioritization Model",
+        }.get(legacy, "Audit")
+
     with st.sidebar:
         st.markdown("### Workspace")
         page = st.radio(
@@ -426,8 +438,7 @@ def render_workspace_selector() -> str:
                 if x == "Rule Engine"
                 else "🔥 Prioritization Model"
             ),
-            label_visibility="visible",
-            key="app_page",
+            key="app_page_nav",
         )
     return page
 

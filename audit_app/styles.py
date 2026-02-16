@@ -225,6 +225,30 @@ section[data-testid="stSidebar"] * {
 
 section[data-testid="stSidebar"] div[role="radiogroup"] label {
     padding: 6px 8px !important;
+    margin-bottom: 4px !important;
+}
+
+section[data-testid="stSidebar"] div[role="radiogroup"] p {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+section[data-testid="stSidebar"] label[data-baseweb="radio"] {
+    display: flex !important;
+    align-items: center !important;
+}
+
+section[data-testid="stSidebar"] label[data-baseweb="radio"] div[data-testid="stMarkdownContainer"] {
+    margin-left: 6px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+section[data-testid="stSidebar"] label[data-baseweb="radio"] p {
+    color: #f5ebe0 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
 }
 </style>
 """
