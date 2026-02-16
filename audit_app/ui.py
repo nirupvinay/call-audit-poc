@@ -316,7 +316,8 @@ def evaluate_and_render(client, transcript: str) -> None:
             else:
                 result = ai_param["result"]
                 if param["type"] == "Flag":
-                    final_result, score = result, 0
+                    final_result = "FLAG" if result == "YES" else "NO"
+                    score = 0
                 elif result == "YES":
                     final_result, score = "YES", param["score"]
                 elif result == "FATAL":
