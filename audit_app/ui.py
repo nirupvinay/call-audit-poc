@@ -271,15 +271,22 @@ def render_results(template_name: str, template_results: list[dict], template_to
     df = pd.DataFrame(template_results).reset_index(drop=True)
 
     def style_result(val):
+        # Regular / Conditional colors
         if val == "YES":
-            return "color: #1b5e20; font-weight: 700;"
+            return "color: #1b5e20; font-weight: 700;"   # green
         if val == "NO":
-            return "color: #8b0000; font-weight: 700;"
+            return "color: #8b0000; font-weight: 700;"   # dark red
         if val == "FATAL":
-            return "color: #8b0000; font-weight: 900;"
-        if val == "FLAG":
-            return "color: #0b3d0b; font-weight: 900;"
+            return "color: #8b0000; font-weight: 900;"   # strong red
+    
+        # Flag styling (inverted)
+        if val == "FLAG_YES":
+            return "color: #8b0000; font-weight: 900;"   # dark red
+        if val == "FLAG_NO":
+            return "color: #0b3d0b; font-weight: 900;"   # dark green
+    
         return ""
+
     
     styled_df = df.style.map(style_result, subset=["Result"])
     
@@ -316,7 +323,7 @@ def evaluate_and_render(client, transcript: str) -> None:
             else:
                 result = ai_param["result"]
                 if param["type"] == "Flag":
-                    final_result = "FLAG" if result == "YES" else "NO"
+                    final_result = "FLAG_YES" if result == "YES" else "FLAG_NO"
                     score = 0
                 elif result == "YES":
                     final_result, score = "YES", param["score"]
