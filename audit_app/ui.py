@@ -419,16 +419,23 @@ def render_shared_header() -> None:
 def render_workspace_selector() -> str:
     st.markdown(SIDEBAR_NAV_STYLES, unsafe_allow_html=True)
 
+    legacy_page_map = {
+        "🧾 Audit": "Audit",
+        "⚙️ Rule Engine": "Rule Engine",
+        "🔥 Prioritization Model": "Prioritization Model",
+        "Audit": "Audit",
+        "Rule Engine": "Rule Engine",
+        "Prioritization Model": "Prioritization Model",
+    }
+
     if "app_page_nav" not in st.session_state:
         legacy = st.session_state.get("app_page")
-        st.session_state["app_page_nav"] = {
-            "🧾 Audit": "Audit",
-            "⚙️ Rule Engine": "Rule Engine",
-            "🔥 Prioritization Model": "Prioritization Model",
-            "Audit": "Audit",
-            "Rule Engine": "Rule Engine",
-            "Prioritization Model": "Prioritization Model",
-        }.get(legacy, "Audit")
+        st.session_state["app_page_nav"] = legacy_page_map.get(legacy, "Audit")
+    else:
+        st.session_state["app_page_nav"] = legacy_page_map.get(
+            st.session_state["app_page_nav"],
+            "Audit",
+        )
 
     with st.sidebar:
         st.markdown("### Workspace")
