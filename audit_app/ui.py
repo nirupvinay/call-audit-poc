@@ -66,6 +66,44 @@ def initialize_prioritization_state() -> None:
         st.session_state.prioritization_rename_mode = False
 
 
+
+
+def _rule_engine_key_prefix(selected_template: str) -> str:
+    rev = st.session_state.get("rule_engine_form_rev", 0)
+    return f"{selected_template}_{rev}"
+
+
+def _bump_rule_engine_form_rev() -> None:
+    st.session_state["rule_engine_form_rev"] = st.session_state.get("rule_engine_form_rev", 0) + 1
+
+
+def _sync_rule_engine_from_state(template_data: dict, key_prefix: str) -> None:
+    for idx, param in enumerate(template_data.get("parameters", [])):
+        title_key = f"title_{key_prefix}_{idx}"
+        type_key = f"type_{key_prefix}_{idx}"
+        fatal_key = f"fatal_{key_prefix}_{idx}"
+        score_key = f"score_{key_prefix}_{idx}"
+
+        if title_key in st.session_state:
+            param["title"] = st.session_state[title_key]
+        if type_key in st.session_state:
+            param["type"] = st.session_state[type_key]
+        if fatal_key in st.session_state:
+            param["fatal"] = st.session_state[fatal_key]
+        if score_key in st.session_state:
+            param["score"] = st.session_state[score_key]
+
+        for p_idx in range(len(param.get("prompts", []))):
+            prompt_key = f"prompt_{key_prefix}_{idx}_{p_idx}"
+            if prompt_key in st.session_state:
+                param["prompts"][p_idx] = st.session_state[prompt_key]
+
+            if p_idx < len(param.get("logic", [])):
+                logic_key = f"logic_{key_prefix}_{idx}_{p_idx}"
+                if logic_key in st.session_state:
+                    param["logic"][p_idx] = st.session_state[logic_key]
+
+
 def set_flash_toast(message: str, icon: str = "✅", duration: int = 2) -> None:
     st.session_state["_flash_toast"] = {
         "message": message,
@@ -215,6 +253,7 @@ def render_template_selector() -> tuple[str, dict]:
 
 def render_parameters(selected_template: str, template_data: dict) -> None:
     ensure_minimum_parameter(template_data)
+    key_prefix = _rule_engine_key_prefix(selected_template)
 
     for idx, param in enumerate(template_data["parameters"]):
         title_col, empty_col = st.columns([3, 9])
@@ -222,7 +261,7 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
             param["title"] = st.text_input(
                 "Title",
                 value=param["title"],
-                key=f"title_{selected_template}_{idx}",
+                key=f"title_{key_prefix}_{idx}",
                 label_visibility="collapsed",
                 placeholder="Parameter title",
                 max_chars=100,
@@ -235,7 +274,7 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
                 "Type",
                 ["Regular", "Conditional", "Flag"],
                 index=["Regular", "Conditional", "Flag"].index(param["type"]),
-                key=f"type_{selected_template}_{idx}",
+                key=f"type_{key_prefix}_{idx}",
                 label_visibility="collapsed",
             )
 
@@ -245,7 +284,7 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
             param["fatal"] = st.checkbox(
                 "Fatal",
                 value=param["fatal"],
-                key=f"fatal_{selected_template}_{idx}",
+                key=f"fatal_{key_prefix}_{idx}",
                 disabled=is_flag,
             )
 
@@ -258,7 +297,7 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
                     max_value=999,
                     step=1,
                     value=param["score"],
-                    key=f"score_{selected_template}_{idx}",
+                    key=f"score_{key_prefix}_{idx}",
                     label_visibility="collapsed",
                     disabled=is_flag,
                 )
@@ -276,14 +315,14 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
                         index=param_titles.index(param["prompts"][p_idx])
                         if param["prompts"][p_idx] in param_titles
                         else 0,
-                        key=f"prompt_{selected_template}_{idx}_{p_idx}",
+                        key=f"prompt_{key_prefix}_{idx}_{p_idx}",
                         label_visibility="collapsed",
                     )
                 else:
                     param["prompts"][p_idx] = st.text_area(
                         "Prompt",
                         value=param["prompts"][p_idx],
-                        key=f"prompt_{selected_template}_{idx}_{p_idx}",
+                        key=f"prompt_{key_prefix}_{idx}_{p_idx}",
                         height=60,
                         label_visibility="collapsed",
                         placeholder="Enter Prompt",
@@ -292,23 +331,27 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
             with button_col:
                 if len(param["prompts"]) > 1 and st.button(
                     "🗑",
-                    key=f"del_prompt_{selected_template}_{idx}_{p_idx}",
+                    key=f"del_prompt_{key_prefix}_{idx}_{p_idx}",
                     use_container_width=True,
                 ):
+                    _sync_rule_engine_from_state(template_data, key_prefix)
                     param["prompts"].pop(p_idx)
                     if p_idx < len(param["logic"]):
                         param["logic"].pop(p_idx)
                     save_templates()
+                    _bump_rule_engine_form_rev()
                     st.rerun()
 
                 if p_idx == len(param["prompts"]) - 1 and st.button(
                     "➕",
-                    key=f"add_prompt_{selected_template}_{idx}_{p_idx}",
+                    key=f"add_prompt_{key_prefix}_{idx}_{p_idx}",
                     use_container_width=True,
                 ):
+                    _sync_rule_engine_from_state(template_data, key_prefix)
                     param["prompts"].append("")
                     param["logic"].append("AND")
                     save_templates()
+                    _bump_rule_engine_form_rev()
                     st.rerun()
 
             if p_idx < len(param["prompts"]) - 1:
@@ -322,7 +365,7 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
                         index=["AND", "OR"].index(param["logic"][p_idx])
                         if p_idx < len(param["logic"])
                         else 0,
-                        key=f"logic_{selected_template}_{idx}_{p_idx}",
+                        key=f"logic_{key_prefix}_{idx}_{p_idx}",
                         label_visibility="collapsed",
                     )
                 st.write("")
@@ -330,7 +373,8 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
         col_add, col_del = st.columns(2)
 
         with col_add:
-            if st.button("➕ Add Parameter", key=f"add_param_{idx}", use_container_width=True):
+            if st.button("➕ Add Parameter", key=f"add_param_{key_prefix}_{idx}", use_container_width=True):
+                _sync_rule_engine_from_state(template_data, key_prefix)
                 template_data["parameters"].insert(
                     idx + 1,
                     {
@@ -343,20 +387,22 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
                     },
                 )
                 save_templates()
+                _bump_rule_engine_form_rev()
                 st.rerun()
 
         with col_del:
             if st.button(
                 "🗑 Delete Parameter",
-                key=f"delete_param_{idx}",
+                key=f"delete_param_{key_prefix}_{idx}",
                 use_container_width=True,
             ) and len(template_data["parameters"]) > 1:
+                _sync_rule_engine_from_state(template_data, key_prefix)
                 template_data["parameters"].pop(idx)
                 save_templates()
+                _bump_rule_engine_form_rev()
                 st.rerun()
 
         st.markdown(PARAMETER_DIVIDER, unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
 
 
 def render_results(template_name: str, template_results: list[dict], template_total: int) -> None:
@@ -839,6 +885,8 @@ def run_app() -> None:
     st.set_page_config(layout="wide")
     initialize_session_state()
     initialize_prioritization_state()
+    if "rule_engine_form_rev" not in st.session_state:
+        st.session_state["rule_engine_form_rev"] = 0
     render_flash_toast()
 
     client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
