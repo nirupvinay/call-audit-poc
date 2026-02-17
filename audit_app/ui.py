@@ -459,7 +459,22 @@ def render_app_access_gate() -> bool:
     if st.session_state.app_authenticated:
         return True
 
-    st.subheader("Protected Access")
+    st.markdown(
+        """
+        <div style="
+            max-width: 460px;
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(212,165,116,0.45);
+            background: rgba(20, 24, 33, 0.35);
+            margin-bottom: 8px;
+        ">
+            <div style="font-size: 22px; font-weight: 700; color: #f5ebe0; margin-bottom: 6px;">Protected Access</div>
+            <div style="font-size: 13px; color: #f5ebe0;">Enter app password to access Audit, Rule Engine, and Prioritization Model.</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     entered_password = st.text_input(
         "App Password",
         type="password",
