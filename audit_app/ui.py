@@ -166,25 +166,30 @@ def render_template_action_bar() -> None:
             " ",
             type=["json"],
             label_visibility="collapsed",
+            key="rule_upload_templates",
         )
 
         if uploaded_file is not None:
-            try:
-                content = uploaded_file.read().decode("utf-8")
-                data = json.loads(content)
+            current_signature = f"{uploaded_file.name}:{uploaded_file.size}"
+            if current_signature != st.session_state.get("rule_upload_signature", ""):
+                try:
+                    content = uploaded_file.read().decode("utf-8")
+                    data = json.loads(content)
 
-                if not isinstance(data, dict):
-                    raise ValueError("Invalid format")
+                    if not isinstance(data, dict):
+                        raise ValueError("Invalid format")
 
-                st.session_state.templates = data
-                st.session_state.current_template = list(data.keys())[0]
+                    st.session_state.templates = data
+                    st.session_state.current_template = list(data.keys())[0]
 
-                save_templates()
-                set_flash_toast("Templates restored and saved.", icon="✅", duration=2)
-                st.rerun()
+                    save_templates()
+                    st.session_state["rule_upload_signature"] = current_signature
+                    set_flash_toast("Templates restored and saved.", icon="✅", duration=2)
+                    st.rerun()
 
-            except Exception:
-                st.toast("Invalid file.", icon="⚠️", duration=2)
+                except Exception:
+                    st.session_state["rule_upload_signature"] = current_signature
+                    st.toast("Invalid file.", icon="⚠️", duration=2)
 
 
 def render_template_selector() -> tuple[str, dict]:
@@ -676,27 +681,31 @@ def render_prioritization_template_controls() -> dict:
         )
 
         if uploaded_file is not None:
-            try:
-                content = uploaded_file.read().decode("utf-8")
-                data = json.loads(content)
-                if not isinstance(data, dict) or not data:
-                    raise ValueError("Invalid format")
-
-                for template_value in data.values():
-                    if not isinstance(template_value, dict):
+            current_signature = f"{uploaded_file.name}:{uploaded_file.size}"
+            if current_signature != st.session_state.get("prior_upload_signature", ""):
+                try:
+                    content = uploaded_file.read().decode("utf-8")
+                    data = json.loads(content)
+                    if not isinstance(data, dict) or not data:
                         raise ValueError("Invalid format")
-                    if "active" not in template_value:
-                        template_value["active"] = True
-                    if "prioritization_logic" not in template_value:
-                        template_value["prioritization_logic"] = ""
 
-                st.session_state.prioritization_templates = data
-                st.session_state.prioritization_current_template = next(iter(data.keys()))
-                save_prioritization_templates()
-                set_flash_toast("Templates restored and saved.", icon="✅", duration=2)
-                st.rerun()
-            except Exception:
-                st.toast("Invalid file.", icon="⚠️", duration=2)
+                    for template_value in data.values():
+                        if not isinstance(template_value, dict):
+                            raise ValueError("Invalid format")
+                        if "active" not in template_value:
+                            template_value["active"] = True
+                        if "prioritization_logic" not in template_value:
+                            template_value["prioritization_logic"] = ""
+
+                    st.session_state.prioritization_templates = data
+                    st.session_state.prioritization_current_template = next(iter(data.keys()))
+                    save_prioritization_templates()
+                    st.session_state["prior_upload_signature"] = current_signature
+                    set_flash_toast("Templates restored and saved.", icon="✅", duration=2)
+                    st.rerun()
+                except Exception:
+                    st.session_state["prior_upload_signature"] = current_signature
+                    st.toast("Invalid file.", icon="⚠️", duration=2)
 
     st.markdown("Template")
     c1, c_edit, c2, c3 = st.columns([5, 1, 1, 1])
@@ -887,6 +896,10 @@ def run_app() -> None:
     initialize_prioritization_state()
     if "rule_engine_form_rev" not in st.session_state:
         st.session_state["rule_engine_form_rev"] = 0
+    if "rule_upload_signature" not in st.session_state:
+        st.session_state["rule_upload_signature"] = ""
+    if "prior_upload_signature" not in st.session_state:
+        st.session_state["prior_upload_signature"] = ""
     render_flash_toast()
 
     client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])

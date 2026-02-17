@@ -173,6 +173,20 @@ div[data-testid="stCheckbox"] p {
 hr {
     border-color: rgba(245, 235, 224, 0.25) !important;
 }
+
+
+/* Toast text color */
+div[data-testid="stToast"] * {
+    color: #000000 !important;
+}
+
+/* Ensure collapsed sidebar releases width */
+section[data-testid="stSidebar"][aria-expanded="false"] {
+    min-width: 0 !important;
+    max-width: 0 !important;
+    width: 0 !important;
+}
+
 </style>
 """
 
@@ -201,8 +215,8 @@ div[class*="st-key-logic_"] div[data-baseweb="select"] svg {
 SIDEBAR_NAV_STYLES = """
 <style>
 section[data-testid="stSidebar"] {
-    min-width: 330px !important;
-    max-width: 330px !important;
+    min-width: 250px !important;
+    max-width: 250px !important;
     background: linear-gradient(180deg, #5a2b3c 0%, #6a3042 70%, #5f2d3f 100%) !important;
     border-right: 1px solid rgba(212, 165, 116, 0.24);
 }
@@ -234,7 +248,7 @@ section[data-testid="stSidebar"] label[data-baseweb="radio"] > div:first-child {
 
 section[data-testid="stSidebar"] label[data-baseweb="radio"] p {
     color: #f5ebe0 !important;
-    font-size: 17px !important;
+    font-size: 15px !important;
     font-weight: 600 !important;
     line-height: 1.2 !important;
     white-space: nowrap !important;
@@ -251,8 +265,8 @@ PRIORITIZATION_PAGE_STYLES = """
 }
 
 section[data-testid="stSidebar"] {
-    min-width: 330px !important;
-    max-width: 330px !important;
+    min-width: 250px !important;
+    max-width: 250px !important;
     background: linear-gradient(180deg, #0d2a57 0%, #102f63 100%) !important;
 }
 
