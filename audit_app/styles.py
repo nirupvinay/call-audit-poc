@@ -180,6 +180,14 @@ div[data-testid="stToast"] * {
     color: #000000 !important;
 }
 
+div[data-testid="stSpinner"] > div {
+    border-top-color: #d4a574 !important;
+}
+
+div[data-testid="stSpinner"] p {
+    color: #f5ebe0 !important;
+}
+
 /* Ensure collapsed sidebar releases width */
 section[data-testid="stSidebar"][aria-expanded="false"] {
     min-width: 0 !important;
@@ -289,6 +297,14 @@ div[data-testid="column"] > div > div > button[kind="secondary"]:hover {
     background: rgba(11, 27, 59, 0.42) !important;
     border: 1px solid rgba(212, 165, 116, 0.24) !important;
     box-shadow: 0 10px 24px rgba(10, 23, 46, 0.36) !important;
+}
+
+div[data-testid="stSpinner"] > div {
+    border-top-color: #d4a574 !important;
+}
+
+div[data-testid="stSpinner"] p {
+    color: #e8f0ff !important;
 }
 </style>
 """

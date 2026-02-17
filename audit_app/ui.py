@@ -135,6 +135,8 @@ def render_result_badge(result: str) -> str:
         "YES": ("#d3eadb", "#224f35", "#3f8f63"),
         "NO": ("#ebd6da", "#6f2b37", "#9c4e5e"),
         "FATAL": ("#ead1d1", "#5f1f24", "#a45f5f"),
+        "RED FLAG": ("#f0d7dc", "#7a1f31", "#b4576c"),
+        "GREEN FLAG": ("#d4e9dc", "#1f5a3b", "#4a9b6f"),
     }
     bg, text, border = palette.get(result, ("#e8dccd", "#563d2d", "#9c7b56"))
     return (
@@ -421,6 +423,10 @@ def render_results(template_name: str, template_results: list[dict], template_to
             if value == "NO"
             else "background-color:#ead1d1;color:#5f1f24;font-weight:700;border-radius:999px;"
             if value == "FATAL"
+            else "background-color:#f0d7dc;color:#7a1f31;font-weight:700;border-radius:999px;"
+            if value == "RED FLAG"
+            else "background-color:#d4e9dc;color:#1f5a3b;font-weight:700;border-radius:999px;"
+            if value == "GREEN FLAG"
             else ""
         ),
         subset=["Result"],
@@ -442,20 +448,12 @@ def evaluate_and_render(client, transcript: str) -> None:
         st.error("Paste transcript first.")
         st.stop()
 
-    st.markdown(
-        """
-        <div style="font-size:12px; font-weight:500; color:#C0C0C0;">
-            ⚙️ Running audit…! Please be patient, I'm new to this!
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
     audit_payload = build_audit_payload(st.session_state.templates)
     ai_results = None
 
     try:
-        ai_results = run_openai_audit(client, transcript, audit_payload)
+        with st.spinner("Running audit..."):
+            ai_results = run_openai_audit(client, transcript, audit_payload)
     except AuditResponseParseError as e:
         st.error("AI returned unreadable JSON.")
         st.code(e.raw_response)
@@ -491,7 +489,12 @@ def evaluate_and_render(client, transcript: str) -> None:
                 result = ai_param["result"]
 
                 if param["type"] == "Flag":
-                    final_result = result
+                    if result == "YES":
+                        final_result = "RED FLAG"
+                    elif result == "NO":
+                        final_result = "GREEN FLAG"
+                    else:
+                        final_result = result
                     score = 0
                 elif result == "YES":
                     final_result = "YES"
