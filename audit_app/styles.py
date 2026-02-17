@@ -1,157 +1,159 @@
 APP_STYLES = """
 <style>
-/* Rich burgundy gradient background - more pronounced */
+:root {
+    --bg-1: #4a1f2a;
+    --bg-2: #6b2737;
+    --bg-3: #8b454e;
+    --bg-4: #5c2e3e;
+    --text-primary: #f5ebe0;
+    --text-secondary: #e3d7c8;
+    --accent-gold: #d4a574;
+    --input-bg: #efe8df;
+    --input-text: #4e2431;
+    --card-bg: rgba(28, 14, 19, 0.34);
+    --card-border: rgba(212, 165, 116, 0.28);
+    --card-shadow: 0 10px 24px rgba(20, 8, 13, 0.22);
+}
+
 .stApp {
-    background: linear-gradient(135deg, #4a1f2a 0%, #6b2737 25%, #8b454e 50%, #6b2737 75%, #5c2e3e 100%);
+    background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 25%, var(--bg-3) 50%, var(--bg-2) 75%, var(--bg-4) 100%);
     background-attachment: fixed;
+    color: var(--text-primary);
 }
 
 .block-container {
     max-width: none !important;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding: 16px 28px 24px !important;
 }
 
-/* Scale down all fonts globally */
 html, body, .stApp {
-    font-size: 13px !important;
+    font-size: 14px !important;
+    line-height: 1.45;
 }
 
 h1 {
-    font-size: 1.8rem !important;
-    color: #f5ebe0 !important;
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.2px;
+    color: var(--text-primary) !important;
+    margin-bottom: 8px !important;
 }
 
 h2, h3 {
-    font-size: 1.3rem !important;
-    color: #f5ebe0 !important;
+    font-size: 1.2rem !important;
+    font-weight: 650 !important;
+    color: var(--text-primary) !important;
 }
 
-/* Input fields styling - smaller with cream colors */
-.stTextInput input, .stTextArea textarea, .stSelectbox select {
-    background-color: #e6e6e6 !important;
-    border: 2px solid #d4a574 !important;
-    border-radius: 6px !important;
-    color: #6b2737 !important;
-    font-weight: 500;
-    font-size: 13px !important;
-    padding: 6px 10px !important;
+p, .stMarkdown, label, small {
+    color: var(--text-secondary) !important;
+}
+
+.stTextInput input,
+.stTextArea textarea,
+.stSelectbox select,
+.stNumberInput input,
+div[data-baseweb="select"] > div {
+    background-color: var(--input-bg) !important;
+    border: 1px solid rgba(212, 165, 116, 0.5) !important;
+    border-radius: 10px !important;
+    color: var(--input-text) !important;
+    font-size: 14px !important;
+    min-height: 40px !important;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 140ms ease;
 }
 
 .stTextArea textarea {
-    min-height: 60px !important;
+    min-height: 84px !important;
 }
 
-.stTextInput input:focus, .stTextArea textarea:focus, .stSelectbox select:focus {
-    border-color: #d4a574 !important;
-    box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.3) !important;
+.stTextInput input:focus,
+.stTextArea textarea:focus,
+.stNumberInput input:focus,
+div[data-baseweb="select"] > div:focus-within {
+    border-color: var(--accent-gold) !important;
+    box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.22) !important;
 }
 
-/* Style secondary buttons */
+.stButton > button,
+.stDownloadButton > button,
 div[data-testid="column"] > div > div > button[kind="secondary"] {
-    background: linear-gradient(135deg, #6b2737 0%, #8b454e 100%) !important;
-    color: #f5ebe0 !important;
-    border: none !important;
-    border-radius: 5px !important;
-    padding: 5px 10px !important;
-    font-weight: 500 !important;
-    font-size: 12px !important;
-    transition: all 0.2s ease !important;
-    box-shadow: 0 2px 6px rgba(107, 39, 55, 0.4) !important;
-}
-
-div[data-testid="column"] > div > div > button:hover {
-    background: linear-gradient(135deg, #5c2e3e 0%, #6b2737 100%) !important;
-    box-shadow: 0 3px 8px rgba(107, 39, 55, 0.5) !important;
-}
-
-/* Save Templates button */
-.stButton > button:first-child {
-    background: linear-gradient(135deg, #8b454e 0%, #6b2737 100%) !important;
-    color: #f5ebe0 !important;
-    border-radius: 5px !important;
-    font-weight: 500 !important;
-    font-size: 12px !important;
-    padding: 5px 10px !important;
-    box-shadow: 0 2px 6px rgba(139, 69, 78, 0.4) !important;
-}
-
-.stButton > button:first-child:hover {
-    background: linear-gradient(135deg, #6b2737 0%, #5c2e3e 100%) !important;
-    box-shadow: 0 3px 8px rgba(139, 69, 78, 0.5) !important;
-}
-
-/* Labels and text - cream colors for visibility */
-.stMarkdown {
-    color: #f5ebe0 !important;
+    min-height: 40px !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(212, 165, 116, 0.38) !important;
+    background: linear-gradient(135deg, #874353 0%, #652a3b 100%) !important;
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
     font-size: 13px !important;
+    letter-spacing: 0.2px;
+    box-shadow: 0 6px 14px rgba(39, 14, 23, 0.34) !important;
+    transition: transform 140ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
-label {
-    color: #f5ebe0 !important;
-    font-weight: 500;
-    font-size: 13px !important;
+.stButton > button:hover,
+.stDownloadButton > button:hover,
+div[data-testid="column"] > div > div > button[kind="secondary"]:hover {
+    background: linear-gradient(135deg, #723648 0%, #562435 100%) !important;
+    box-shadow: 0 8px 16px rgba(39, 14, 23, 0.42) !important;
+    transform: translateY(-1px);
 }
 
-/* Dividers */
-hr {
-    border-color: rgba(245, 235, 224, 0.3) !important;
+.stButton > button:active,
+.stDownloadButton > button:active {
+    transform: translateY(0);
 }
 
-/* Number input styling */
-.stNumberInput input {
-    background-color: #e6e6e6 !important;
-    border: 2px solid #d4a574 !important;
-    border-radius: 6px !important;
-    color: #6b2737 !important;
-    font-size: 13px !important;
-    padding: 6px 10px !important;
+section[data-testid="stFileUploader"] > div {
+    border: 1px dashed rgba(212, 165, 116, 0.45) !important;
+    border-radius: 10px !important;
+    background: rgba(20, 10, 15, 0.2) !important;
+    padding: 3px 10px !important;
 }
 
-/* Checkbox styling */
-.stCheckbox {
-    font-size: 13px !important;
+.ui-card {
+    border: 1px solid var(--card-border);
+    background: var(--card-bg);
+    border-radius: 14px;
+    box-shadow: var(--card-shadow);
+    padding: 14px 14px 12px;
+    margin-bottom: 12px;
+    backdrop-filter: blur(1px);
 }
 
-/* Selectbox styling */
-.stSelectbox label {
-    font-size: 13px !important;
+.ui-card-tight {
+    padding-top: 10px;
+    padding-bottom: 8px;
 }
 
-/* Dataframe styling */
+.ui-golden-divider {
+    height: 10px;
+    margin-top: 16px;
+    margin-bottom: 14px;
+    background: linear-gradient(to right, transparent, rgba(212,165,116,0.52), transparent);
+}
+
 .stDataFrame {
-    background-color: #f5ebe0 !important;
-    border-radius: 6px !important;
-    font-size: 12px !important;
+    border: 1px solid rgba(212, 165, 116, 0.3) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 8px 20px rgba(21, 10, 15, 0.25) !important;
 }
 
-/* Table text */
 table {
     font-size: 12px !important;
 }
 
-/* Reduce spacing */
-.element-container {
-    margin-bottom: 0.5rem !important;
-}
-
-/* Force beige color for checkbox side text */
-div[data-testid="stCheckbox"] p {
-    color: #f5ebe0 !important;
-}
-
-/* Make table text beige */
-table, th, td {
-    color: #f5ebe0 !important;
-}
-
-/* Center all column headers */
 thead tr th {
     text-align: center !important;
+    background: rgba(96, 42, 57, 0.82) !important;
 }
 
-/* Column alignments */
-tbody tr td:nth-child(1) {
+tbody tr:nth-child(even) {
+    background: rgba(70, 30, 43, 0.34) !important;
+}
+
+tbody tr td:nth-child(1),
+tbody tr td:nth-child(4) {
     text-align: left !important;
 }
 
@@ -160,54 +162,37 @@ tbody tr td:nth-child(3) {
     text-align: center !important;
 }
 
-tbody tr td:nth-child(5) {
-    text-align: left !important;
+div[data-testid="stCheckbox"] p {
+    color: var(--text-primary) !important;
 }
 
-/* Download button styling */
-.stDownloadButton > button {
-    background: linear-gradient(135deg, #8b454e 0%, #6b2737 100%) !important;
-    color: #f5ebe0 !important;
-    border: none !important;
-    border-radius: 5px !important;
-    font-weight: 500 !important;
-    font-size: 12px !important;
-    padding: 5px 10px !important;
-    box-shadow: 0 2px 6px rgba(139, 69, 78, 0.4) !important;
-    width: 200px !important;
+.element-container {
+    margin-bottom: 0.6rem !important;
 }
 
-.stDownloadButton > button:hover {
-    background: linear-gradient(135deg, #6b2737 0%, #5c2e3e 100%) !important;
-    box-shadow: 0 3px 8px rgba(139, 69, 78, 0.5) !important;
-}
-
-/* File uploader styling */
-section[data-testid="stFileUploader"] > div {
-    padding: 2px 8px !important;
-    height: 32px !important;
-    font-size: 12px !important;
+hr {
+    border-color: rgba(245, 235, 224, 0.25) !important;
 }
 </style>
 """
 
 LOGIC_DROPDOWN_STYLES = """
 <style>
-/* Style only logic dropdown widgets by stable widget key prefix */
 div[class*="st-key-logic_"] div[data-baseweb="select"],
 div[class*="st-key-logic_"] div[data-baseweb="select"] > div {
-    background-color: #000000 !important;
-    color: #ffffff !important;
+    background-color: #1f1f1f !important;
+    color: #f9f9f9 !important;
     text-align: center !important;
+    min-width: 120px !important;
 }
 
 div[class*="st-key-logic_"] div[data-baseweb="select"] input {
-    color: #ffffff !important;
+    color: #f9f9f9 !important;
     text-align: center !important;
 }
 
 div[class*="st-key-logic_"] div[data-baseweb="select"] svg {
-    fill: #ffffff !important;
+    fill: #f9f9f9 !important;
 }
 </style>
 """
@@ -216,9 +201,10 @@ div[class*="st-key-logic_"] div[data-baseweb="select"] svg {
 SIDEBAR_NAV_STYLES = """
 <style>
 section[data-testid="stSidebar"] {
-    min-width: 340px !important;
-    max-width: 340px !important;
-    background: linear-gradient(180deg, #5c2e3e 0%, #6b2737 100%) !important;
+    min-width: 330px !important;
+    max-width: 330px !important;
+    background: linear-gradient(180deg, #5a2b3c 0%, #6a3042 70%, #5f2d3f 100%) !important;
+    border-right: 1px solid rgba(212, 165, 116, 0.24);
 }
 
 section[data-testid="stSidebar"] * {
@@ -226,34 +212,29 @@ section[data-testid="stSidebar"] * {
 }
 
 section[data-testid="stSidebar"] div[role="radiogroup"] label {
-    padding: 6px 8px !important;
-    margin-bottom: 4px !important;
+    border-radius: 10px !important;
+    margin-bottom: 6px !important;
+    padding: 8px 10px !important;
+    border-left: 3px solid transparent !important;
+    transition: background-color 150ms ease, border-color 150ms ease;
 }
 
-section[data-testid="stSidebar"] div[role="radiogroup"] p {
-    font-size: 14px !important;
-    font-weight: 500 !important;
+section[data-testid="stSidebar"] label[data-baseweb="radio"][aria-checked="true"] {
+    background: rgba(212, 165, 116, 0.16) !important;
+    border-left-color: rgba(212, 165, 116, 0.95) !important;
 }
 
-section[data-testid="stSidebar"] label[data-baseweb="radio"] {
-    display: flex !important;
-    align-items: center !important;
-    cursor: pointer !important;
+section[data-testid="stSidebar"] label[data-baseweb="radio"]:hover {
+    background: rgba(245, 235, 224, 0.08) !important;
 }
 
 section[data-testid="stSidebar"] label[data-baseweb="radio"] > div:first-child {
     display: none !important;
 }
 
-section[data-testid="stSidebar"] label[data-baseweb="radio"] div[data-testid="stMarkdownContainer"] {
-    margin-left: 0 !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
 section[data-testid="stSidebar"] label[data-baseweb="radio"] p {
     color: #f5ebe0 !important;
-    font-size: 18px !important;
+    font-size: 17px !important;
     font-weight: 600 !important;
     line-height: 1.2 !important;
     white-space: nowrap !important;
@@ -270,32 +251,30 @@ PRIORITIZATION_PAGE_STYLES = """
 }
 
 section[data-testid="stSidebar"] {
-    min-width: 340px !important;
-    max-width: 340px !important;
+    min-width: 330px !important;
+    max-width: 330px !important;
     background: linear-gradient(180deg, #0d2a57 0%, #102f63 100%) !important;
 }
 
-.stButton > button:first-child,
+.stButton > button,
 .stDownloadButton > button,
 div[data-testid="column"] > div > div > button[kind="secondary"] {
-    background: linear-gradient(135deg, #1b4f96 0%, #12346b 100%) !important;
-    color: #e7eefc !important;
-    border: 1px solid rgba(212,165,116,0.35) !important;
-    box-shadow: 0 2px 6px rgba(18, 52, 107, 0.5) !important;
+    background: linear-gradient(135deg, #1c4e8f 0%, #143c73 100%) !important;
+    color: #e8f0ff !important;
+    border: 1px solid rgba(212, 165, 116, 0.34) !important;
+    box-shadow: 0 6px 14px rgba(16, 40, 82, 0.44) !important;
 }
 
-.stButton > button:first-child:hover,
+.stButton > button:hover,
 .stDownloadButton > button:hover,
 div[data-testid="column"] > div > div > button[kind="secondary"]:hover {
-    background: linear-gradient(135deg, #12346b 0%, #0d2a57 100%) !important;
+    background: linear-gradient(135deg, #173f74 0%, #10325e 100%) !important;
 }
 
-.prior-protected {
-    max-width: 460px;
-    background: rgba(11, 31, 66, 0.65);
-    border: 1px solid rgba(212,165,116,0.45);
-    border-radius: 10px;
-    padding: 16px;
+.ui-card {
+    background: rgba(11, 27, 59, 0.42) !important;
+    border: 1px solid rgba(212, 165, 116, 0.24) !important;
+    box-shadow: 0 10px 24px rgba(10, 23, 46, 0.36) !important;
 }
 </style>
 """
@@ -303,34 +282,22 @@ div[data-testid="column"] > div > div > button[kind="secondary"]:hover {
 
 BACKEND_COMPACT_STYLES = """
 <style>
-/* Reduce extra vertical gaps in Rule Engine page */
 div[data-testid="stVerticalBlock"] > div:has(div[class*="st-key-prompt_"]) {
-    margin-bottom: 0.2rem !important;
+    margin-bottom: 0.18rem !important;
 }
 
 div[data-testid="stVerticalBlock"] > div:has(div[class*="st-key-logic_"]) {
-    margin-top: 0.05rem !important;
-    margin-bottom: 0.05rem !important;
+    margin-top: 0.02rem !important;
+    margin-bottom: 0.02rem !important;
 }
 
 div[data-testid="stVerticalBlock"] > div:has(div[class*="st-key-add_prompt_"]) {
-    margin-top: 0.1rem !important;
+    margin-top: 0.08rem !important;
 }
 </style>
 """
 
 
-
 PARAMETER_DIVIDER = """
-<div style="
-    height:10px;
-    background: linear-gradient(
-        to right,
-        transparent,
-        rgba(212,165,116,0.35),
-        transparent
-    );
-    margin-top:10px;
-    margin-bottom:6px;
-"></div>
+<div class="ui-golden-divider"></div>
 """

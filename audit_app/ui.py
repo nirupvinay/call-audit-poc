@@ -66,13 +66,53 @@ def initialize_prioritization_state() -> None:
         st.session_state.prioritization_rename_mode = False
 
 
+def set_flash_toast(message: str, icon: str = "✅", duration: int = 2) -> None:
+    st.session_state["_flash_toast"] = {
+        "message": message,
+        "icon": icon,
+        "duration": duration,
+    }
+
+
+def render_flash_toast() -> None:
+    payload = st.session_state.pop("_flash_toast", None)
+    if payload:
+        st.toast(
+            payload.get("message", ""),
+            icon=payload.get("icon"),
+            duration=payload.get("duration", 2),
+        )
+
+
+def start_card(card_class: str = "ui-card") -> None:
+    st.markdown(f'<div class="{card_class}">', unsafe_allow_html=True)
+
+
+def end_card() -> None:
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+def render_result_badge(result: str) -> str:
+    palette = {
+        "YES": ("#d3eadb", "#224f35", "#3f8f63"),
+        "NO": ("#ebd6da", "#6f2b37", "#9c4e5e"),
+        "FATAL": ("#ead1d1", "#5f1f24", "#a45f5f"),
+    }
+    bg, text, border = palette.get(result, ("#e8dccd", "#563d2d", "#9c7b56"))
+    return (
+        f"<span style='display:inline-block;padding:4px 10px;border-radius:999px;"
+        f"font-weight:700;font-size:12px;background:{bg};color:{text};"
+        f"border:1px solid {border};letter-spacing:0.2px;'>{result}</span>"
+    )
+
+
 def render_template_action_bar() -> None:
     col_save, col_download, col_upload = st.columns(3)
 
     with col_save:
         if st.button("💾 Save Templates", use_container_width=True):
             save_templates()
-            st.success("Templates saved successfully!")
+            st.toast("Templates saved successfully!", icon="✅", duration=2)
 
     with col_download:
         st.download_button(
@@ -102,11 +142,11 @@ def render_template_action_bar() -> None:
                 st.session_state.current_template = list(data.keys())[0]
 
                 save_templates()
-                st.success("Templates restored and saved.")
+                set_flash_toast("Templates restored and saved.", icon="✅", duration=2)
                 st.rerun()
 
             except Exception:
-                st.error("Invalid file.")
+                st.toast("Invalid file.", icon="⚠️", duration=2)
 
 
 def render_template_selector() -> tuple[str, dict]:
@@ -322,7 +362,27 @@ def render_parameters(selected_template: str, template_data: dict) -> None:
 def render_results(template_name: str, template_results: list[dict], template_total: int) -> None:
     st.subheader(f"Template: {template_name}")
     df = pd.DataFrame(template_results).reset_index(drop=True)
-    st.dataframe(df, use_container_width=True)
+    styled_df = df.style.map(
+        lambda value: (
+            "background-color:#d3eadb;color:#224f35;font-weight:700;border-radius:999px;"
+            if value == "YES"
+            else "background-color:#ebd6da;color:#6f2b37;font-weight:700;border-radius:999px;"
+            if value == "NO"
+            else "background-color:#ead1d1;color:#5f1f24;font-weight:700;border-radius:999px;"
+            if value == "FATAL"
+            else ""
+        ),
+        subset=["Result"],
+    )
+    st.dataframe(styled_df, use_container_width=True)
+    badge_counts = df["Result"].value_counts().to_dict()
+    badge_html = " ".join(
+        render_result_badge(name)
+        + f" <span style='color:#f5ebe0;font-weight:600;margin-right:8px;'>{count}</span>"
+        for name, count in badge_counts.items()
+    )
+    if badge_html:
+        st.markdown(badge_html, unsafe_allow_html=True)
     st.markdown(f"**Total Score: {template_total}**")
 
 
@@ -504,9 +564,12 @@ def render_backend_page() -> None:
     st.divider()
     st.markdown(BACKEND_COMPACT_STYLES, unsafe_allow_html=True)
 
+    start_card()
     render_template_action_bar()
     selected_template, template_data = render_template_selector()
+    end_card()
 
+    start_card("ui-card ui-card-tight")
     new_active_state = st.checkbox("Template Active", value=template_data.get("active", True))
     if new_active_state != template_data.get("active", True):
         template_data["active"] = new_active_state
@@ -515,12 +578,14 @@ def render_backend_page() -> None:
         template_data["active"] = new_active_state
 
     render_parameters(selected_template, template_data)
+    end_card()
 
 
 def render_frontend_page(client) -> None:
     st.subheader("Audit")
     st.divider()
 
+    start_card()
     transcript = st.text_area("Paste transcript here", key=st.session_state["transcript_key"])
 
     col1, col2 = st.columns(2)
@@ -529,6 +594,8 @@ def render_frontend_page(client) -> None:
 
     if run:
         evaluate_and_render(client, transcript)
+
+    end_card()
 
     if reset:
         num = int(st.session_state["transcript_key"].split("_")[-1]) + 1
@@ -542,7 +609,7 @@ def render_prioritization_template_controls() -> dict:
     with col_save:
         if st.button("💾 Save Templates", key="prior_save_templates", use_container_width=True):
             save_prioritization_templates()
-            st.success("Templates saved successfully!")
+            st.toast("Templates saved successfully!", icon="✅", duration=2)
 
     with col_download:
         st.download_button(
@@ -580,10 +647,10 @@ def render_prioritization_template_controls() -> dict:
                 st.session_state.prioritization_templates = data
                 st.session_state.prioritization_current_template = next(iter(data.keys()))
                 save_prioritization_templates()
-                st.success("Templates restored and saved.")
+                set_flash_toast("Templates restored and saved.", icon="✅", duration=2)
                 st.rerun()
             except Exception:
-                st.error("Invalid file.")
+                st.toast("Invalid file.", icon="⚠️", duration=2)
 
     st.markdown("Template")
     c1, c_edit, c2, c3 = st.columns([5, 1, 1, 1])
@@ -669,6 +736,7 @@ def render_prioritization_model_page(client) -> None:
     st.subheader("Prioritization Model")
     st.divider()
 
+    start_card()
     template_data = render_prioritization_template_controls()
 
     active = st.checkbox(
@@ -693,22 +761,7 @@ def render_prioritization_model_page(client) -> None:
         template_data["prioritization_logic"] = updated_logic
         save_prioritization_templates()
 
-    st.markdown(
-        """
-        <div style="
-            height: 10px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            background: linear-gradient(
-                to right,
-                transparent,
-                rgba(212,165,116,0.45),
-                transparent
-            );
-        "></div>
-        """,
-        unsafe_allow_html=True,
-    )
+    st.markdown(PARAMETER_DIVIDER, unsafe_allow_html=True)
 
     transcript = st.text_area(
         "Paste transcript here",
@@ -718,6 +771,8 @@ def render_prioritization_model_page(client) -> None:
     col1, col2 = st.columns(2)
     run = col1.button("Run Prioritization", key="run_prioritization")
     reset = col2.button("Reset", key="reset_prioritization")
+
+    end_card()
 
     if run:
         if transcript.strip() == "":
@@ -766,11 +821,11 @@ def render_prioritization_model_page(client) -> None:
             st.markdown(f"**Template: {template_name}**")
 
             if category == "HOT":
-                st.markdown("<p style='font-size:28px;font-weight:700;color:#ff4d4f;'>🔥 HOT</p>", unsafe_allow_html=True)
+                st.markdown("<p style='font-size:27px;font-weight:700;color:#d96a6e;'>🔥 HOT</p>", unsafe_allow_html=True)
             elif category == "WARM":
-                st.markdown("<p style='font-size:28px;font-weight:700;color:#ff9f1a;'>🟠 WARM</p>", unsafe_allow_html=True)
+                st.markdown("<p style='font-size:27px;font-weight:700;color:#d6a15c;'>🟠 WARM</p>", unsafe_allow_html=True)
             elif category == "COLD":
-                st.markdown("<p style='font-size:28px;font-weight:700;color:#5dade2;'>❄️ COLD</p>", unsafe_allow_html=True)
+                st.markdown("<p style='font-size:27px;font-weight:700;color:#7da4d4;'>❄️ COLD</p>", unsafe_allow_html=True)
             else:
                 st.error(f"AI response is invalid for template: {template_name}")
 
@@ -784,6 +839,7 @@ def run_app() -> None:
     st.set_page_config(layout="wide")
     initialize_session_state()
     initialize_prioritization_state()
+    render_flash_toast()
 
     client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
