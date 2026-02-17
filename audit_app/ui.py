@@ -16,6 +16,7 @@ from audit_app.styles import (
     BACKEND_COMPACT_STYLES,
     LOGIC_DROPDOWN_STYLES,
     PARAMETER_DIVIDER,
+    PRIORITIZATION_PAGE_STYLES,
     SIDEBAR_NAV_STYLES,
 )
 from audit_app.template_store import ensure_minimum_parameter, initialize_session_state, save_templates
@@ -442,8 +443,37 @@ def render_workspace_selector() -> str:
                 else "🔥 Prioritization Model"
             ),
             key="app_page_nav",
+            label_visibility="collapsed",
         )
     return page
+
+
+def render_app_access_gate() -> bool:
+    app_password = str(st.secrets.get("APP_PASSWORD", "")).strip()
+    if not app_password:
+        return True
+
+    if "app_authenticated" not in st.session_state:
+        st.session_state.app_authenticated = False
+
+    if st.session_state.app_authenticated:
+        return True
+
+    st.subheader("Protected Access")
+    entered_password = st.text_input(
+        "App Password",
+        type="password",
+        key="app_password_input",
+        placeholder="Enter app password",
+    )
+    unlock = st.button("Unlock App", key="unlock_app")
+    if unlock:
+        if entered_password == app_password:
+            st.session_state.app_authenticated = True
+            st.rerun()
+        else:
+            st.error("Invalid app password.")
+    return False
 
 
 def render_backend_page() -> None:
@@ -532,6 +562,7 @@ def render_prioritization_template_controls() -> dict:
             except Exception:
                 st.error("Invalid file.")
 
+    st.markdown("Template")
     c1, c_edit, c2, c3 = st.columns([5, 1, 1, 1])
 
     with c1:
@@ -543,6 +574,7 @@ def render_prioritization_template_controls() -> dict:
             if st.session_state.prioritization_current_template in names
             else 0,
             key="prioritization_template_select",
+            label_visibility="collapsed",
         )
         st.session_state.prioritization_current_template = selected
 
@@ -610,6 +642,7 @@ def render_prioritization_template_controls() -> dict:
 
 
 def render_prioritization_model_page(client) -> None:
+    st.markdown(PRIORITIZATION_PAGE_STYLES, unsafe_allow_html=True)
     st.subheader("Prioritization Model")
     st.divider()
 
@@ -733,6 +766,9 @@ def run_app() -> None:
 
     st.markdown(APP_STYLES, unsafe_allow_html=True)
     render_shared_header()
+    if not render_app_access_gate():
+        return
+
     page = render_workspace_selector()
 
     if page == "Audit":

@@ -216,6 +216,8 @@ div[class*="st-key-logic_"] div[data-baseweb="select"] svg {
 SIDEBAR_NAV_STYLES = """
 <style>
 section[data-testid="stSidebar"] {
+    min-width: 340px !important;
+    max-width: 340px !important;
     background: linear-gradient(180deg, #5c2e3e 0%, #6b2737 100%) !important;
 }
 
@@ -236,19 +238,64 @@ section[data-testid="stSidebar"] div[role="radiogroup"] p {
 section[data-testid="stSidebar"] label[data-baseweb="radio"] {
     display: flex !important;
     align-items: center !important;
+    cursor: pointer !important;
+}
+
+section[data-testid="stSidebar"] label[data-baseweb="radio"] > div:first-child {
+    display: none !important;
 }
 
 section[data-testid="stSidebar"] label[data-baseweb="radio"] div[data-testid="stMarkdownContainer"] {
-    margin-left: 6px !important;
+    margin-left: 0 !important;
     opacity: 1 !important;
     visibility: visible !important;
 }
 
 section[data-testid="stSidebar"] label[data-baseweb="radio"] p {
     color: #f5ebe0 !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
     line-height: 1.2 !important;
+    white-space: nowrap !important;
+}
+</style>
+"""
+
+
+PRIORITIZATION_PAGE_STYLES = """
+<style>
+.stApp {
+    background: linear-gradient(135deg, #0b1f42 0%, #12346b 25%, #1b4f96 50%, #12346b 75%, #0f2f5f 100%) !important;
+    background-attachment: fixed !important;
+}
+
+section[data-testid="stSidebar"] {
+    min-width: 340px !important;
+    max-width: 340px !important;
+    background: linear-gradient(180deg, #0d2a57 0%, #102f63 100%) !important;
+}
+
+.stButton > button:first-child,
+.stDownloadButton > button,
+div[data-testid="column"] > div > div > button[kind="secondary"] {
+    background: linear-gradient(135deg, #1b4f96 0%, #12346b 100%) !important;
+    color: #e7eefc !important;
+    border: 1px solid rgba(212,165,116,0.35) !important;
+    box-shadow: 0 2px 6px rgba(18, 52, 107, 0.5) !important;
+}
+
+.stButton > button:first-child:hover,
+.stDownloadButton > button:hover,
+div[data-testid="column"] > div > div > button[kind="secondary"]:hover {
+    background: linear-gradient(135deg, #12346b 0%, #0d2a57 100%) !important;
+}
+
+.prior-protected {
+    max-width: 460px;
+    background: rgba(11, 31, 66, 0.65);
+    border: 1px solid rgba(212,165,116,0.45);
+    border-radius: 10px;
+    padding: 16px;
 }
 </style>
 """
