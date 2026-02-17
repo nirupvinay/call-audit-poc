@@ -439,19 +439,20 @@ def render_workspace_selector() -> str:
 
     with st.sidebar:
         st.markdown("### Workspace")
-        page = st.radio(
+        workspace_display_map = {
+            "▣ Audit": "Audit",
+            "⚙ Rule Engine": "Rule Engine",
+            "◆ Prioritization Model": "Prioritization Model",
+        }
+        selected_workspace = st.radio(
             "Workspace",
-            ["Audit", "Rule Engine", "Prioritization Model"],
-            format_func=lambda x: (
-                "▣ Audit"
-                if x == "Audit"
-                else "⚙ Rule Engine"
-                if x == "Rule Engine"
-                else "◆ Prioritization Model"
-            ),
-            key="app_page_nav",
+            list(workspace_display_map.keys()),
+            index=list(workspace_display_map.values()).index(st.session_state["app_page_nav"]),
+            key="app_page_nav_display",
             label_visibility="collapsed",
         )
+    page = workspace_display_map[selected_workspace]
+    st.session_state["app_page_nav"] = page
     return page
 
 
