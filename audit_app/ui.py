@@ -436,11 +436,11 @@ def render_workspace_selector() -> str:
             "Workspace",
             ["Audit", "Rule Engine", "Prioritization Model"],
             format_func=lambda x: (
-                "🧾 Audit"
+                "▣ Audit"
                 if x == "Audit"
-                else "⚙️ Rule Engine"
+                else "⚙ Rule Engine"
                 if x == "Rule Engine"
-                else "🔥 Prioritization Model"
+                else "◆ Prioritization Model"
             ),
             key="app_page_nav",
             label_visibility="collapsed",
