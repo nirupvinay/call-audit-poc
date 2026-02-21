@@ -19,7 +19,13 @@ from audit_app.styles import (
     PRIORITIZATION_PAGE_STYLES,
     SIDEBAR_NAV_STYLES,
 )
-from audit_app.template_store import ensure_minimum_parameter, initialize_session_state, save_templates
+from audit_app.template_store import (
+    ensure_minimum_parameter,
+    initialize_session_state,
+    load_json_with_backup,
+    save_json_with_backup,
+    save_templates,
+)
 
 PRIORITIZATION_TEMPLATE_FILE = Path("prioritization_templates.json")
 
@@ -34,15 +40,13 @@ def _default_prioritization_templates() -> dict:
 
 
 def save_prioritization_templates() -> None:
-    with PRIORITIZATION_TEMPLATE_FILE.open("w", encoding="utf-8") as f:
-        json.dump(st.session_state.prioritization_templates, f, indent=2)
+    save_json_with_backup(PRIORITIZATION_TEMPLATE_FILE.name, st.session_state.prioritization_templates)
 
 
 def initialize_prioritization_state() -> None:
     if "prioritization_templates" not in st.session_state:
         try:
-            with PRIORITIZATION_TEMPLATE_FILE.open("r", encoding="utf-8") as f:
-                loaded = json.load(f)
+            loaded = load_json_with_backup(PRIORITIZATION_TEMPLATE_FILE.name)
             if not isinstance(loaded, dict) or not loaded:
                 raise ValueError("Invalid prioritization templates")
             st.session_state.prioritization_templates = loaded
@@ -476,6 +480,7 @@ def evaluate_and_render(client, transcript: str) -> None:
             continue
 
         results = []
+        export_rows = []
         fatal_triggered = False
         template_total = 0
 
@@ -518,12 +523,24 @@ def evaluate_and_render(client, transcript: str) -> None:
                     "Reason": reason,
                 }
             )
+            export_rows.append(
+                {
+                    "Template": template_name,
+                    "Parameter": param["title"],
+                    "Result": final_result,
+                    "Score": score,
+                    "Reason": reason,
+                }
+            )
 
         if fatal_triggered:
             template_total = 0
 
         if results:
             render_results(template_name, results, template_total)
+
+            existing_rows = st.session_state.get("audit_result_export_rows", [])
+            st.session_state["audit_result_export_rows"] = existing_rows + export_rows
 
 
 def render_shared_header() -> None:
@@ -647,7 +664,19 @@ def render_frontend_page(client) -> None:
     reset = col2.button("Reset")
 
     if run:
+        st.session_state["audit_result_export_rows"] = []
         evaluate_and_render(client, transcript)
+
+    export_rows = st.session_state.get("audit_result_export_rows", [])
+    if export_rows:
+        export_df = pd.DataFrame(export_rows)
+        st.download_button(
+            "⬇️ Download Results",
+            data=export_df.to_csv(index=False),
+            file_name="audit_results.csv",
+            mime="text/csv",
+            use_container_width=True,
+        )
 
     end_card()
 
@@ -903,6 +932,8 @@ def run_app() -> None:
         st.session_state["rule_upload_signature"] = ""
     if "prior_upload_signature" not in st.session_state:
         st.session_state["prior_upload_signature"] = ""
+    if "audit_result_export_rows" not in st.session_state:
+        st.session_state["audit_result_export_rows"] = []
     render_flash_toast()
 
     client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
