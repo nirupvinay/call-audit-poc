@@ -62,7 +62,10 @@ However:
 
 A detail must be considered valid ONLY IF:
 • It is explicitly confirmed, OR  
-• It directly answers a question from the agent  
+• It directly answers a question from the agent, OR  
+• It is clearly stated and the conversation continues in a way that shows acceptance without correction  
+
+If the continuation is neutral and does not indicate acceptance → treat as NOT valid  
 
 If a detail is mentioned without confirmation or response:
 → treat it as detected but NOT valid  
