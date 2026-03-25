@@ -42,7 +42,6 @@ CONTROLLED CONTEXT INFERENCE
 You MAY infer intent ONLY when:
 
 • Meaning is strongly implied by nearby words, AND
-• A human auditor would reach the same conclusion, AND
 • No equally likely alternative interpretation exists.
 
 If uncertainty exists → DO NOT infer → return NO.
