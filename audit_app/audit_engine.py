@@ -151,12 +151,13 @@ EVIDENCE & REASONING RULES
 • No generic QA language.
 • No speculation.
 • Keep reasoning concise and factual.
-• Write reasoning in simple, consistent, factual language.
+• Write reasoning in very simple, everyday language.
+• Use plain human wording as if explaining to a non-technical person.
+• Do NOT use any technical terms, audit terms, or formal wording.
+• Keep sentences short and easy to understand.
 • Do NOT include interpretation beyond directly observed behavior.
 • Do NOT mention prompts, parameters, rules, transcript, fail, pass, or evaluation logic.
 • Explain only what happened in the conversation.
-• Do NOT use jargons.
-
 Provide timestamps when detectable.
 If unavailable → return empty list.
 
