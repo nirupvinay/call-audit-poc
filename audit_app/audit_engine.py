@@ -82,6 +82,28 @@ Examples (only when clearly linked to the question):
 If the meaning is not clearly tied to the agent’s question or requires interpretation → return NO.
 
 --------------------------------------------------
+CONTEXTUAL EVIDENCE INTERPRETATION
+--------------------------------------------------
+
+In real conversations, information may be exchanged without a strict question-answer format.
+
+You MUST treat information as valid evidence if:
+
+• A specific detail (e.g., name, city, confirmation) is clearly spoken, AND  
+• It is acknowledged, repeated, or responded to in a way that shows it is being used or confirmed in the conversation, AND  
+• The meaning is clear without requiring assumption  
+
+This includes cases where:
+• The agent states or repeats the detail and the merchant continues the conversation without correction  
+• The detail is naturally embedded in conversation rather than asked directly  
+
+Do NOT reject valid evidence only because it is not asked in a formal question format.
+
+However:
+• Do NOT assume correctness if the source or intent is unclear  
+• If it could be system data, guesswork, or unclear reference → return NO
+
+--------------------------------------------------
 PARAMETER ISOLATION (CRITICAL)
 --------------------------------------------------
 
