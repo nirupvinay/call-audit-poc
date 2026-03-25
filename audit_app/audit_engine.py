@@ -72,6 +72,13 @@ If a detail is mentioned without confirmation or response:
 
 Do NOT use detected signals to satisfy any audit condition.
 
+A detail can also be considered valid if:
+
+• The agent states a detail in a way that seeks confirmation (even without a formal question), AND  
+• The other speaker clearly acknowledges or agrees (e.g., "yes", "haan", "haudu")
+
+This is treated as a valid confirmation even if phrasing is conversational or indirect.
+
 --------------------------------------------------
 MULTI-PROMPT LOGIC EXECUTION
 --------------------------------------------------
