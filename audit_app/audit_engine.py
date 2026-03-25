@@ -41,10 +41,7 @@ UNIVERSAL LANGUAGE HANDLING
 
 • Interpret SEMANTIC meaning, not grammar perfection.
 
-• Imperfect wording is VALID evidence if intent is clear.
-
-• Do NOT fail due to:
-  pronunciation issues, partial sentences, fillers, informal tone.
+• Imperfect wording is VALID evidence ONLY if intent is clear and complete.
 
 • If meaning itself is uncertain → return NO.
 
@@ -82,26 +79,23 @@ Examples (only when clearly linked to the question):
 If the meaning is not clearly tied to the agent’s question or requires interpretation → return NO.
 
 --------------------------------------------------
-CONTEXTUAL EVIDENCE INTERPRETATION
+CONTEXTUAL SIGNAL DETECTION (RESTRICTED)
 --------------------------------------------------
 
-In real conversations, information may be exchanged without a strict question-answer format.
+Context can be used ONLY to detect presence of relevant signals.
 
-You MUST treat information as valid evidence if:
+• Context helps identify that a detail (name, city, etc.) appears in the conversation
+• Context MUST NOT be used to assume confirmation or complete a condition
 
-• A specific detail (e.g., name, city, confirmation) is clearly spoken, AND  
-• It is acknowledged, repeated, or responded to in a way that shows it is being used or confirmed in the conversation, AND  
-• The meaning is clear without requiring assumption  
+A detail is considered VALID ONLY IF:
+• It is clearly confirmed, OR
+• It directly answers a question, OR
+• It is explicitly acknowledged by the other speaker
 
-This includes cases where:
-• The agent states or repeats the detail and the merchant continues the conversation without correction  
-• The detail is naturally embedded in conversation rather than asked directly  
+If a detail is mentioned without confirmation or acknowledgment:
+→ treat it as DETECTED but NOT VALID
 
-Do NOT reject valid evidence only because it is not asked in a formal question format.
-
-However:
-• Do NOT assume correctness if the source or intent is unclear  
-• If it could be system data, guesswork, or unclear reference → return NO
+Do NOT treat detected signals as completed conditions.
 
 --------------------------------------------------
 PARAMETER ISOLATION (CRITICAL)
@@ -142,7 +136,7 @@ You MUST:
 
 2. For EACH prompt, internally determine a YES or NO based strictly on transcript evidence.
 
-3. Do NOT combine prompts before evaluating them individually.
+3. Do NOT use partial or detected signals to satisfy a prompt.
 
 4. Apply provided logic strictly:
 
@@ -254,106 +248,3 @@ Do NOT:
 You are a deterministic audit engine.
 Return structured compliance decisions only.
 """
-
-
-class AuditResponseParseError(Exception):
-    def __init__(self, raw_response: str):
-        self.raw_response = raw_response
-        super().__init__("AI returned unreadable JSON")
-
-
-def build_audit_payload(templates: dict) -> list[dict]:
-    audit_payload = []
-    for template_name, template in templates.items():
-        if not template.get("active"):
-            continue
-
-        for param in template["parameters"]:
-            audit_payload.append(
-                {
-                    "template": template_name,
-                    "name": param["title"],
-                    "type": param["type"],
-                    "fatal": param["fatal"],
-                    "prompts": param["prompts"],
-                    "logic": param["logic"],
-                }
-            )
-    return audit_payload
-
-
-def run_openai_audit(client, transcript: str, audit_payload: list[dict]) -> dict:
-    response = client.chat.completions.create(
-        model="gpt-5-mini",
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {
-                "role": "user",
-                "content": json.dumps(
-                    {
-                        "transcript": transcript,
-                        "audit_parameters": audit_payload,
-                    }
-                ),
-            },
-        ],
-    )
-
-    raw_ai = response.choices[0].message.content
-    start = raw_ai.find("{")
-    end = raw_ai.rfind("}") + 1
-    cleaned = raw_ai[start:end]
-
-    try:
-        return json.loads(cleaned)
-    except Exception as exc:
-        raise AuditResponseParseError(raw_ai) from exc
-
-
-LEAD_CLASSIFIER_SYSTEM_PROMPT = """
-You are a deterministic lead qualifier.
-
-Classify the lead into exactly one category: HOT, WARM, or COLD, using only evidence from the transcript.
-
-Rules:
-1. Use only transcript evidence.
-2. If there is clear buying intent, urgency, budget fit, and next-step readiness, prefer HOT.
-3. If interest exists but commitment/clarity is partial, use WARM.
-4. If weak/no interest, mismatch, or refusal, use COLD.
-5. If uncertain, choose the lower-confidence category rather than overestimating.
-6. Follow any output requirements provided by the user, but category must still be one of HOT/WARM/COLD.
-
-Return JSON only in this exact shape:
-{
-  "category": "HOT | WARM | COLD",
-  "reasoning": "short factual explanation"
-}
-"""
-
-
-def run_openai_lead_classifier(client, transcript: str, output_requirement: str) -> dict:
-    response = client.chat.completions.create(
-        model="gpt-5-mini",
-        messages=[
-            {"role": "system", "content": LEAD_CLASSIFIER_SYSTEM_PROMPT},
-            {
-                "role": "user",
-                "content": json.dumps(
-                    {
-                        "transcript": transcript,
-                        "output_requirement": output_requirement,
-                    }
-                ),
-            },
-        ],
-    )
-
-    raw_ai = response.choices[0].message.content
-    start = raw_ai.find("{")
-    end = raw_ai.rfind("}") + 1
-    cleaned = raw_ai[start:end]
-
-    try:
-        return json.loads(cleaned)
-    except Exception as exc:
-        raise AuditResponseParseError(raw_ai) from exc
