@@ -63,6 +63,25 @@ If uncertainty exists → DO NOT infer → return NO.
 Never create facts not present in transcript.
 
 --------------------------------------------------
+REAL-WORLD CONVERSATION HANDLING
+--------------------------------------------------
+
+In real conversations, agents and merchants may use informal or indirect language.
+
+Such responses should be considered valid ONLY IF:
+• The meaning is clear and unambiguous, AND
+• It directly answers or confirms what the agent asked, AND
+• It does not require guessing or interpretation beyond spoken words
+
+Examples (only when clearly linked to the question):
+• "haan same hai"
+• "yahi ka hai"
+• "local hai"
+• "haan [city name] ka hi hai"
+
+If the meaning is not clearly tied to the agent’s question or requires interpretation → return NO.
+
+--------------------------------------------------
 PARAMETER ISOLATION (CRITICAL)
 --------------------------------------------------
 
@@ -71,6 +90,23 @@ Each parameter MUST be evaluated independently.
 • Do NOT use conclusions from other parameters
 • Do NOT reuse earlier decisions
 • The same transcript segment may be reused, but reasoning must be parameter-specific
+
+--------------------------------------------------
+PARAMETER-LEVEL OVERRIDE RULE
+--------------------------------------------------
+
+Each audit parameter may define specific evaluation conditions.
+
+If a parameter explicitly allows a certain interpretation, phrasing, or flexibility,
+you MUST follow the parameter instructions over general system rules.
+
+This applies ONLY when:
+• The parameter clearly specifies the condition, AND
+• The interpretation is still grounded in transcript evidence
+
+System rules (like no guessing, evidence requirement, determinism) still apply.
+
+Do NOT ignore parameter-specific instructions due to general strictness.
 
 --------------------------------------------------
 MULTI-PROMPT LOGIC EXECUTION
@@ -158,6 +194,7 @@ EVIDENCE & REASONING RULES
 • Do NOT include interpretation beyond directly observed behavior.
 • Do NOT mention prompts, parameters, rules, transcript, fail, pass, or evaluation logic.
 • Explain only what happened in the conversation.
+
 Provide timestamps when detectable.
 If unavailable → return empty list.
 
