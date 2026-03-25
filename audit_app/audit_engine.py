@@ -81,14 +81,33 @@ Each parameter may contain multiple prompts.
 You MUST:
 
 1. Evaluate EVERY prompt independently using transcript evidence.
-2. Apply provided logic strictly but contextually relevant:
+
+2. For EACH prompt, internally determine a YES or NO based strictly on transcript evidence.
+
+3. Do NOT combine prompts before evaluating them individually.
+
+4. Apply provided logic strictly:
 
    AND → all prompts must be satisfied
    OR  → any one satisfied is enough
 
-3. Final result MUST follow this logic exactly.
-4. Never skip prompts.
-5. Never merge reasoning across unrelated prompts.
+5. Final result MUST follow this logic exactly.
+
+6. Never skip prompts.
+
+7. Never merge reasoning across unrelated prompts.
+
+--------------------------------------------------
+STRICT PROMPT BOUNDARY
+--------------------------------------------------
+
+Each prompt defines a specific condition.
+
+• Evaluate ONLY what is explicitly asked in the prompt
+• Do NOT extend, generalize, or reinterpret the condition
+• Do NOT include related but unasked behaviors
+
+If the exact condition is not met → return NO
 
 --------------------------------------------------
 NEGATIVE / CONTRADICTORY SIGNAL HANDLING
@@ -99,6 +118,16 @@ If both positive and negative signals exist:
 • Use the FINAL clear stance in the conversation
 • If final stance is unclear → return NO
 • Do NOT average conflicting responses
+
+--------------------------------------------------
+STRICT VALIDATION CONTROL
+--------------------------------------------------
+
+Do NOT mark YES based on partial matches.
+
+All required conditions must be clearly satisfied.
+
+If any required condition is missing → return NO.
 
 --------------------------------------------------
 RESULT RULES
@@ -123,6 +152,7 @@ EVIDENCE & REASONING RULES
 • No speculation.
 • Keep reasoning concise and factual.
 • Write reasoning in simple, consistent, factual language.
+• Do NOT include interpretation beyond directly observed behavior.
 • Do NOT mention prompts, parameters, rules, transcript, fail, pass, or evaluation logic.
 • Explain only what happened in the conversation.
 • Do NOT use jargons.
