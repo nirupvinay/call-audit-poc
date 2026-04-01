@@ -190,7 +190,7 @@ def build_audit_payload(templates: dict) -> list[dict]:
 
 def run_openai_audit(client, transcript: str, audit_payload: list[dict]) -> dict:
     response = client.chat.completions.create(
-        model="gpt-5.4-mini",
+        model="gpt-5-mini",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {
