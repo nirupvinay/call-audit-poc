@@ -2,162 +2,59 @@ import json
 
 
 SYSTEM_PROMPT = """
-You are a STRICT, deterministic AI Call Audit Evaluator.
+You are a strict deterministic call audit evaluator.
 
-Your job is to evaluate a call transcript against structured audit parameters
-and return ONLY factual, transcript-grounded compliance decisions.
+Evaluate the transcript against the provided audit parameters and return only transcript-grounded results.
 
-You must behave like a compliance engine, not a conversational AI.
+Rules:
+1. Use only spoken evidence from the transcript.
+2. Never guess or invent facts.
+3. If evidence is unclear, incomplete, or missing, return NO.
+4. Evaluate every parameter independently.
+5. Evaluate every prompt inside each parameter independently.
+6. Apply logic exactly:
+   - AND: all prompts must be satisfied
+   - OR: at least one prompt must be satisfied
+7. Do not skip any parameter.
+8. Return exactly one result for every input parameter.
+9. Preserve the exact parameter name.
+10. FATAL is allowed only when fatal=true and the result would otherwise be NO.
 
---------------------------------------------------
-CORE EVALUATION PRINCIPLES
---------------------------------------------------
+Language handling:
+- The transcript may be in Hindi, Hinglish, English, mixed language, broken grammar, STT errors, fillers, or merged words.
+- Judge semantic meaning, not grammar perfection.
+- Imperfect wording counts only when the meaning is still clearly satisfied.
+- If meaning is uncertain, return NO.
 
-1. Use ONLY spoken transcript evidence.
-2. Never guess missing information.
-3. Never assume intent without clear linguistic signal.
-4. If evidence is unclear or absent → result MUST be NO.
-5. Determinism is mandatory. Same input → same output.
+Validation rules:
+- Mention of a detail is not enough by itself.
+- A detail is valid only if it is clearly confirmed, directly answered, or clearly accepted without correction.
+- If a detail is merely detected but not validated, do not count it as satisfied.
 
---------------------------------------------------
-UNIVERSAL LANGUAGE HANDLING
---------------------------------------------------
+Reasoning rules:
+- Keep reasoning short, factual, and specific.
+- Refer only to what was actually said or clearly conveyed.
+- Do not mention prompts, rules, evaluation logic, pass/fail, or policy.
+- No generic QA wording.
+- No speculation.
 
-• The transcript may contain ANY language:
-  Hindi, Hinglish, English, mixed speech, broken grammar, STT errors, fillers, merged words.
+Timestamps:
+- Include timestamps only when clearly detectable from the transcript.
+- Otherwise return an empty list.
 
-• Interpret SEMANTIC meaning, not grammar perfection.
-
-• Imperfect wording is VALID evidence ONLY if intent is clear AND the condition is fully satisfied.
-
-• Do NOT fail due to:
-  pronunciation issues, partial sentences, fillers, informal tone.
-
-• If meaning itself is uncertain → return NO.
-
---------------------------------------------------
-CONTROLLED CONTEXT INFERENCE
---------------------------------------------------
-
-You MAY infer intent ONLY when:
-
-• Meaning is strongly implied by nearby words, AND
-• No equally likely alternative interpretation exists.
-
-If uncertainty exists → DO NOT infer → return NO.
-
-Never create facts not present in transcript.
-
---------------------------------------------------
-CONTEXT SIGNAL VALIDATION
---------------------------------------------------
-
-Context may help identify that a detail (such as name, city, or confirmation) is present in the conversation.
-
-However:
-
-• Presence of a detail is NOT equal to validation  
-• A condition is satisfied ONLY when it is clearly confirmed or directly answered  
-
-A detail must be considered valid ONLY IF:
-• It is explicitly confirmed, OR  
-• It directly answers a question from the agent, OR  
-• It is clearly stated and the conversation continues in a way that shows acceptance without correction  
-
-If the continuation is neutral and does not indicate acceptance → treat as NOT valid  
-
-If a detail is mentioned without confirmation or response:
-→ treat it as detected but NOT valid  
-
-Do NOT use detected signals to satisfy any audit condition.
-
-A detail can also be considered valid if:
-
-• The agent states a detail in a way that seeks confirmation (even without a formal question), AND  
-• The other speaker clearly acknowledges or agrees (e.g., "yes", "haan", "haudu")
-
-This is treated as a valid confirmation even if phrasing is conversational or indirect.
-
---------------------------------------------------
-MULTI-PROMPT LOGIC EXECUTION
---------------------------------------------------
-
-Each parameter may contain multiple prompts.
-
-You MUST:
-
-1. Evaluate EVERY prompt independently using transcript evidence.
-
-2. Apply provided logic strictly:
-
-   AND → all prompts must be satisfied
-   OR  → any one satisfied is enough
-
-3. Final result MUST follow this logic exactly.
-4. Never skip prompts.
-5. Never merge reasoning across unrelated prompts.
-
---------------------------------------------------
-RESULT RULES
---------------------------------------------------
-
-Allowed outputs per parameter:
-
-YES
-NO
-FATAL → only when:
-        parameter.fatal = true
-        AND final logical result = NO
-
-No other labels allowed.
-
---------------------------------------------------
-EVIDENCE & REASONING RULES
---------------------------------------------------
-
-• Reasoning MUST reference real transcript wording or clear meaning.
-• No generic QA language.
-• No speculation.
-• Keep reasoning concise and factual.
-• Write reasoning in natural human audit language.
-• Do NOT mention prompts, parameters, rules, transcript, fail, pass, or evaluation logic.
-• Explain only what happened in the conversation.
-• Do NOT use jargons.
-
-Provide timestamps when detectable.
-If unavailable → return empty list.
-
---------------------------------------------------
-STRICT OUTPUT FORMAT (JSON ONLY)
---------------------------------------------------
-
-Return ONLY valid JSON:
+Return only valid JSON in exactly this format:
 
 {
   "parameters": [
     {
       "name": "<exact parameter name>",
       "result": "YES | NO | FATAL",
-      "reasoning": "<concise transcript-grounded justification>",
+      "reasoning": "<concise factual explanation>",
       "timestamps": ["mm:ss"]
     }
   ]
 }
-
---------------------------------------------------
-ABSOLUTE PROHIBITIONS
---------------------------------------------------
-
-Do NOT:
-
-• Add commentary outside JSON
-• Explain reasoning process
-• Invent evidence
-• Use probability words ("maybe", "likely", etc.)
-
-You are a deterministic audit engine.
-Return structured compliance decisions only.
-"""
+""".strip()
 
 
 class AuditResponseParseError(Exception):
@@ -188,9 +85,115 @@ def build_audit_payload(templates: dict) -> list[dict]:
     return audit_payload
 
 
+def _extract_text_content(raw_content) -> str:
+    if isinstance(raw_content, str):
+        return raw_content
+
+    if isinstance(raw_content, list):
+        parts = []
+        for item in raw_content:
+            if isinstance(item, str):
+                parts.append(item)
+            elif isinstance(item, dict):
+                if "text" in item:
+                    parts.append(str(item["text"]))
+                elif item.get("type") == "output_text" and "text" in item:
+                    parts.append(str(item["text"]))
+        return "".join(parts)
+
+    return str(raw_content)
+
+
+def _safe_parse_json(raw_ai: str) -> dict:
+    try:
+        return json.loads(raw_ai)
+    except Exception:
+        start = raw_ai.find("{")
+        end = raw_ai.rfind("}") + 1
+        cleaned = raw_ai[start:end] if start != -1 and end > 0 else raw_ai
+        try:
+            return json.loads(cleaned)
+        except Exception as exc:
+            raise AuditResponseParseError(raw_ai) from exc
+
+
+def _normalize_result(value: str, fatal: bool) -> str:
+    value = (value or "").strip().upper()
+
+    if value == "YES":
+        return "YES"
+
+    if value == "FATAL":
+        return "FATAL" if fatal else "NO"
+
+    if value == "NO":
+        return "FATAL" if fatal else "NO"
+
+    return "FATAL" if fatal else "NO"
+
+
+def _normalize_timestamps(value) -> list[str]:
+    if not isinstance(value, list):
+        return []
+
+    cleaned = []
+    for item in value:
+        if isinstance(item, str) and item.strip():
+            cleaned.append(item.strip())
+    return cleaned
+
+
+def _default_missing_result(parameter: dict) -> dict:
+    return {
+        "name": parameter["name"],
+        "result": "FATAL" if parameter.get("fatal") else "NO",
+        "reasoning": "Required evidence was not clearly present.",
+        "timestamps": [],
+    }
+
+
+def _reconcile_audit_response(parsed: dict, audit_payload: list[dict]) -> dict:
+    ai_parameters = parsed.get("parameters", [])
+    if not isinstance(ai_parameters, list):
+        ai_parameters = []
+
+    by_name = {}
+    for item in ai_parameters:
+        if not isinstance(item, dict):
+            continue
+        name = str(item.get("name", "")).strip()
+        if not name:
+            continue
+        if name not in by_name:
+            by_name[name] = item
+
+    final_parameters = []
+
+    for parameter in audit_payload:
+        expected_name = parameter["name"]
+        raw_item = by_name.get(expected_name)
+
+        if raw_item is None:
+            final_parameters.append(_default_missing_result(parameter))
+            continue
+
+        final_parameters.append(
+            {
+                "name": expected_name,
+                "result": _normalize_result(raw_item.get("result", ""), bool(parameter.get("fatal"))),
+                "reasoning": str(raw_item.get("reasoning", "")).strip(),
+                "timestamps": _normalize_timestamps(raw_item.get("timestamps", [])),
+            }
+        )
+
+    return {"parameters": final_parameters}
+
+
 def run_openai_audit(client, transcript: str, audit_payload: list[dict]) -> dict:
     response = client.chat.completions.create(
         model="gpt-5.4-mini",
+        temperature=0,
+        response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {
@@ -199,49 +202,45 @@ def run_openai_audit(client, transcript: str, audit_payload: list[dict]) -> dict
                     {
                         "transcript": transcript,
                         "audit_parameters": audit_payload,
-                    }
+                    },
+                    ensure_ascii=False,
                 ),
             },
         ],
     )
 
-    raw_ai = response.choices[0].message.content
-
-    start = raw_ai.find("{")
-    end = raw_ai.rfind("}") + 1
-    cleaned = raw_ai[start:end]
-
-    try:
-        return json.loads(cleaned)
-    except Exception as exc:
-        raise AuditResponseParseError(raw_ai) from exc
+    raw_ai = _extract_text_content(response.choices[0].message.content)
+    parsed = _safe_parse_json(raw_ai)
+    return _reconcile_audit_response(parsed, audit_payload)
 
 
 LEAD_CLASSIFIER_SYSTEM_PROMPT = """
 You are a deterministic lead qualifier.
 
-Classify the lead into exactly one category: HOT, WARM, or COLD, using only evidence from the transcript.
+Classify the lead into exactly one category: HOT, WARM, or COLD, using only transcript evidence.
 
 Rules:
 1. Use only transcript evidence.
-2. If there is clear buying intent, urgency, budget fit, and next-step readiness, prefer HOT.
-3. If interest exists but commitment/clarity is partial, use WARM.
-4. If weak/no interest, mismatch, or refusal, use COLD.
-5. If uncertain, choose the lower-confidence category rather than overestimating.
-6. Follow any output requirements provided by the user, but category must still be one of HOT/WARM/COLD.
+2. Never guess.
+3. If there is clear buying intent, urgency, budget fit, and next-step readiness, prefer HOT.
+4. If interest exists but commitment or clarity is partial, use WARM.
+5. If weak or no interest, mismatch, or refusal, use COLD.
+6. If uncertain, choose the lower-confidence category.
 
-Return JSON only in this exact shape:
+Return only valid JSON in this exact shape:
 
 {
   "category": "HOT | WARM | COLD",
   "reasoning": "short factual explanation"
 }
-"""
+""".strip()
 
 
 def run_openai_lead_classifier(client, transcript: str, output_requirement: str) -> dict:
     response = client.chat.completions.create(
         model="gpt-5-mini",
+        temperature=0,
+        response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": LEAD_CLASSIFIER_SYSTEM_PROMPT},
             {
@@ -250,19 +249,21 @@ def run_openai_lead_classifier(client, transcript: str, output_requirement: str)
                     {
                         "transcript": transcript,
                         "output_requirement": output_requirement,
-                    }
+                    },
+                    ensure_ascii=False,
                 ),
             },
         ],
     )
 
-    raw_ai = response.choices[0].message.content
+    raw_ai = _extract_text_content(response.choices[0].message.content)
+    parsed = _safe_parse_json(raw_ai)
 
-    start = raw_ai.find("{")
-    end = raw_ai.rfind("}") + 1
-    cleaned = raw_ai[start:end]
+    category = str(parsed.get("category", "")).strip().upper()
+    if category not in {"HOT", "WARM", "COLD"}:
+        category = "COLD"
 
-    try:
-        return json.loads(cleaned)
-    except Exception as exc:
-        raise AuditResponseParseError(raw_ai) from exc
+    return {
+        "category": category,
+        "reasoning": str(parsed.get("reasoning", "")).strip(),
+    }
