@@ -13,34 +13,66 @@ Rules:
 4. Evaluate every parameter independently.
 5. Evaluate every prompt inside each parameter independently.
 6. Apply logic exactly:
-   - AND: all prompts must be satisfied
-   - OR: at least one prompt must be satisfied
+   - AND: all prompts must be satisfied.
+   - OR: at least one prompt must be satisfied.
 7. Do not skip any parameter.
 8. Return exactly one result for every input parameter.
 9. Preserve the exact parameter name.
 10. FATAL is allowed only when fatal=true and the result would otherwise be NO.
+11. Evaluate the complete transcript before deciding any parameter result.
+
+Conversation evaluation:
+- Evaluate using the entire conversation, not isolated sentences.
+- Evidence may appear anywhere in the transcript unless the parameter explicitly requires a specific sequence.
+- Combine relevant evidence across multiple dialogue turns.
+- Do not require all supporting evidence to appear together if the overall requirement is satisfied across the conversation.
+- Consider repeated attempts by the agent. If a requirement is eventually satisfied, evaluate based on the final outcome.
+- If a speaker corrects, updates, or replaces previously stated information, use the latest clearly confirmed or accepted version.
+- Ignore abandoned, incomplete, restarted, or immediately corrected statements.
+- If conflicting information exists, evaluate using the final clearly confirmed or accepted information.
+- Merchant interruptions, overlaps, fillers, or natural conversational flow do not invalidate otherwise complete evidence.
+- Treat semantically equivalent wording as satisfying a prompt when the intended meaning is clearly conveyed.
+- Evaluate the conversation holistically before making a decision.
+- Do not award partial credit. For AND conditions, every required prompt must be satisfied.
 
 Language handling:
-- The transcript may be in Hindi, Hinglish, English, mixed language, broken grammar, STT errors, fillers, or merged words.
-- Judge semantic meaning, not grammar perfection.
-- Imperfect wording counts only when the meaning is still clearly satisfied.
-- If meaning is uncertain, return NO.
+- The transcript may be in Hindi, Hinglish, English, mixed language, broken grammar, STT errors, fillers, repeated words, merged words, split words, pronunciation variations, or transcription mistakes.
+- Judge semantic meaning rather than literal wording or grammar.
+- Imperfect wording counts only when the intended meaning is still clearly satisfied.
+- Minor STT mistakes, omitted words, merged words, split words, or transcription inaccuracies should not affect evaluation if the surrounding conversation clearly conveys the intended meaning.
+- Small omissions that are realistically attributable to transcription may be tolerated only when the remaining transcript provides clear supporting context. Never reconstruct missing dialogue or assume facts that are not reasonably supported by the conversation.
+- If multiple interpretations are reasonably possible, choose the conservative interpretation.
+- If meaning remains uncertain, return NO.
 
 Validation rules:
 - Mention of a detail is not enough by itself.
-- A detail is valid only if it is clearly confirmed, directly answered, or clearly accepted without correction.
+- A detail is valid only if it is clearly confirmed, directly answered, clearly accepted without correction, or otherwise clearly conveyed through the conversation.
+- If a detail is later corrected or contradicted, evaluate using the final confirmed or accepted version.
 - If a detail is merely detected but not validated, do not count it as satisfied.
+
+Evidence rules:
+- Every result must be supported by transcript evidence.
+- Evaluate using the complete conversation, not isolated statements.
+- When returning YES or FATAL, ensure sufficient transcript evidence supports the decision.
+- The reasoning must reference only evidence actually present or clearly conveyed in the transcript.
+- Never infer missing information solely from context.
+- If supporting evidence is ambiguous, incomplete, or cannot be reasonably identified, return NO.
 
 Reasoning rules:
 - Keep reasoning short, factual, and specific.
 - Refer only to what was actually said or clearly conveyed.
+- State the key transcript evidence that led to the decision instead of giving generic conclusions.
+- For YES or FATAL results, the reasoning should describe the evidence corresponding to the reported timestamp(s).
+- For NO results, briefly state what required evidence was missing or insufficient.
 - Do not mention prompts, rules, evaluation logic, pass/fail, or policy.
+- Do not speculate or explain assumptions.
 - No generic QA wording.
-- No speculation.
 
 Timestamps:
 - Include timestamps only when clearly detectable from the transcript.
-- Otherwise return an empty list.
+- Every timestamp must directly correspond to the evidence described in the reasoning.
+- If multiple timestamps directly support the decision, include all relevant timestamps.
+- If timestamps are unavailable or cannot be reliably identified, return an empty list.
 
 Return only valid JSON in exactly this format:
 
@@ -49,13 +81,12 @@ Return only valid JSON in exactly this format:
     {
       "name": "<exact parameter name>",
       "result": "YES | NO | FATAL",
-      "reasoning": "<concise factual explanation>",
+      "reasoning": "<concise factual explanation with supporting evidence>",
       "timestamps": ["mm:ss"]
     }
   ]
 }
 """.strip()
-
 
 class AuditResponseParseError(Exception):
     def __init__(self, raw_response: str):
