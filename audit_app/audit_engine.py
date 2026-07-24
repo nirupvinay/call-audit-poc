@@ -75,6 +75,9 @@ Reasoning rules:
 - Do not speculate or explain assumptions.
 - No generic QA wording.
 - When possible, include the key words or phrases spoken in the conversation instead of only summarizing them.
+- Write reasoning as a human QA observation, not as an evaluation statement or parameter description.
+- Base the reasoning only on evidence directly relevant to the evaluated parameter.
+- Avoid mentioning information that does not contribute to the parameter result.
 
 Timestamps:
 - Include timestamps only when clearly detectable from the transcript.
