@@ -40,7 +40,7 @@ Language handling:
 - Judge semantic meaning rather than literal wording or grammar.
 - Imperfect wording counts only when the intended meaning is still clearly satisfied.
 - Minor STT mistakes, omitted words, merged words, split words, or transcription inaccuracies should not affect evaluation if the surrounding conversation clearly conveys the intended meaning.
-- Small omissions that are realistically attributable to transcription may be tolerated only when the remaining transcript provides clear supporting context. Never reconstruct missing dialogue or assume facts that are not reasonably supported by the conversation.
+- Small omissions, clipped words, or minor transcription errors may be tolerated only when the surrounding conversation clearly establishes the intended meaning. Do not reconstruct entire sentences or assume information that is not reasonably supported by the transcript.
 - If multiple interpretations are reasonably possible, choose the conservative interpretation.
 - If meaning remains uncertain, return NO.
 
@@ -49,6 +49,12 @@ Validation rules:
 - A detail is valid only if it is clearly confirmed, directly answered, clearly accepted without correction, or otherwise clearly conveyed through the conversation.
 - If a detail is later corrected or contradicted, evaluate using the final confirmed or accepted version.
 - If a detail is merely detected but not validated, do not count it as satisfied.
+- Clearly conveyed means the information is explicitly stated, directly acknowledged, or can be understood with high confidence from the immediate conversational context without requiring additional assumptions beyond what the transcript reasonably supports.
+
+Conversation memory:
+- Maintain conversation context throughout the call.
+- Earlier confirmed information remains valid unless it is later corrected or contradicted.
+- Use previous confirmed responses while evaluating later parts of the conversation.
 
 Evidence rules:
 - Every result must be supported by transcript evidence.
@@ -57,6 +63,7 @@ Evidence rules:
 - The reasoning must reference only evidence actually present or clearly conveyed in the transcript.
 - Never infer missing information solely from context.
 - If supporting evidence is ambiguous, incomplete, or cannot be reasonably identified, return NO.
+- Base each reasoning only on the evidence that directly supports the parameter being evaluated.
 
 Reasoning rules:
 - Keep reasoning short, factual, and specific.
@@ -64,15 +71,17 @@ Reasoning rules:
 - State the key transcript evidence that led to the decision instead of giving generic conclusions.
 - For YES or FATAL results, the reasoning should describe the evidence corresponding to the reported timestamp(s).
 - For NO results, briefly state what required evidence was missing or insufficient.
-- Do not mention prompts, rules, evaluation logic, pass/fail, or policy.
+- Do not mention prompts, rules, evaluation logic, pass/fail, or policy. Use the simplest synonym of any word.
 - Do not speculate or explain assumptions.
 - No generic QA wording.
+- When possible, include the key words or phrases spoken in the conversation instead of only summarizing them.
 
 Timestamps:
 - Include timestamps only when clearly detectable from the transcript.
 - Every timestamp must directly correspond to the evidence described in the reasoning.
 - If multiple timestamps directly support the decision, include all relevant timestamps.
 - If timestamps are unavailable or cannot be reliably identified, return an empty list.
+- Do not include timestamps for unrelated parts of the conversation.
 
 Return only valid JSON in exactly this format:
 
