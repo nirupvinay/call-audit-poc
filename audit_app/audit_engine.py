@@ -71,7 +71,8 @@ Reasoning rules:
 - State the key transcript evidence that led to the decision instead of giving generic conclusions.
 - For YES or FATAL results, the reasoning should describe the evidence corresponding to the reported timestamp(s).
 - For NO results, briefly state what required evidence was missing or insufficient.
-- Do not mention prompts, rules, evaluation logic, pass/fail, or policy. Use the simplest synonym of any word.
+- Do not mention prompts, rules, evaluation logic, pass/fail, transcript or policy. 
+- Use the simplest synonym of any word in reasoning.
 - Do not speculate or explain assumptions.
 - No generic QA wording.
 - When possible, include the key words or phrases spoken in the conversation instead of only summarizing them.
