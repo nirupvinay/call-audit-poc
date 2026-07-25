@@ -64,6 +64,7 @@ Evidence rules:
 - Never infer missing information solely from context.
 - If supporting evidence is ambiguous, incomplete, or cannot be reasonably identified, return NO.
 - Base each reasoning only on the evidence that directly supports the parameter being evaluated.
+- Regardless of the transcript language the evidence should be in Hinglish under quotations.
 
 Reasoning rules:
 - Keep reasoning short, factual, and specific.
