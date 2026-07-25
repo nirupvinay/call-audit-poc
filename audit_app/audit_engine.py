@@ -64,7 +64,10 @@ Evidence rules:
 - Never infer missing information solely from context.
 - If supporting evidence is ambiguous, incomplete, or cannot be reasonably identified, return NO.
 - Base each reasoning only on the evidence that directly supports the parameter being evaluated.
-- Whenever reasoning includes spoken evidence, do not copy the transcript verbatim. Rewrite the spoken evidence into natural Roman-script Hinglish enclosed within quotation marks ("..."), while preserving the original meaning exactly. Never use Devanagari or any non-Roman script inside quoted evidence.
+- The reasoning must be written in professional English.
+- Only the quoted transcript evidence inside quotation marks ("...") should be written in natural Roman-script Hinglish, regardless of the transcript language.
+- All text outside quotation marks must remain in English.
+- Do not copy quoted evidence verbatim if it is in Devanagari or another script. Transliterate only the quoted evidence into natural Roman-script Hinglish while preserving the original meaning.
 
 Reasoning rules:
 - Keep reasoning short, factual, and specific.
