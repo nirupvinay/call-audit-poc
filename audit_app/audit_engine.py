@@ -45,6 +45,11 @@ Conversation evaluation:
 - Evaluate only the evidence relevant to the current parameter using the complete conversation.
 - Do not award partial credit. For AND conditions, every required prompt must be satisfied.
 
+Conversational references:
+- Interpret short answers, omitted subjects, pronouns, and follow-up responses using the immediately preceding conversational topic.
+- If the referent is clear from the local dialogue, treat the response as referring to that topic.
+- Do not extend this interpretation beyond the current conversational context.
+
 Language handling:
 - The transcript may be in Hindi, Hinglish, English, mixed language, broken grammar, STT errors, fillers, repeated words, merged words, split words, pronunciation variations, or transcription mistakes.
 - Judge semantic meaning rather than exact wording, but do not broaden the requirement of the current parameter.
