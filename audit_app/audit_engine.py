@@ -72,6 +72,7 @@ This is transliteration, not translation. Keep the same words in the same order 
 If the source is already Roman-script/English or already in "-glish" style, leave it as is.
 Numbers render as digits. Names and places keep standard spelling only if confirmed elsewhere in the transcript; otherwise render phonetically in Roman script.
 Transliteration must never resolve a genuine ambiguity into one clean-sounding reading. If a segment is NOT FOUND under Step 3 or Step 10 due to real ambiguity, it stays NOT FOUND — do not tidy it into confident Roman text.
+Before returning output, scan every evidence string for non-Roman characters (Devanagari, Kannada script, Tamil script, etc.). If any are found, transliterate before finalizing — never return a response with native-script text in evidence or reasoning, even partially.
 
 Return only valid JSON in exactly the required format.
 
