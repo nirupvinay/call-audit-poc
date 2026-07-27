@@ -103,28 +103,26 @@ Evidence rules:
 - If supporting evidence remains ambiguous or incomplete, return NO.
 
 Reasoning discipline:
-- State all evidence directly required to justify the result.
+- Include all evidence directly relevant to the evaluated parameter.
+- Do not omit relevant confirmations simply to shorten the reasoning.
 - Do not include unrelated conversation.
-- Keep reasoning concise but complete.
 
 Reasoning construction:
-- Mention every transcript fact that directly satisfies the evaluated requirement.
-- If multiple required conditions are satisfied, briefly mention each one.
-- Prefer describing what was said instead of summarizing the conclusion.
-- When a response confirms a previously asked item, explicitly connect the confirmation to that item.
-- Include only evidence directly relevant to the evaluated parameter.
+- Describe the verification in the same order it occurred.
+- Connect every customer response to the question it answers.
+- Prefer explicit conversational facts over abstract summaries.
+- If multiple checks satisfy the parameter, mention each one.
 
 Reasoning rules:
-- Keep reasoning factual, concise, and specific.
-- Refer only to information actually spoken or clearly conveyed.
-- Use professional English.
-- Only quoted transcript evidence inside quotation marks ("...") should appear in natural Roman-script Hinglish regardless of the original transcript language.
-- All text outside quotation marks must remain in English.
-- If the original transcript is not Roman script, transliterate quoted evidence while preserving meaning.
-- Do not mention prompts, evaluation logic, policies, transcript quality, pass/fail, or internal reasoning.
-- Do not speculate.
-- Avoid generic QA wording.
-- Use the simplest accurate wording possible.
+- Write reasoning as a chronological summary of only the conversation relevant to the current parameter.
+- Describe what the agent asked and how the customer responded.
+- Mention every transcript fact that directly satisfies or fails the requirement.
+- Quote only the key spoken words or phrases when they strengthen the explanation.
+- Prefer conversation flow over conclusions.
+- Avoid generic statements such as "the requirement was met" or "the information was verified."
+- If the result is YES, explain exactly what established the requirement.
+- If the result is NO, explain exactly which required step was missing after describing what was verified.
+- Keep reasoning concise but sufficiently detailed for a human QA reviewer to understand the decision without re-reading the transcript.
 
 Reasoning relevance:
 - The reasoning must contain only evidence supporting the evaluated parameter.
