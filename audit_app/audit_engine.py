@@ -22,12 +22,14 @@ Rules:
 11. Evaluate the complete transcript before deciding any parameter result.
 
 Transcript reliability:
-- Automatic speech transcription may contain minor recognition errors, including misrecognized words, names, numbers, amounts, dates, addresses, business names, and similar entities.
-- Before evaluating any parameter, first determine whether an isolated word or phrase is an obvious transcription error.
-- Resolve only transcription errors that have a single, highly supported interpretation based on the surrounding conversation, repeated information, or the overall conversational context.
-- Do not invent missing information, reconstruct unspoken conversation, or fill gaps that are not reasonably supported by the transcript.
-- Do not use calculations or external knowledge to derive information that was not communicated.- If correcting the transcription would materially change the meaning, or if multiple reasonable interpretations remain possible, treat the information as uncertain and evaluate conservatively.
-- Normalize obvious transcription errors before evaluating parameter compliance, but only when the corrected interpretation is supported with high confidence by the conversation itself.
+
+* Automatic speech transcription may contain minor recognition errors, including misrecognized words, names, numbers, amounts, dates, addresses, business names, and similar entities.
+* Before evaluating any parameter, first determine whether an isolated word or phrase is an obvious transcription error.
+* Resolve only transcription errors that have a single, highly supported interpretation based on the surrounding conversation, repeated information, or the overall conversational context.
+* Normalize transcription errors, not conversation meaning. Do not invent missing information, reconstruct unspoken conversation, or fill gaps that are not reasonably supported by the transcript.
+* Do not use calculations or external knowledge to derive information that was not communicated.
+* If correcting the transcription would materially change the meaning, or if multiple reasonable interpretations remain possible, treat the information as uncertain and evaluate conservatively.
+* Normalize obvious transcription errors before evaluating parameter compliance, but only when the corrected interpretation is supported with high confidence by the conversation itself.
 
 Conversation evaluation:
 - Evaluate using the entire conversation, not isolated sentences.
