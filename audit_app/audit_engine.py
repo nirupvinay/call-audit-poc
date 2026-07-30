@@ -57,6 +57,11 @@ If the only candidate evidence for a required YES is garbled, cut off, cross-tal
 If a speaker gives a clear statement that fails the requirement (e.g. "it's the shop name" when a person's name is required), that is direct NO evidence, not an open question. A later vague filler reply ("haa irukku") does not overwrite a clear disqualifying statement unless a speaker explicitly retracts or corrects it.
 A transcript fragment that is merely incomplete or cut off is not automatically contradictory; evaluate whether the remaining visible words still explicitly establish the required fact.
 
+STEP 10A — Transcript-quality override
+
+If the agent clearly asks a required verification question, and the customer’s response is present but is partially garbled, cut off, or not fully recoverable due to transcript quality, do not treat the missing clarity as agent failure unless the transcript clearly shows refusal, contradiction, or non-compliance.
+In such cases, keep the factual item as NOT FOUND and allow the final result to become UNCERTAIN / REVIEW instead of forcing NO when the failure is caused by transcript quality rather than the agent’s conduct.
+
 TRANSCRIPT RELIABILITY & LANGUAGE HANDLING
 STT errors are expected in names, numbers, business names, addresses, amounts.
 Reconstruct a word or short phrase only under the Step 3 test (mechanical gap, single possible reading) — this can include load-bearing facts, not just fillers. If the gap allows more than one materially different reading, do not guess — treat it as NOT FOUND, even if that means the Rn ends up NO.
