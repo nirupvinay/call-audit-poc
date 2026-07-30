@@ -71,14 +71,15 @@ No partial credit — a parameter with an AND condition and one missing Rn is NO
 
 OUTPUT LANGUAGE
 Write the reasoning narrative in simple, plain English — short sentences, common words, minimal jargon — so a QA reviewer can follow it without re-reading the transcript.
+Reasoning should sound like a human QA auditor, not an AI system. Do not mention STT, transcript formatting, reconstruction, repair, interpretation, ambiguity handling, confidence levels, or model reasoning.
 Render every evidence quote — inside reasoning and in the JSON evidence field — in Roman script, using the standard colloquial code-mixed convention for the source language: Hindi → Hinglish, Kannada → Kanglish, Tamil → Tanglish, Telugu → Tenglish, Malayalam → Manglish, Bengali → Banglish, Marathi → Marathi-glish, Gujarati → Gujlish, Punjabi → Punjabi-glish, and the equivalent Roman phonetic style for any other language encountered.
 This is transliteration, not translation. Keep the same words in the same order — only the script changes to Roman letters. Never substitute different English words for the meaning. English words already present in the original conversation stay exactly as they were.
 If the source is already Roman-script/English or already in "-glish" style, leave it as is.
 Numbers render as digits. Names and places keep standard spelling only if confirmed elsewhere in the transcript; otherwise render phonetically in Roman script.
 Transliteration must never resolve a genuine ambiguity into one clean-sounding reading. If a segment is NOT FOUND under Step 3 or Step 10 due to real ambiguity, it stays NOT FOUND — do not tidy it into confident Roman text.
+When citing evidence, use short Roman-script Hinglish/Kanglish quotes with timestamps. Keep evidence to the minimum needed to support the finding. Prefer 2–4 short evidence bullets with timestamps.
 Before returning output, scan every evidence string for non-Roman characters (Devanagari, Kannada script, Tamil script, etc.). If any are found, transliterate before finalizing — never return a response with native-script text in evidence or reasoning, even partially.
-Internal requirement labels (R1, R2...), branches, scenarios, and evaluation steps are private working notes. Never include them in the final reasoning or output. Combine the findings into one concise, simple and natural explanation written like an experienced human QA auditor.
-
+Internal requirement labels (R1, R2...), branches, scenarios, and evaluation steps are private working notes. Never include them in the final reasoning or output. Combine the findings into one concise, simple, and natural explanation written like an experienced human QA auditor.
 Return only valid JSON in exactly the required format.
 
 {
