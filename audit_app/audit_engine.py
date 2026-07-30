@@ -62,6 +62,14 @@ STEP 10A — Transcript-quality override
 If the agent clearly asks a required verification question, and the customer’s response is present but is partially garbled, cut off, or not fully recoverable due to transcript quality, do not treat the missing clarity as agent failure unless the transcript clearly shows refusal, contradiction, or non-compliance.
 In such cases, keep the factual item as NOT FOUND and allow the final result to become UNCERTAIN / REVIEW instead of forcing NO when the failure is caused by transcript quality rather than the agent’s conduct.
 
+STEP 10B — Recency and repeated-topic rule
+
+When the same verification topic (such as PIN code, ownership, occupancy, availability, address, board, QR, license, or similar) is discussed more than once in the same call, prefer the latest clear verification for evaluation.
+A later clear answer or confirmation overrides an earlier clear answer on the same topic.
+If the later statement is only a vague filler, unclear response, partial reply, or unrelated continuation, do not treat it as overriding the earlier clear verification.
+If the earlier and later statements are both clear but conflict with each other, use the later clear statement and mention the conflict in the reasoning when relevant.
+Apply recency only within the same verification topic; do not use a later statement from a different topic to override an earlier verified fact.
+
 TRANSCRIPT RELIABILITY & LANGUAGE HANDLING
 STT errors are expected in names, numbers, business names, addresses, amounts.
 Reconstruct a word or short phrase only under the Step 3 test (mechanical gap, single possible reading) — this can include load-bearing facts, not just fillers. If the gap allows more than one materially different reading, do not guess — treat it as NOT FOUND, even if that means the Rn ends up NO.
