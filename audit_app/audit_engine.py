@@ -12,6 +12,8 @@ Always evaluate the complete conversation before deciding. Do not stop at the fi
 
 For noisy telephony transcripts, evaluate the verification flow conversationally rather than through exact word-for-word matching. If an earlier wording is garbled, partially transcribed, or not a perfect name match, but a later linked clarification clearly establishes the same verification fact and the customer agrees, treat the verification as completed for that topic.
 
+When evaluating a verification flow, prioritize the conversational outcome over isolated mismatched words. If the agent asks a verification question, the customer responds, and the agent proceeds by treating the fact as verified without any contradiction from the customer, prefer the established conversational understanding. Do not fail a verification only because one isolated name, word, or phrase appears corrupted by transcription when the surrounding exchange clearly points to the same verified fact.
+
 STEP 2 — Extract. For each Rn, scan the FULL transcript (not just the expected location) and pull:
 
 exact quote (speaker tag + line/timestamp if available)
@@ -42,7 +44,7 @@ Extract the name of the required entity for comparison (e.g. the account/loan ho
 Compare explicitly: match / mismatch / relationship stated / unresolved.
 A business-level identifier (shop name, company name, brand name) never satisfies a requirement for a person's name — even if a speaker or the parameter loosely calls it "the name." If a speaker states the identifier is a business/shop/company name where a personal name is required, treat this as direct disqualifying evidence, not an open question.
 Mismatch with no relationship explicitly stated = unresolved. Unresolved fails any sub-check depending on it — never assume relationship or sameness of person.
-An isolated unclear or garbled name that is not independently confirmed elsewhere in the conversation is not treated as a confirmed mismatch if a later linked account, document, or ownership clarification establishes the identifier in the merchant's name.
+An isolated unclear, garbled, or phonetically distorted name should not be treated as a confirmed mismatch when the surrounding conversation, account ownership, document ownership, or repeated confirmation indicates that the merchant is referring to himself or the same verified person. A mismatch is confirmed only when the transcript clearly establishes two different persons and no correction, relationship, or later clarification resolves the difference.
 
 STEP 6 — Judge each Rn independently. Rn = YES only if: (a) evidence exists AND (b) it directly answers that specific Rn (per Steps 4–5) AND (c) it is the final, non-retracted version if corrected later AND (d) it reflects only what was actually said, plus at most the narrow word-level repair permitted under Step 3 — never content whose only support is a missing scenario you filled in. Otherwise Rn = NO.
 
@@ -65,7 +67,7 @@ A transcript fragment that is merely incomplete or cut off is not automatically 
 STEP 10A — Transcript-quality override
 
 If the agent clearly asks a required verification question, and the customer’s response is present but is partially garbled, cut off, or not fully recoverable due to transcript quality, do not treat the missing clarity as agent failure unless the transcript clearly shows refusal, contradiction, or non-compliance.
-In such cases, keep the factual item as NOT FOUND and allow the final result to become UNCERTAIN / REVIEW instead of forcing NO when the failure is caused by transcript quality rather than the agent’s conduct.
+Do not treat the missing clarity as negative evidence against the agent; evaluate the remaining explicit evidence and apply the parameter logic normally
 
 STEP 10B — Recency and repeated-topic rule
 
@@ -98,7 +100,7 @@ This is transliteration, not translation. Keep the same words in the same order 
 If the source is already Roman-script/English or already in "-glish" style, leave it as is.
 Numbers render as digits. Names and places keep standard spelling only if confirmed elsewhere in the transcript; otherwise render phonetically in Roman script.
 Transliteration must never resolve a genuine ambiguity into one clean-sounding reading. If a segment is NOT FOUND under Step 3 or Step 10 due to real ambiguity, it stays NOT FOUND — do not tidy it into confident Roman text.
-When citing evidence, use short Roman-script Hinglish/Kanglish quotes with timestamps. Keep evidence to the minimum needed to support the finding. Prefer 2–4 short evidence bullets with timestamps.
+When citing evidence, use short Roman-script Hinglish/Kanglish quotes with timestamps. Keep evidence to the minimum needed to support the finding. Write the reasoning as a short human QA note: state the conclusion first, then cite 1–3 short evidence snippets. Avoid explaining the rule engine, ambiguity handling, transcript quality, or why a result was chosen over another possible interpretation.
 Before returning output, scan every evidence string for non-Roman characters (Devanagari, Kannada script, Tamil script, etc.). If any are found, transliterate before finalizing — never return a response with native-script text in evidence or reasoning, even partially.
 Internal requirement labels (R1, R2...), branches, scenarios, and evaluation steps are private working notes. Never include them in the final reasoning or output. Combine the findings into one concise, simple, and natural explanation written like an experienced human QA auditor.
 
@@ -250,7 +252,8 @@ def _reconcile_audit_response(parsed: dict, audit_payload: list[dict]) -> dict:
 
 def run_openai_audit(client, transcript: str, audit_payload: list[dict]) -> dict:
     response = client.chat.completions.create(
-        model="gpt-5",
+        model="gpt-5.5",
+        temperature=0,
         response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
