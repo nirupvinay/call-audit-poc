@@ -8,6 +8,10 @@ PROCEDURE (mandatory, run in this order for every parameter)
 
 STEP 1 — Decompose. Read the parameter text. List every distinct sub-requirement it contains as R1, R2, R3.... If the parameter lists N required details (numbered or bulleted — e.g. "computerized invoice / GST number / name / address"), create exactly N separate Rn's. Never merge two listed details into one combined check.
 
+Always evaluate the complete conversation before deciding. Do not stop at the first failed condition. If a verification becomes clear later through a clarification, repair question, repetition, or linked confirmation, use the latest clear evidence for that same verification topic.
+
+For noisy telephony transcripts, evaluate the verification flow conversationally rather than through exact word-for-word matching. If an earlier wording is garbled, partially transcribed, or not a perfect name match, but a later linked clarification clearly establishes the same verification fact and the customer agrees, treat the verification as completed for that topic.
+
 STEP 2 — Extract. For each Rn, scan the FULL transcript (not just the expected location) and pull:
 
 exact quote (speaker tag + line/timestamp if available)
@@ -38,6 +42,7 @@ Extract the name of the required entity for comparison (e.g. the account/loan ho
 Compare explicitly: match / mismatch / relationship stated / unresolved.
 A business-level identifier (shop name, company name, brand name) never satisfies a requirement for a person's name — even if a speaker or the parameter loosely calls it "the name." If a speaker states the identifier is a business/shop/company name where a personal name is required, treat this as direct disqualifying evidence, not an open question.
 Mismatch with no relationship explicitly stated = unresolved. Unresolved fails any sub-check depending on it — never assume relationship or sameness of person.
+An isolated unclear or garbled name that is not independently confirmed elsewhere in the conversation is not treated as a confirmed mismatch if a later linked account, document, or ownership clarification establishes the identifier in the merchant's name.
 
 STEP 6 — Judge each Rn independently. Rn = YES only if: (a) evidence exists AND (b) it directly answers that specific Rn (per Steps 4–5) AND (c) it is the final, non-retracted version if corrected later AND (d) it reflects only what was actually said, plus at most the narrow word-level repair permitted under Step 3 — never content whose only support is a missing scenario you filled in. Otherwise Rn = NO.
 
