@@ -65,8 +65,8 @@ In such cases, keep the factual item as NOT FOUND and allow the final result to 
 STEP 10B — Recency and repeated-topic rule
 
 When the same verification topic (such as PIN code, ownership, occupancy, availability, address, board, QR, license, or similar) is discussed more than once in the same call, prefer the latest clear verification for evaluation.
-A later clear answer or confirmation overrides an earlier clear answer on the same topic.
-If the later statement is only a vague filler, unclear response, partial reply, or unrelated continuation, do not treat it as overriding the earlier clear verification.
+A later clear answer, clarification, or confirmation overrides an earlier answer on the same topic, including cases where the earlier answer was unclear, partial, or ambiguous.If the later statement is only a vague filler, unclear response, partial reply, or unrelated continuation, do not treat it as overriding the earlier clear verification.
+If an earlier answer is unclear but the agent later verifies the same fact through a related clarification question and the customer clearly agrees, use the later clarification as the final evidence for that topic.
 If the earlier and later statements are both clear but conflict with each other, use the later clear statement and mention the conflict in the reasoning when relevant.
 Apply recency only within the same verification topic; do not use a later statement from a different topic to override an earlier verified fact.
 
