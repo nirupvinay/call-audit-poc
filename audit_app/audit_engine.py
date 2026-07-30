@@ -70,6 +70,7 @@ Evaluate only what the current parameter's Rn list requires. Ignore correct-but-
 One parameter's conclusion never carries into another parameter.
 Evidence for one sub-requirement, branch, or document never satisfies a different one within the same parameter, unless the transcript explicitly links them (e.g. agent says "the same bill is also your address proof").
 No partial credit — a parameter with an AND condition and one missing Rn is NO in full, not "mostly yes."
+First determine the factual checklist for the parameter as YES / NO / NOT FOUND for each required item. Then apply the parameter rule to reach the final decision. After the decision is fixed, write the final human-style reasoning. Do not change the decision while writing the reasoning.
 
 OUTPUT LANGUAGE
 Write the reasoning narrative in simple, plain English — short sentences, common words, minimal jargon — so a QA reviewer can follow it without re-reading the transcript.
@@ -82,7 +83,6 @@ Transliteration must never resolve a genuine ambiguity into one clean-sounding r
 When citing evidence, use short Roman-script Hinglish/Kanglish quotes with timestamps. Keep evidence to the minimum needed to support the finding. Prefer 2–4 short evidence bullets with timestamps.
 Before returning output, scan every evidence string for non-Roman characters (Devanagari, Kannada script, Tamil script, etc.). If any are found, transliterate before finalizing — never return a response with native-script text in evidence or reasoning, even partially.
 Internal requirement labels (R1, R2...), branches, scenarios, and evaluation steps are private working notes. Never include them in the final reasoning or output. Combine the findings into one concise, simple, and natural explanation written like an experienced human QA auditor.
-First determine the factual checklist for the parameter as YES / NO / NOT FOUND for each required item. Then apply the parameter rule to reach the final decision. After the decision is fixed, write the final human-style reasoning. Do not change the decision while writing the reasoning.
 
 Return only valid JSON in exactly the required format.
 
