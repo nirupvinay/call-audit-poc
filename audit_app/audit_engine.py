@@ -250,7 +250,7 @@ def _reconcile_audit_response(parsed: dict, audit_payload: list[dict]) -> dict:
 
 def run_openai_audit(client, transcript: str, audit_payload: list[dict]) -> dict:
     response = client.chat.completions.create(
-        model="gpt-5.6-terra",
+        model="gpt-5",
         response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
