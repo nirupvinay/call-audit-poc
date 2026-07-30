@@ -17,6 +17,7 @@ STEP 3 — Contextual repair covers missing words, never missing scenarios. Tran
 
 Permitted (word-level): a specific word, number, or name is clipped, garbled, or split by a mechanical transcription artifact, AND exactly one reading is possible — e.g. the same speaker repeats it clearly elsewhere, or the immediate sentence leaves no other coherent option. Test: would a fluent speaker read the raw text and fill the gap without hesitation, the way autocorrect fixes an obvious typo? If yes, use that word — this applies even to load-bearing facts, not just fillers.
 Permitted (word-level): resolving a pronoun, short reply ("same", "mine", "haan", "yes", "this one"), or elliptical answer to the single most recent on-topic item. This identifies what an existing word refers to — it does not add new content.
+Permitted (truncated-answer protection): if a response is clearly cut off by an STT dropout, interruption, or sentence truncation, do not treat the missing tail as negative evidence against the agent. Use the available portion of the response only. A requirement may still be marked YES only if the remaining transcript contains enough explicit information to satisfy that requirement; otherwise treat it as unresolved rather than assuming the missing words.
 Forbidden (scenario-level): assuming an entire question was asked or answered because it's the kind of thing usually covered at this point in this type of call, or because the surrounding conversation makes it seem likely. If neither speaker's actual words show a specific exchange happening, it stays NOT FOUND — no matter how standard or expected that exchange would normally be.
 Forbidden: turning a genuinely scrambled or multi-reading segment into one clean sentence to manufacture a fact. If a fluent speaker would have to guess between materially different words, numbers, or names, that segment is not reconstructable — it stays NOT FOUND (see Step 10).
 
@@ -50,6 +51,7 @@ STEP 10 — Garbled or contradicting evidence.
 
 If the only candidate evidence for a required YES is garbled, cut off, cross-talk, or supports two materially different readings that would flip the verdict → treat as NOT FOUND (per Step 3, this is not word-level repairable). Do not resolve toward the reading that completes the expected pattern.
 If a speaker gives a clear statement that fails the requirement (e.g. "it's the shop name" when a person's name is required), that is direct NO evidence, not an open question. A later vague filler reply ("haa irukku") does not overwrite a clear disqualifying statement unless a speaker explicitly retracts or corrects it.
+A transcript fragment that is merely incomplete or cut off is not automatically contradictory; evaluate whether the remaining visible words still explicitly establish the required fact.
 
 TRANSCRIPT RELIABILITY & LANGUAGE HANDLING
 STT errors are expected in names, numbers, business names, addresses, amounts.
